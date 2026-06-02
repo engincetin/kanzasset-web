@@ -251,9 +251,7 @@ function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
         <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 20, background: WBRAND.white, border: `1.5px solid ${WBRAND.red}`, display: 'grid', placeItems: 'center' }}>
-                <AHLGMark size={40}/>
-              </div>
+              <AHLGMark size={44}/>
               <div>
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? 'Mint complete' : 'Minting'}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{wfmt(amount, 4)} AHLG</div>
