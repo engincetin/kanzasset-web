@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
+import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
 import { WMark, AHLGMark } from '../components/coinicons.jsx';
 import { WPrimary, WSecondary } from '../components/primitives.jsx';
@@ -140,7 +141,7 @@ function WebLogin({ onContinue }) {
 
 // ─── Step 2 — email / SMS verification code ───────────────────
 function WebVerify2FA({ onVerified, onBack }) {
-  const [channel, setChannel] = useState('email');
+  const [channel, setChannel] = useState(getAuthChannel());
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const refs = useRef([]);
   const masked = channel === 'email' ? 'a••••t@kanzasset.com' : '+90 532 ••• 7890';

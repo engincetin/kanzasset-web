@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, WBALANCES, WMETA } from '../lib/index.js';
+import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WAssetSelector } from '../components/shared.jsx';
@@ -142,7 +143,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
   const [verifying, setVerifying] = useState(false);
   const [verifyStep, setVerifyStep] = useState('code');
   const [code, setCode] = useState(['', '', '', '', '', '']);
-  const [channel, setChannel] = useState('email');
+  const [channel, setChannel] = useState(getAuthChannel());
 
   const cryptoWhitelist = [
     { id: 'cw-usdt', title: 'Cold wallet · USDT', sub: 'Ethereum · 0xC4e1A3…8fB9hPq', net: 'ERC-20', verified: true },

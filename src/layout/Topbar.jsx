@@ -90,9 +90,9 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout }) {
                   { id: 'account',      label: 'Account settings',         icon: 'M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zM3 22c0-5 4-9 9-9s9 4 9 9' },
                   { id: 'security',     label: 'Security & 2FA',           icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z' },
                   { id: 'destinations', label: 'Whitelisted destinations', icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
-                  { id: 'prefs',        label: 'Notifications',            icon: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9z' },
+                  { id: 'prefs',        label: 'Preferences',              icon: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.01a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.01a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z' },
                 ].map(it => (
-                  <button key={it.id} onClick={() => { setMenuOpen(false); onNavigate && onNavigate('profile'); }} style={{
+                  <button key={it.id} onClick={() => { setMenuOpen(false); onNavigate && onNavigate('profile', it.id); }} style={{
                     width: '100%', display: 'flex', alignItems: 'center', gap: 12,
                     padding: '9px 12px', borderRadius: 6, border: 'none',
                     background: 'transparent', cursor: 'pointer', textAlign: 'left',
@@ -127,7 +127,7 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout }) {
               </div>
 
               <div style={{ padding: 6, borderTop: `1px solid ${WBRAND.line}` }}>
-                <button onClick={() => { setMenuOpen(false); onNavigate && onNavigate('profile'); }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '9px 12px', borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left', fontFamily: WFONT, fontSize: 13, fontWeight: 500, color: WBRAND.ink, letterSpacing: '-0.005em' }}>
+                <button onClick={() => { setMenuOpen(false); onNavigate && onNavigate('profile', 'help'); }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '9px 12px', borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left', fontFamily: WFONT, fontSize: 13, fontWeight: 500, color: WBRAND.ink, letterSpacing: '-0.005em' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke={WBRAND.muted} strokeWidth="1.7"/><path d="M12 17v.01M12 14a2 2 0 011-2 2 2 0 10-2-3" stroke={WBRAND.muted} strokeWidth="1.7" strokeLinecap="round"/></svg>
                   <span style={{ flex: 1 }}>Help & support</span>
                   {WIcon.external(WBRAND.muted)}

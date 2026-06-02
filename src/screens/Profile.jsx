@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt } from '../lib/index.js';
+import { getAuthChannel, setAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 
@@ -118,15 +119,51 @@ function ProfAccount() {
 }
 
 function ProfSecurity() {
+  const [twoFA, setTwoFA] = useState(getAuthChannel());
+  useEffect(() => { setAuthChannel(twoFA); }, [twoFA]);
+
   return (
     <>
-      <SectionCard title="Sign-in & 2FA" sub="Protect your account with hardware-grade authentication.">
+      <SectionCard title="Two-factor authentication" sub="Choose how we send your verification code at sign-in and for withdrawals.">
+        <div style={{ padding: '18px 22px 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            {[
+              { id: 'email', label: 'Email', dest: 'a••••t@kanzasset.com',
+                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.7"/><path d="M4 7l8 6 8-6" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/></svg> },
+              { id: 'sms',   label: 'SMS', dest: '+90 532 ••• 7890',
+                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="6" y="2.5" width="12" height="19" rx="2.5" stroke="currentColor" strokeWidth="1.7"/><path d="M10.5 18.5h3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg> },
+            ].map(m => {
+              const on = twoFA === m.id;
+              return (
+                <button key={m.id} onClick={() => setTwoFA(m.id)} style={{
+                  textAlign: 'left', cursor: 'pointer', padding: '14px 16px', borderRadius: 12,
+                  border: `1.5px solid ${on ? WBRAND.red : WBRAND.line2}`,
+                  background: on ? WBRAND.surface2 : WBRAND.white,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 9, background: on ? WBRAND.redSoft : WBRAND.surface, color: on ? WBRAND.red : WBRAND.muted, display: 'grid', placeItems: 'center' }}>{m.icon}</div>
+                    <div style={{ width: 18, height: 18, borderRadius: 9, border: `1.5px solid ${on ? WBRAND.red : WBRAND.line2}`, background: on ? WBRAND.red : 'transparent', display: 'grid', placeItems: 'center' }}>{on && <div style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}/>}</div>
+                  </div>
+                  <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, marginTop: 12, letterSpacing: '-0.01em' }}>{m.label}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{m.dest}</div>
+                </button>
+              );
+            })}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: 14, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
+            {WIcon.shield(WBRAND.ink)}
+            <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
+              We'll send your 6-digit code by <strong>{twoFA === 'email' ? 'email' : 'SMS'}</strong> every time you sign in or request a withdrawal.
+            </div>
+          </div>
+        </div>
+      </SectionCard>
+
+      <SectionCard title="Sign-in security">
         <div style={{ padding: '4px 22px 0' }}>
           {[
             { l: 'Password',          v: 'Last changed Mar 12, 2026',  pill: <WPill tone="neutral">Strong</WPill>,                                 cta: 'Change' },
             { l: 'Authenticator app', v: '1Password · iPhone 15',      pill: <WPill tone="positive">{WIcon.check(WBRAND.positive)} Active</WPill>, cta: 'Reset' },
-            { l: 'Hardware key',      v: 'YubiKey 5C NFC · primary',   pill: <WPill tone="positive">{WIcon.check(WBRAND.positive)} Active</WPill>, cta: 'Manage' },
-            { l: 'SMS fallback',      v: '+90 532 *** 7890',            pill: <WPill tone="warn">Discouraged</WPill>,                               cta: 'Disable' },
             { l: 'Passkeys',          v: 'iCloud Keychain · Touch ID', pill: <WPill tone="positive">{WIcon.check(WBRAND.positive)} 2 devices</WPill>, cta: 'Manage' },
           ].map((r, i, arr) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
@@ -245,6 +282,7 @@ function ProfKYC() {
 
 function ProfDestinations() {
   const [tab, setTab] = useState('crypto');
+  const [addOpen, setAddOpen] = useState(false);
 
   const cryptoAddrs = [
     { l: 'Cold wallet · USDT', ch: 'Ethereum · ERC-20', a: '0xC4e1A3...8fB9hPq', added: 'Mar 20, 2026', verified: true  },
@@ -252,16 +290,18 @@ function ProfDestinations() {
     { l: 'Ledger · USDT',      ch: 'Ethereum · ERC-20', a: '0x88aF12...e8WzX2k', added: 'Apr 11, 2026', verified: true  },
     { l: 'Hot wallet · USDT',  ch: 'Ethereum · ERC-20', a: '0xDeF456...789aBcD', added: 'May 13, 2026', verified: false },
   ];
+  const [bankDef, setBankDef] = useState(0);
   const banks = [
-    { bank: 'Emirates NBD',    ccy: 'AED', iban: 'AE07 0331 2345 6789 0001 198',  def: true  },
-    { bank: 'JP Morgan Chase', ccy: 'USD', iban: '021000021 · 802135 2249',        def: false },
-    { bank: 'Garanti BBVA',    ccy: 'EUR', iban: 'TR33 0006 2000 4290 0000 0001',  def: false },
-    { bank: 'Lloyds Bank',     ccy: 'GBP', iban: 'GB29 LOYD 3092 1031 9876 54',    def: false },
+    { bank: 'Emirates NBD',    ccy: 'AED', iban: 'AE07 0331 2345 6789 0001 198'  },
+    { bank: 'JP Morgan Chase', ccy: 'USD', iban: '021000021 · 802135 2249'       },
+    { bank: 'Garanti BBVA',    ccy: 'EUR', iban: 'TR33 0006 2000 4290 0000 0001' },
+    { bank: 'Lloyds Bank',     ccy: 'GBP', iban: 'GB29 LOYD 3092 1031 9876 54'   },
   ];
+  const [shipDef, setShipDef] = useState(0);
   const shipAddrs = [
-    { label: 'Home',     city: 'Dubai',    line: 'Marina Plaza, Tower 1, Apt 2208',   country: 'UAE',     def: true  },
-    { label: 'Office',   city: 'Dubai',    line: 'DMCC Almas Tower, Floor 38',        country: 'UAE',     def: false },
-    { label: 'Istanbul', city: 'Istanbul', line: 'Levent Mah. Büyükdere Cad. No:185', country: 'Türkiye', def: false },
+    { label: 'Home',     city: 'Dubai',    line: 'Marina Plaza, Tower 1, Apt 2208',   country: 'UAE'     },
+    { label: 'Office',   city: 'Dubai',    line: 'DMCC Almas Tower, Floor 38',        country: 'UAE'     },
+    { label: 'Istanbul', city: 'Istanbul', line: 'Levent Mah. Büyükdere Cad. No:185', country: 'Türkiye' },
   ];
 
   const tabs = [
@@ -274,7 +314,7 @@ function ProfDestinations() {
     <SectionCard
       title="Whitelisted destinations"
       sub="Pre-approved crypto addresses, bank accounts and shipping addresses. Withdrawals and physical delivery can only be sent to verified destinations."
-      footer={<WPrimary>{WIcon.plus('#fff')} {tab === 'crypto' ? 'Add new address' : tab === 'bank' ? 'Add bank account' : 'Add shipping address'}</WPrimary>}
+      footer={<WPrimary onClick={() => setAddOpen(true)}>{WIcon.plus('#fff')} {tab === 'crypto' ? 'Add new address' : tab === 'bank' ? 'Add bank account' : 'Add shipping address'}</WPrimary>}
     >
       <div style={{ padding: '0 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', gap: 4 }}>
         {tabs.map(t => {
@@ -316,11 +356,12 @@ function ProfDestinations() {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{b.bank}</span>
-                {b.def && <WPill tone="accent">Default {b.ccy}</WPill>}
+                {bankDef === i && <WPill tone="accent">Default {b.ccy}</WPill>}
                 <WPill tone="positive">{WIcon.check(WBRAND.positive)} Verified</WPill>
               </div>
               <WMonoNum size={11} color={WBRAND.muted} style={{ marginTop: 3, display: 'block' }}>{b.iban}</WMonoNum>
             </div>
+            {bankDef !== i && <WSecondary size="sm" onClick={() => setBankDef(i)}>Make default</WSecondary>}
             <WSecondary size="sm">Edit</WSecondary>
             <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>Remove</button>
           </div>
@@ -334,17 +375,133 @@ function ProfDestinations() {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{a.label} · {a.city}</span>
-                {a.def && <WPill tone="accent">Default shipping</WPill>}
+                {shipDef === i && <WPill tone="accent">Default shipping</WPill>}
                 <WPill tone="positive">{WIcon.check(WBRAND.positive)} Verified</WPill>
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{a.line}, {a.country}</div>
             </div>
+            {shipDef !== i && <WSecondary size="sm" onClick={() => setShipDef(i)}>Make default</WSecondary>}
             <WSecondary size="sm">Edit</WSecondary>
             <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>Remove</button>
           </div>
         ))}
       </div>
+      {addOpen && <AddDestinationModal tab={tab} onClose={() => setAddOpen(false)}/>}
     </SectionCard>
+  );
+}
+
+// ─── Add destination modal (crypto address / bank / shipping) ─
+function AddDestinationModal({ tab, onClose }) {
+  const [submitted, setSubmitted] = useState(false);
+
+  const cfg = {
+    crypto: {
+      title: 'Add crypto address',
+      sub: 'New addresses require a 24-hour security hold before first withdrawal.',
+      review: '24-hour security review',
+      fields: [
+        { id: 'label',   label: 'Label',          placeholder: 'e.g. Cold wallet · USDT' },
+        { id: 'network', label: 'Network',        value: 'Ethereum · ERC-20', select: ['Ethereum · ERC-20'] },
+        { id: 'address', label: 'Wallet address', placeholder: '0x…', mono: true },
+      ],
+    },
+    bank: {
+      title: 'Add bank account',
+      sub: 'Accounts must be held in your verified legal name (Ahmet Yılmaz).',
+      review: '24-hour security review',
+      fields: [
+        { id: 'bank',  label: 'Bank name',      placeholder: 'e.g. Emirates NBD' },
+        { id: 'ccy',   label: 'Currency',       value: 'AED', select: ['AED', 'USD', 'EUR', 'GBP'] },
+        { id: 'iban',  label: 'IBAN / Account', placeholder: 'AE07 0331 2345 6789 0001 198', mono: true },
+        { id: 'swift', label: 'SWIFT / BIC',    placeholder: 'EBILAEAD', mono: true },
+      ],
+    },
+    shipping: {
+      title: 'Add shipping address',
+      sub: 'We ship insured to UAE, Türkiye, Saudi Arabia and Kuwait.',
+      review: 'Verified instantly',
+      fields: [
+        { id: 'label',   label: 'Label',          placeholder: 'e.g. Home, Office' },
+        { id: 'line',    label: 'Street address', placeholder: 'Building, street, apt' },
+        { id: 'city',    label: 'City',           placeholder: 'Dubai' },
+        { id: 'country', label: 'Country',        value: 'United Arab Emirates', select: ['United Arab Emirates', 'Türkiye', 'Saudi Arabia', 'Kuwait'] },
+      ],
+    },
+  }[tab];
+
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+        {submitted ? (
+          <>
+            <div style={{ padding: '36px 28px 8px', textAlign: 'center' }}>
+              <div style={{ width: 64, height: 64, borderRadius: 32, margin: '0 auto', background: tab === 'shipping' ? 'rgba(15,122,71,0.10)' : 'rgba(183,121,31,0.12)', display: 'grid', placeItems: 'center' }}>
+                {tab === 'shipping'
+                  ? <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke={WBRAND.positive} strokeWidth="1.8"/><path d="M7.5 12.5l3 3 6-6.5" stroke={WBRAND.positive} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  : WIcon.shield(WBRAND.warn)}
+              </div>
+              <h2 style={{ margin: '20px 0 0', fontFamily: WFONT, fontSize: 20, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>
+                {tab === 'shipping' ? 'Address added' : 'Submitted for review'}
+              </h2>
+              <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 8, lineHeight: 1.55, padding: '0 12px' }}>
+                {tab === 'shipping'
+                  ? 'Your new shipping address is ready to use for physical delivery.'
+                  : `For your security, this destination will be available for use after a ${cfg.review.toLowerCase()}. We'll notify you once it clears.`}
+              </div>
+            </div>
+            <div style={{ padding: '22px 24px 22px' }}>
+              <WPrimary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center' }}>Done</WPrimary>
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ padding: '20px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+              <div>
+                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{cfg.title}</h2>
+                <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 5, lineHeight: 1.5 }}>{cfg.sub}</div>
+              </div>
+              <button onClick={onClose} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', flexShrink: 0, background: WBRAND.surface, cursor: 'pointer', color: WBRAND.ink, display: 'grid', placeItems: 'center' }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              </button>
+            </div>
+
+            <div style={{ padding: '18px 24px 4px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {cfg.fields.map(f => (
+                <div key={f.id}>
+                  <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, marginBottom: 7, letterSpacing: '-0.005em' }}>{f.label}</div>
+                  {f.select ? (
+                    <SelectField value={f.value} options={f.select} onChange={() => {}}/>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', height: 44, padding: '0 14px', borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white }}>
+                      <input placeholder={f.placeholder} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: f.mono ? WMONO : WFONT, fontSize: 13, color: WBRAND.ink, fontWeight: 500 }}/>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {tab !== 'shipping' && (
+              <div style={{ padding: '14px 24px 0' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
+                  {WIcon.shield(WBRAND.ink)}
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
+                    New {tab === 'crypto' ? 'addresses' : 'accounts'} are held for <strong>24 hours</strong> before the first withdrawal as a security measure.
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div style={{ padding: '18px 24px 22px', display: 'flex', gap: 8 }}>
+              <WSecondary size="lg" onClick={onClose} style={{ flex: 1, justifyContent: 'center', height: 52 }}>Cancel</WSecondary>
+              <WPrimary size="lg" onClick={() => setSubmitted(true)} style={{ flex: 1, justifyContent: 'center' }}>
+                {tab === 'shipping' ? 'Add address' : 'Add & verify'}
+              </WPrimary>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -438,8 +595,9 @@ function ProfHelp() {
   );
 }
 
-export function WebProfile({ navigate, onLogout }) {
-  const [section, setSection] = useState('account');
+export function WebProfile({ navigate, onLogout, initialSection = 'account' }) {
+  const [section, setSection] = useState(initialSection);
+  useEffect(() => { setSection(initialSection); }, [initialSection]);
 
   const sections = [
     { id: 'account',      label: 'Account',                  icon: 'M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zM3 22c0-5 4-9 9-9s9 4 9 9' },
@@ -448,6 +606,7 @@ export function WebProfile({ navigate, onLogout }) {
     { id: 'destinations', label: 'Whitelisted destinations', icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
     { id: 'prefs',        label: 'Preferences',              icon: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.01a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.01a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z' },
     { id: 'help',         label: 'Help & legal',             icon: 'M12 2a10 10 0 100 20 10 10 0 000-20zM12 17v.01M12 14a2 2 0 011-2 2 2 0 10-2-3' },
+    { id: 'close',        label: 'Close account',            icon: 'M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z' },
   ];
 
   return (
@@ -511,6 +670,71 @@ export function WebProfile({ navigate, onLogout }) {
           {section === 'destinations' && <ProfDestinations/>}
           {section === 'prefs'        && <ProfPrefs/>}
           {section === 'help'         && <ProfHelp/>}
+          {section === 'close'        && <ProfCloseAccount onLogout={onLogout}/>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Close account ────────────────────────────────────────────
+function ProfCloseAccount({ onLogout }) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  return (
+    <>
+      <SectionCard title="Close account" sub="Permanently close your Kanzasset account.">
+        <div style={{ padding: '18px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '16px', background: WBRAND.surface2, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
+            {[
+              'Your AHLG balance must be zero — redeem or withdraw all gold first.',
+              'All open delivery orders must be completed or cancelled.',
+              'Closing is permanent and cannot be undone. Transaction records are retained for 7 years for compliance.',
+            ].map((t, i) => (
+              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <span style={{ width: 5, height: 5, borderRadius: 3, background: WBRAND.muted2, marginTop: 7, flexShrink: 0 }}/>
+                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.ink, lineHeight: 1.5 }}>{t}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ padding: '14px 22px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'flex-end', background: WBRAND.surface2, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
+          <button onClick={() => setConfirmOpen(true)} style={{ height: 44, padding: '0 20px', borderRadius: 10, cursor: 'pointer', background: WBRAND.white, border: `1px solid ${WBRAND.red}`, color: WBRAND.red, fontFamily: WFONT, fontWeight: 700, fontSize: 14, letterSpacing: '-0.005em', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m1 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z" stroke={WBRAND.red} strokeWidth="1.7" strokeLinejoin="round"/></svg>
+            Close my account
+          </button>
+        </div>
+      </SectionCard>
+      {confirmOpen && <CloseAccountModal onClose={() => setConfirmOpen(false)} onLogout={onLogout}/>}
+    </>
+  );
+}
+
+function CloseAccountModal({ onClose, onLogout }) {
+  const [text, setText] = useState('');
+  const ok = text.trim().toUpperCase() === 'CLOSE';
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+        <div style={{ padding: '28px 28px 0', textAlign: 'center' }}>
+          <div style={{ width: 60, height: 60, borderRadius: 30, margin: '0 auto', background: WBRAND.redSoft, display: 'grid', placeItems: 'center' }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17v.01" stroke={WBRAND.red} strokeWidth="2.2" strokeLinecap="round"/><path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke={WBRAND.red} strokeWidth="1.7" strokeLinejoin="round"/></svg>
+          </div>
+          <h2 style={{ margin: '18px 0 0', fontFamily: WFONT, fontSize: 20, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>Close your account?</h2>
+          <p style={{ margin: '8px 0 0', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, lineHeight: 1.55 }}>
+            This permanently closes your Kanzasset account and signs you out of all devices. This action <strong style={{ color: WBRAND.ink }}>cannot be undone</strong>.
+          </p>
+        </div>
+        <div style={{ padding: '20px 28px 0' }}>
+          <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, marginBottom: 7 }}>
+            Type <span style={{ fontFamily: WMONO, color: WBRAND.red }}>CLOSE</span> to confirm
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', height: 44, padding: '0 14px', borderRadius: 10, border: `1px solid ${ok ? WBRAND.red : WBRAND.line2}`, background: WBRAND.white }}>
+            <input value={text} onChange={e => setText(e.target.value)} placeholder="CLOSE" autoFocus style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WMONO, fontSize: 14, color: WBRAND.ink, fontWeight: 500, letterSpacing: '0.08em' }}/>
+          </div>
+        </div>
+        <div style={{ padding: '20px 28px 24px', display: 'flex', gap: 8 }}>
+          <WSecondary size="lg" onClick={onClose} style={{ flex: 1, justifyContent: 'center', height: 52 }}>Cancel</WSecondary>
+          <button onClick={() => ok && onLogout && onLogout()} style={{ flex: 1, height: 52, borderRadius: 10, border: 'none', cursor: ok ? 'pointer' : 'not-allowed', opacity: ok ? 1 : 0.45, background: WBRAND.red, color: '#fff', fontFamily: WFONT, fontWeight: 700, fontSize: 15, letterSpacing: '-0.005em' }}>Close account</button>
         </div>
       </div>
     </div>

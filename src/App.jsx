@@ -24,7 +24,7 @@ const TITLES = {
   profile:   { title: 'Account settings',     sub: 'Tier 3 · institutional' },
 };
 
-function Screen({ active, navigate, onLogout }) {
+function Screen({ active, navigate, onLogout, profileSection, profileKey }) {
   switch (active) {
     case 'dashboard': return <WebPortfolio navigate={navigate} />;
     case 'wallet':    return <WebWallet    navigate={navigate} />;
@@ -33,7 +33,7 @@ function Screen({ active, navigate, onLogout }) {
     case 'deposit':   return <WebDeposit   navigate={navigate} />;
     case 'withdraw':  return <WebWithdraw  navigate={navigate} />;
     case 'activity':  return <WebActivity  navigate={navigate} />;
-    case 'profile':   return <WebProfile   navigate={navigate} onLogout={onLogout} />;
+    case 'profile':   return <WebProfile   key={profileKey} navigate={navigate} onLogout={onLogout} initialSection={profileSection} />;
     default:          return <WebPortfolio navigate={navigate} />;
   }
 }
@@ -42,10 +42,18 @@ function AppShell({ onLogout }) {
   const [active, setActive] = useState('dashboard');
   const [collapsed, setCollapsed] = useState(false);
   const [notifsOpen, setNotifsOpen] = useState(false);
+  const [profileSection, setProfileSection] = useState('account');
+  const [profileKey, setProfileKey] = useState(0);
 
   const { title, sub } = TITLES[active] ?? TITLES.dashboard;
 
-  const navigate = (screen) => setActive(screen);
+  const navigate = (screen, section) => {
+    setActive(screen);
+    if (screen === 'profile') {
+      setProfileSection(section || 'account');
+      setProfileKey(k => k + 1);
+    }
+  };
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', overflow: 'hidden', position: 'relative', background: WBRAND.surface }}>
@@ -65,7 +73,7 @@ function AppShell({ onLogout }) {
           onLogout={onLogout}
         />
         <main style={{ flex: 1, minHeight: 0, overflow: 'hidden', background: WBRAND.surface }}>
-          <Screen active={active} navigate={navigate} onLogout={onLogout} />
+          <Screen active={active} navigate={navigate} onLogout={onLogout} profileSection={profileSection} profileKey={profileKey} />
         </main>
       </div>
 
