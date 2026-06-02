@@ -3,9 +3,9 @@ import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, WBALANCES, WMETA } from 
 import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/primitives.jsx';
-import { WAssetSelector } from '../components/shared.jsx';
+import { WAssetSelector, WCountdown } from '../components/shared.jsx';
 
-function WithdrawVerifyModal({ step, setStep, code, setCode, channel, setChannel, codeFull, amount, asset, kind, destination, onClose, onTrack }) {
+function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, amount, asset, kind, destination, onClose, onTrack }) {
   const refs = useRef([]);
   const masked = channel === 'email' ? 'a••••t@kanzasset.com' : '+90 532 ••• 7890';
 
@@ -46,14 +46,19 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, setChannel
               </div>
             </div>
 
+            {/* Selected channel (fixed from Security settings) */}
             <div style={{ padding: '16px 24px 0' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 3, background: WBRAND.surface, borderRadius: 8 }}>
-                {[{ id: 'email', label: 'Email' }, { id: 'sms', label: 'SMS' }].map(c => {
-                  const on = channel === c.id;
-                  return (
-                    <button key={c.id} onClick={() => setChannel(c.id)} style={{ height: 32, border: 'none', cursor: 'pointer', background: on ? WBRAND.white : 'transparent', color: on ? WBRAND.ink : WBRAND.muted, borderRadius: 6, fontFamily: WFONT, fontWeight: 700, fontSize: 12, boxShadow: on ? '0 1px 2px rgba(0,0,0,0.06)' : 'none' }}>{c.label}</button>
-                  );
-                })}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, display: 'grid', placeItems: 'center', color: WBRAND.ink, flexShrink: 0 }}>
+                  {channel === 'email'
+                    ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.7"/><path d="M4 7l8 6 8-6" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/></svg>
+                    : <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="6" y="2.5" width="12" height="19" rx="2.5" stroke="currentColor" strokeWidth="1.7"/><path d="M10.5 18.5h3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink }}>Code sent via {channel === 'email' ? 'email' : 'SMS'}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{masked}</div>
+                </div>
+                <WPill tone="neutral">2FA</WPill>
               </div>
             </div>
 
@@ -76,7 +81,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, setChannel
             <div style={{ padding: '6px 24px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>Didn't get it?</span>
               <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>Resend code</button>
-              <span style={{ marginLeft: 'auto', fontFamily: WMONO, fontSize: 11, color: WBRAND.muted2 }}>expires in 04:59</span>
+              <span style={{ marginLeft: 'auto', fontSize: 11, color: WBRAND.muted2 }}><WCountdown seconds={299} prefix="expires in "/></span>
             </div>
 
             <div style={{ padding: '18px 24px 22px' }}>
@@ -143,7 +148,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
   const [verifying, setVerifying] = useState(false);
   const [verifyStep, setVerifyStep] = useState('code');
   const [code, setCode] = useState(['', '', '', '', '', '']);
-  const [channel, setChannel] = useState(getAuthChannel());
+  const channel = getAuthChannel();
 
   const cryptoWhitelist = [
     { id: 'cw-usdt', title: 'Cold wallet · USDT', sub: 'Ethereum · 0xC4e1A3…8fB9hPq', net: 'ERC-20', verified: true },
@@ -298,7 +303,6 @@ export function WebWithdraw({ navigate, initialAsset }) {
           code={code}
           setCode={setCode}
           channel={channel}
-          setChannel={setChannel}
           codeFull={codeFull}
           amount={amt}
           asset={asset}

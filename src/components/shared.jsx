@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
 
 export function WSpinner({ size = 14, color }) {
@@ -13,6 +13,17 @@ export function WSpinner({ size = 14, color }) {
       </svg>
     </>
   );
+}
+
+export function WCountdown({ seconds = 299, prefix = '' }) {
+  const [n, setN] = useState(seconds);
+  useEffect(() => {
+    const t = setInterval(() => setN(x => (x <= 0 ? 0 : x - 1)), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const mm = String(Math.floor(n / 60)).padStart(2, '0');
+  const ss = String(n % 60).padStart(2, '0');
+  return <span style={{ fontFamily: WMONO, fontVariantNumeric: 'tabular-nums' }}>{prefix}{mm}:{ss}</span>;
 }
 
 export function WTimeline({ steps, active, stamps, done }) {

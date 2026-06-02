@@ -3,7 +3,8 @@ import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
 import { WMark, AHLGMark } from '../components/coinicons.jsx';
-import { WPrimary, WSecondary } from '../components/primitives.jsx';
+import { WPrimary, WSecondary, WPill } from '../components/primitives.jsx';
+import { WCountdown } from '../components/shared.jsx';
 
 // ─── Shared centered auth shell — brand panel left, form right ──
 function WAuthLayout({ children }) {
@@ -141,7 +142,7 @@ function WebLogin({ onContinue }) {
 
 // ─── Step 2 — email / SMS verification code ───────────────────
 function WebVerify2FA({ onVerified, onBack }) {
-  const [channel, setChannel] = useState(getAuthChannel());
+  const channel = getAuthChannel();
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const refs = useRef([]);
   const masked = channel === 'email' ? 'a••••t@kanzasset.com' : '+90 532 ••• 7890';
@@ -175,18 +176,18 @@ function WebVerify2FA({ onVerified, onBack }) {
           Enter the 6-digit code we sent to <strong style={{ color: WBRAND.ink }}>{masked}</strong>.
         </p>
 
-        {/* Channel toggle */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 3, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 8, marginTop: 20 }}>
-          {[{ id: 'email', label: 'Email' }, { id: 'sms', label: 'SMS' }].map(c => {
-            const on = channel === c.id;
-            return (
-              <button key={c.id} onClick={() => setChannel(c.id)} style={{
-                height: 36, border: 'none', cursor: 'pointer',
-                background: on ? WBRAND.surface : 'transparent', color: on ? WBRAND.ink : WBRAND.muted,
-                borderRadius: 6, fontFamily: WFONT, fontWeight: 700, fontSize: 13,
-              }}>{c.label}</button>
-            );
-          })}
+        {/* Selected channel (fixed from Security settings) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 20, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, display: 'grid', placeItems: 'center', color: WBRAND.ink, flexShrink: 0 }}>
+            {channel === 'email'
+              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.7"/><path d="M4 7l8 6 8-6" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/></svg>
+              : <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="6" y="2.5" width="12" height="19" rx="2.5" stroke="currentColor" strokeWidth="1.7"/><path d="M10.5 18.5h3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink }}>Code sent via {channel === 'email' ? 'email' : 'SMS'}</div>
+            <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{masked}</div>
+          </div>
+          <WPill tone="neutral">2FA</WPill>
         </div>
 
         {/* Code inputs */}
@@ -205,7 +206,7 @@ function WebVerify2FA({ onVerified, onBack }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 14 }}>
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>Didn't get a code?</span>
           <button style={authLink}>Resend</button>
-          <span style={{ marginLeft: 'auto', fontFamily: WMONO, fontSize: 11, color: WBRAND.muted2 }}>04:59</span>
+          <span style={{ marginLeft: 'auto', fontSize: 11, color: WBRAND.muted2 }}><WCountdown seconds={299}/></span>
         </div>
 
         <WPrimary size="lg" onClick={() => full && onVerified()} style={{ width: '100%', justifyContent: 'center', marginTop: 24, opacity: full ? 1 : 0.45, pointerEvents: full ? 'auto' : 'none' }}>
