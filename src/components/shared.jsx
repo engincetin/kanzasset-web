@@ -1,0 +1,142 @@
+import { useState } from 'react';
+import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
+import { WIcon } from './icons.jsx';
+import { WCoinDot } from './coinicons.jsx';
+import { WPill, WMonoNum } from './primitives.jsx';
+
+// ─── Transaction row (used in Dashboard + Activity) ───────────
+export function WTxRow({ tx, last }) {
+  const typeIcon = {
+    Mint:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke={WBRAND.ink} strokeWidth="1.6" /><path d="M12 8v8M8 12h8" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinecap="round" /></svg>,
+    Redeem:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 19h16" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+    Deposit:  WIcon.download(WBRAND.ink),
+    Withdraw: WIcon.upload(WBRAND.ink),
+    Transfer: WIcon.swap(WBRAND.ink),
+  };
+  const pos = tx.amount > 0;
+  const date = tx.ts.slice(0, 10).split('-').reverse().join('/');
+  const time = tx.ts.slice(11, 16);
+
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1.2fr 1fr 110px',
+      gap: 12, padding: '14px 22px', alignItems: 'center',
+      borderBottom: last ? 'none' : `1px solid ${WBRAND.line}`,
+    }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: 8, background: WBRAND.surface,
+        display: 'grid', placeItems: 'center',
+      }}>{typeIcon[tx.type]}</div>
+      <div>
+        <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{tx.type}</div>
+        <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.id}</div>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <WCoinDot symbol={tx.asset} size={22} />
+        <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink }}>{tx.asset}</span>
+      </div>
+      <WMonoNum size={13} weight={500} color={pos ? WBRAND.positive : WBRAND.ink}>
+        {pos ? '+' : ''}{wfmt(tx.amount, wdecimals(tx.asset))}
+      </WMonoNum>
+      <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{tx.paid}</span>
+      <div>
+        <WMonoNum size={12}>{date}</WMonoNum>
+        <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{time}</div>
+      </div>
+      <div>
+        <WPill tone={tx.status === 'completed' ? 'positive' : tx.status === 'pending' ? 'warn' : 'negative'}>
+          {tx.status === 'completed' && WIcon.check(WBRAND.positive)}
+          {tx.status[0].toUpperCase() + tx.status.slice(1)}
+        </WPill>
+      </div>
+    </div>
+  );
+}
+
+// ─── Per-asset action button ──────────────────────────────────
+export function AssetActionBtn({ label, onClick, icon, accent = false, disabled = false }) {
+  return (
+    <button
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      title={label}
+      style={{
+        height: 28, minWidth: 76, padding: icon ? '0 10px' : '0 12px',
+        border: `1px solid ${accent ? WBRAND.red : WBRAND.line2}`,
+        background: accent ? WBRAND.red : WBRAND.white,
+        color: accent ? '#fff' : WBRAND.ink,
+        borderRadius: 6,
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.4 : 1,
+        fontFamily: WFONT, fontWeight: 600, fontSize: 11,
+        letterSpacing: '-0.005em',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+        flexShrink: 0,
+      }}>
+      {icon}
+      {label}
+    </button>
+  );
+}
+
+// ─── Asset selector pill (Mint + Redeem + Withdraw inputs) ────
+export function WAssetSelector({ value, options, onChange }) {
+  const [open, setOpen] = useState(false);
+  const sel = options.find(o => o.symbol === value) ?? options[0];
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <button onClick={() => setOpen(!open)} style={{
+        background: WBRAND.white, border: `1px solid ${WBRAND.line2}`,
+        borderRadius: 999, padding: '6px 14px 6px 6px',
+        display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
+      }}>
+        <WCoinDot symbol={sel.symbol} size={28}/>
+        <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14, color: WBRAND.ink }}>{sel.symbol}</span>
+        {WIcon.arrowDown(WBRAND.muted)}
+      </button>
+      {open && (
+        <>
+          <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 40 }}/>
+          <div style={{
+            position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+            background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
+            borderRadius: 12, padding: 6, minWidth: 240,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.08)', zIndex: 50,
+          }}>
+            {options.map(o => (
+              <button key={o.symbol} onClick={() => { onChange(o.symbol); setOpen(false); }} style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                padding: '8px 10px', borderRadius: 8, border: 'none',
+                background: o.symbol === value ? WBRAND.surface : 'transparent',
+                cursor: 'pointer', textAlign: 'left',
+              }}>
+                <WCoinDot symbol={o.symbol} size={26}/>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink }}>{o.symbol}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{o.name}</div>
+                </div>
+                <WMonoNum size={12} color={WBRAND.muted}>{wfmt(o.balance ?? 0, wdecimals(o.symbol))}</WMonoNum>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── Decorative QR ────────────────────────────────────────────
+export function FauxWebQR() {
+  const cells = [];
+  const r = 21;
+  for (let y = 0; y < r; y++) {
+    for (let x = 0; x < r; x++) {
+      const on = ((x * 53 + y * 71 + x * y * 3) % 7) > 3
+        || (x < 3 && y < 3) || (x > r - 4 && y < 3) || (x < 3 && y > r - 4);
+      if (on) cells.push(<rect key={x + ',' + y} x={x * 4} y={y * 4} width={3.5} height={3.5} fill={WBRAND.ink} rx="0.4"/>);
+    }
+  }
+  return <svg viewBox={`0 0 ${r * 4} ${r * 4}`} width="100%" height="100%">{cells}</svg>;
+}
