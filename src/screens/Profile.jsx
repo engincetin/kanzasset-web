@@ -416,7 +416,7 @@ function ProfDestinations() {
 }
 
 // ─── Add destination modal (crypto address / bank / shipping) ─
-function AddDestinationModal({ tab, onClose }) {
+export function AddDestinationModal({ tab, onClose }) {
   const [submitted, setSubmitted] = useState(false);
 
   const cfg = {
