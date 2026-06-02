@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WMark } from '../components/coinicons.jsx';
-import { WCard, WPrimary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
+import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector } from '../components/shared.jsx';
 
@@ -14,6 +14,7 @@ export function WebMint({ navigate }) {
   const [from, setFrom] = useState(sources[0]);
   const [amount, setAmount] = useState(String(WRATES.AHLG));
   const [range, setRange] = useState('3M');
+  const [minting, setMinting] = useState(false);
 
   const out = wparse(amount) * from.rate;
   const priceData = wMakePriceData(90);
@@ -33,7 +34,7 @@ export function WebMint({ navigate }) {
   const px = (v, d = 2) => `${isFiat ? '$' : ''}${wfmt(v, d)}${isFiat ? '' : ' ' + quote}`;
 
   return (
-    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
+    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
       <div style={{ marginBottom: 20 }}>
         <WEyebrow>Mint AHLG</WEyebrow>
         <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Convert cash to vaulted gold</h1>
@@ -112,7 +113,7 @@ export function WebMint({ navigate }) {
             </div>
           </WCard>
 
-          <WPrimary size="lg" style={{ width: '100%', justifyContent: 'center' }}>
+          <WPrimary size="lg" onClick={() => setMinting(true)} style={{ width: '100%', justifyContent: 'center' }}>
             Mint {wfmt(out, 4)} AHLG
           </WPrimary>
 
@@ -185,6 +186,139 @@ export function WebMint({ navigate }) {
               </div>
             ))}
           </WCard>
+        </div>
+      </div>
+
+      {minting && (
+        <MintProgressModal
+          amount={out}
+          from={from}
+          paid={wparse(amount)}
+          onClose={() => setMinting(false)}
+          onTrack={() => { setMinting(false); navigate('activity'); }}
+        />
+      )}
+    </div>
+  );
+}
+
+function WSpinner() {
+  return (
+    <>
+      <style>{`@keyframes wspin{to{transform:rotate(360deg)}}`}</style>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ animation: 'wspin .8s linear infinite' }}>
+        <circle cx="12" cy="12" r="9" stroke={WBRAND.redSoft} strokeWidth="3"/>
+        <path d="M12 3a9 9 0 0 1 9 9" stroke={WBRAND.red} strokeWidth="3" strokeLinecap="round"/>
+      </svg>
+    </>
+  );
+}
+
+function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
+  const STEPS = [
+    { id: 'submitted', title: 'Mint request received', sub: 'Order accepted and queued' },
+    { id: 'locked',    title: 'Payment locked',         sub: () => `${wfmt(paid, wdecimals(from.symbol))} ${from.symbol} reserved from balance` },
+    { id: 'minting',   title: 'Minting on-chain',       sub: 'Issuing tokens against vaulted gold' },
+    { id: 'done',      title: 'AHLG minted',            sub: () => `${wfmt(amount, 4)} AHLG credited to your wallet` },
+  ];
+  const [active, setActive] = useState(0);
+  const [stamps, setStamps] = useState({});
+  const ref = 'MT-' + Math.floor(100000 + Math.random() * 899999);
+
+  useEffect(() => {
+    const now = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    setStamps(s => ({ ...s, 0: now() }));
+    const delays = [900, 1700, 6700];
+    const timers = delays.map((d, i) =>
+      setTimeout(() => { setActive(i + 1); setStamps(s => ({ ...s, [i + 1]: now() })); }, d)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const done = active >= STEPS.length - 1;
+
+  return (
+    <div onClick={done ? onClose : undefined} style={{
+      position: 'fixed', inset: 0, zIndex: 100,
+      background: 'rgba(10,10,10,0.42)',
+      display: 'grid', placeItems: 'center', padding: 24,
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: 440, maxWidth: '100%', background: WBRAND.white,
+        borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
+      }}>
+        {/* Header */}
+        <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 20, background: WBRAND.white, border: `1.5px solid ${WBRAND.red}`, display: 'grid', placeItems: 'center' }}>
+                <WMark size={22}/>
+              </div>
+              <div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? 'Mint complete' : 'Minting'}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{wfmt(amount, 4)} AHLG</div>
+              </div>
+            </div>
+            <WMonoNum size={11} color={WBRAND.muted}>{ref}</WMonoNum>
+          </div>
+        </div>
+
+        {/* Timeline */}
+        <div style={{ padding: '20px 24px 8px' }}>
+          {STEPS.map((s, i) => {
+            const isDone = i < active || (i === STEPS.length - 1 && done);
+            const isCurrent = i === active && !isDone;
+            const reached = i <= active;
+            const stamp = stamps[i];
+            const sub = typeof s.sub === 'function' ? s.sub() : s.sub;
+            return (
+              <div key={s.id} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', alignSelf: 'stretch' }}>
+                  <div style={{
+                    width: 26, height: 26, borderRadius: 13, flexShrink: 0,
+                    display: 'grid', placeItems: 'center',
+                    background: isDone ? WBRAND.positive : isCurrent ? WBRAND.redSoft : WBRAND.surface,
+                    border: isCurrent ? `1.5px solid ${WBRAND.red}` : 'none',
+                    transition: 'all .3s ease',
+                  }}>
+                    {isDone
+                      ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      : isCurrent
+                        ? <WSpinner/>
+                        : <span style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.muted }}/>}
+                  </div>
+                  {i < STEPS.length - 1 && (
+                    <div style={{ width: 2, flex: 1, minHeight: 26, background: i < active ? WBRAND.positive : WBRAND.line, transition: 'background .3s ease' }}/>
+                  )}
+                </div>
+                <div style={{ flex: 1, paddingBottom: i < STEPS.length - 1 ? 18 : 8, opacity: reached ? 1 : 0.45 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>
+                    <span style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{s.title}</span>
+                    {stamp && <WMonoNum size={11} color={WBRAND.muted}>{stamp}</WMonoNum>}
+                  </div>
+                  <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3, lineHeight: 1.45 }}>{sub}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding: '8px 24px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {done ? (
+            <>
+              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>
+                Track in Activity
+              </WPrimary>
+              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>
+                Done
+              </WSecondary>
+            </>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 0', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>
+              You can safely close this — minting continues in the background.
+            </div>
+          )}
         </div>
       </div>
     </div>
