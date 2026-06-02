@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { AHLGMark } from '../components/coinicons.jsx';
-import { WCard, WPrimary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
+import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
-import { WAssetSelector } from '../components/shared.jsx';
+import { WAssetSelector, WTimeline } from '../components/shared.jsx';
 
 function RedeemDigital({ targets, to, setTo }) {
   const [amount, setAmount] = useState('1');
+  const [redeeming, setRedeeming] = useState(false);
   const out = wparse(amount) * to.rate;
 
   return (
@@ -72,41 +73,103 @@ function RedeemDigital({ targets, to, setTo }) {
         </div>
       </WCard>
 
-      <WPrimary size="lg" style={{ width: '100%', justifyContent: 'center' }}>
+      <WPrimary size="lg" onClick={() => setRedeeming(true)} style={{ width: '100%', justifyContent: 'center' }}>
         Redeem {wfmt(out, wdecimals(to.symbol))} {to.symbol}
       </WPrimary>
+
+      {redeeming && (
+        <RedeemDigitalModal
+          burn={wparse(amount)}
+          out={out}
+          to={to}
+          onClose={() => setRedeeming(false)}
+          onTrack={() => setRedeeming(false)}
+        />
+      )}
     </>
   );
 }
 
-function RedeemPhysicalWeb() {
-  const maxKg = Math.max(1, Math.floor(WBALANCES.AHLG / 1000));
-  const [kgPicked, setKgPicked] = useState(1);
-  const [addrId, setAddrId] = useState('h');
+function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
+  const STEPS = [
+    { id: 'submitted', title: 'Redeem request received', sub: 'Order accepted and queued' },
+    { id: 'settling',  title: 'Settling to balance',     sub: () => `Converting at 1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
+    { id: 'credited',  title: 'Funds credited',          sub: () => `${wfmt(out, wdecimals(to.symbol))} ${to.symbol} added to your wallet` },
+    { id: 'burning',   title: 'Burning AHLG',            sub: () => `${wfmt(burn, 4)} AHLG removed from circulation` },
+  ];
+  const [active, setActive] = useState(0);
+  const [stamps, setStamps] = useState({});
+  const ref = 'RD-' + Math.floor(100000 + Math.random() * 899999);
 
+  useEffect(() => {
+    const now = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    setStamps(s => ({ ...s, 0: now() }));
+    const delays = [900, 1900, 3000];
+    const timers = delays.map((d, i) =>
+      setTimeout(() => { setActive(i + 1); setStamps(s => ({ ...s, [i + 1]: now() })); }, d)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const done = active >= STEPS.length - 1;
+
+  return (
+    <div onClick={done ? onClose : undefined} style={{
+      position: 'fixed', inset: 0, zIndex: 100,
+      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24,
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: 440, maxWidth: '100%', background: WBRAND.white,
+        borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
+      }}>
+        <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <AHLGMark size={40}/>
+              <div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? 'Redeem complete' : 'Redeeming'}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{wfmt(out, wdecimals(to.symbol))} {to.symbol}</div>
+              </div>
+            </div>
+            <WMonoNum size={11} color={WBRAND.muted2}>{ref}</WMonoNum>
+          </div>
+        </div>
+
+        <div style={{ padding: '20px 24px 8px' }}>
+          <WTimeline steps={STEPS} active={active} stamps={stamps} done={done}/>
+        </div>
+
+        <div style={{ padding: '8px 24px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {done ? (
+            <>
+              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>Track in Activity</WPrimary>
+              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>Done</WSecondary>
+            </>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 0', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>
+              You can safely close this — settlement continues in the background.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RedeemPhysicalWeb() {
   const addresses = [
     { id: 'h', label: 'Home',     city: 'Dubai',    line: 'Marina Plaza, Tower 1, Apt 2208',   country: 'UAE' },
     { id: 'o', label: 'Office',   city: 'Dubai',    line: 'DMCC Almas Tower, Floor 38',        country: 'UAE' },
     { id: 'i', label: 'Istanbul', city: 'Istanbul', line: 'Levent Mah. Büyükdere Cad. No:185', country: 'Türkiye' },
   ];
+  const maxKg = Math.max(1, Math.floor(WBALANCES.AHLG / 1000));
+  const [kgPicked, setKgPicked] = useState(1);
+  const [addrId, setAddrId] = useState('h');
+  const [shipping, setShipping] = useState(false);
+  const addr = addresses.find(a => a.id === addrId);
 
   return (
     <>
-      <div style={{ padding: '20px 22px', background: WBRAND.ink, color: '#fff', borderRadius: 16, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: 120, background: WBRAND.red, opacity: 0.18, filter: 'blur(50px)' }}/>
-        <div style={{ position: 'relative' }}>
-          <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>Available to redeem</div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 12 }}>
-            <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 38, color: '#fff', letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(WBALANCES.AHLG, 0)}</span>
-            <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 16, color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.01em' }}>AHLG</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
-            <WPill tone="inkInv" style={{ fontSize: 11, padding: '4px 9px', background: 'rgba(255,255,255,0.14)', color: '#fff' }}>{(WBALANCES.AHLG / 1000).toFixed(2)} kg total</WPill>
-            <span style={{ fontFamily: WFONT, fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AHLG * WRATES.AHLG)}</span>
-          </div>
-        </div>
-      </div>
-
       <WCard padding={0}>
         <div style={{ padding: '20px 22px 22px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -168,12 +231,12 @@ function RedeemPhysicalWeb() {
         </div>
         <div style={{ padding: '4px 22px 8px' }}>
           {[
-            { l: 'Bar',                v: `${kgPicked} × 1 kg · 999.5 fine` },
-            { l: 'Burned',             v: `${wfmt(kgPicked * 1000, 4)} AHLG` },
-            { l: 'Casting',            v: 'Ahlatci Gold Refinery' },
-            { l: 'Shipping',           v: 'Brinks · AED 120' },
-            { l: 'Insurance',          v: 'Included' },
-            { l: 'Estimated arrival',  v: '3–5 business days' },
+            { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 fine` },
+            { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 4)} AHLG` },
+            { l: 'Casting',           v: 'Ahlatci Gold Refinery' },
+            { l: 'Shipping',          v: 'Brinks · AED 120' },
+            { l: 'Insurance',         v: 'Included' },
+            { l: 'Estimated arrival', v: '3–5 business days' },
           ].map((r, i, arr) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
               <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.l}</span>
@@ -183,7 +246,7 @@ function RedeemPhysicalWeb() {
         </div>
       </WCard>
 
-      <WPrimary size="lg" style={{ width: '100%', justifyContent: 'center' }}>
+      <WPrimary size="lg" onClick={() => setShipping(true)} style={{ width: '100%', justifyContent: 'center' }}>
         Request {kgPicked} kg delivery
       </WPrimary>
 
@@ -193,7 +256,125 @@ function RedeemPhysicalWeb() {
           Bars are cast by Ahlatci Gold Refinery, sealed with tamper-evident packaging, and shipped with a serialised assay certificate. Delivery requires ID verification at the door.
         </div>
       </div>
+
+      {shipping && (
+        <RedeemPhysicalModal
+          kg={kgPicked}
+          addr={addr}
+          onClose={() => setShipping(false)}
+          onTrack={() => setShipping(false)}
+        />
+      )}
     </>
+  );
+}
+
+function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
+  const STEPS = [
+    { id: 'submitted', title: 'Delivery request received', sub: () => `${kg} × 1 kg bar${kg > 1 ? 's' : ''} · ship to ${addr ? addr.label + ', ' + addr.city : 'your address'}` },
+    { id: 'handover',  title: 'Handed to carrier',         sub: 'Brinks Secure Logistics · insured in transit' },
+    { id: 'burning',   title: 'Burning AHLG',              sub: () => `${wfmt(kg * 1000, 4)} AHLG removed from circulation` },
+    { id: 'done',      title: 'Shipped — tracking ready',  sub: 'Your bars are on the way' },
+  ];
+  const [active, setActive] = useState(0);
+  const [stamps, setStamps] = useState({});
+  const orderRef = 'PD-' + Math.floor(100000 + Math.random() * 899999);
+  const tracking = 'BRX' + Math.floor(100000000 + Math.random() * 899999999) + 'AE';
+
+  useEffect(() => {
+    const now = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    setStamps(s => ({ ...s, 0: now() }));
+    const delays = [900, 4500, 5800];
+    const timers = delays.map((d, i) =>
+      setTimeout(() => { setActive(i + 1); setStamps(s => ({ ...s, [i + 1]: now() })); }, d)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const done = active >= STEPS.length - 1;
+
+  return (
+    <div onClick={done ? onClose : undefined} style={{
+      position: 'fixed', inset: 0, zIndex: 100,
+      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24,
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: 460, maxWidth: '100%', background: WBRAND.white,
+        borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
+        maxHeight: '88vh', display: 'flex', flexDirection: 'column',
+      }}>
+        <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <rect x="2.5" y="7" width="13" height="11" rx="1.5" stroke={WBRAND.ink} strokeWidth="1.7"/>
+                  <path d="M15.5 10h3.2c.5 0 .96.27 1.2.7l1.3 2.3c.13.23.2.5.2.76V17a1 1 0 0 1-1 1h-5.9" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/>
+                  <circle cx="6.5" cy="18.5" r="1.8" stroke={WBRAND.ink} strokeWidth="1.7"/>
+                  <circle cx="17.5" cy="18.5" r="1.8" stroke={WBRAND.ink} strokeWidth="1.7"/>
+                </svg>
+              </div>
+              <div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? 'Order shipped' : 'Processing delivery'}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{kg} kg physical gold</div>
+              </div>
+            </div>
+            <WMonoNum size={11} color={WBRAND.muted2}>{orderRef}</WMonoNum>
+          </div>
+        </div>
+
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+          <div style={{ padding: '20px 24px 8px' }}>
+            <WTimeline steps={STEPS} active={active} stamps={stamps} done={done}/>
+          </div>
+
+          {done && (
+            <div style={{ padding: '4px 24px 20px' }}>
+              <div style={{ border: `1px solid ${WBRAND.line}`, borderRadius: 12, overflow: 'hidden' }}>
+                <div style={{ padding: '14px 16px', background: WBRAND.surface2, borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 6, background: WBRAND.ink, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 10, color: '#fff', letterSpacing: '0.04em' }}>BRX</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>Brinks Secure Logistics</div>
+                    <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>Fully insured · signature on delivery</div>
+                  </div>
+                  <WPill tone="warn">In transit</WPill>
+                </div>
+                <div style={{ padding: '14px 16px' }}>
+                  <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Tracking number</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
+                    <WMonoNum size={15} weight={500} style={{ flex: 1 }}>{tracking}</WMonoNum>
+                    <WSecondary size="sm" icon={WIcon.copy(WBRAND.ink)}>Copy</WSecondary>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14, paddingTop: 12, borderTop: `1px dashed ${WBRAND.line}` }}>
+                    <div>
+                      <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Ships to</div>
+                      <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, marginTop: 3 }}>{addr ? `${addr.label} · ${addr.city}` : '—'}</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Est. arrival</div>
+                      <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, marginTop: 3 }}>3–5 business days</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div style={{ padding: '14px 24px 20px', flexShrink: 0, borderTop: done ? `1px solid ${WBRAND.line}` : 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {done ? (
+            <>
+              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>Track in Activity</WPrimary>
+              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>Done</WSecondary>
+            </>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '8px 0', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>
+              Preparing your shipment — a tracking number will appear here shortly.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -226,6 +407,25 @@ export function WebRedeem({ navigate }) {
           <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
             Burn AHLG tokens to receive instant settlement in your Kanzasset balance, or request physical delivery to your address.
           </div>
+        </div>
+      </div>
+
+      {/* Available to redeem — shared across digital + physical */}
+      <div style={{ padding: '20px 24px', marginBottom: 16, background: WBRAND.ink, color: '#fff', borderRadius: 16, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: 120, background: WBRAND.red, opacity: 0.18, filter: 'blur(50px)' }}/>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>Available to redeem</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 12 }}>
+              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 38, color: '#fff', letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(WBALANCES.AHLG, 0)}</span>
+              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 16, color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.01em' }}>AHLG</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+              <WPill tone="inkInv" style={{ fontSize: 11, padding: '4px 9px', background: 'rgba(255,255,255,0.14)', color: '#fff' }}>{(WBALANCES.AHLG / 1000).toFixed(2)} kg total</WPill>
+              <span style={{ fontFamily: WFONT, fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AHLG * WRATES.AHLG)}</span>
+            </div>
+          </div>
+          <AHLGMark size={48}/>
         </div>
       </div>
 

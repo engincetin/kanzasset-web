@@ -1,5 +1,65 @@
 import { useState } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
+
+export function WSpinner({ size = 14, color }) {
+  const arc = color || WBRAND.red;
+  const track = color ? `${color}33` : WBRAND.redSoft;
+  return (
+    <>
+      <style>{`@keyframes wspin{to{transform:rotate(360deg)}}`}</style>
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ animation: 'wspin .8s linear infinite', flexShrink: 0 }}>
+        <circle cx="12" cy="12" r="9" stroke={track} strokeWidth="3"/>
+        <path d="M12 3a9 9 0 0 1 9 9" stroke={arc} strokeWidth="3" strokeLinecap="round"/>
+      </svg>
+    </>
+  );
+}
+
+export function WTimeline({ steps, active, stamps, done }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {steps.map((s, i) => {
+        const isStepDone = i < active || (i === steps.length - 1 && done);
+        const isCurrent = i === active && !isStepDone;
+        const isPending = !isStepDone && !isCurrent;
+        const isLast = i === steps.length - 1;
+        const sub = typeof s.sub === 'function' ? s.sub() : s.sub;
+        return (
+          <div key={s.id} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', alignSelf: 'stretch' }}>
+              <div style={{
+                width: 26, height: 26, borderRadius: 13, flexShrink: 0,
+                display: 'grid', placeItems: 'center',
+                background: isStepDone ? WBRAND.positive : isCurrent ? WBRAND.redSoft : WBRAND.surface,
+                border: isCurrent ? `1.5px solid ${WBRAND.red}` : 'none',
+              }}>
+                {isStepDone ? (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12l5 5 9-9" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                ) : isCurrent ? (
+                  <WSpinner size={13}/>
+                ) : (
+                  <div style={{ width: 7, height: 7, borderRadius: 4, background: WBRAND.line2 }}/>
+                )}
+              </div>
+              {!isLast && (
+                <div style={{ flex: 1, width: 2, background: isStepDone ? WBRAND.positive : WBRAND.line, minHeight: 20, marginTop: 3 }}/>
+              )}
+            </div>
+            <div style={{ flex: 1, paddingBottom: isLast ? 4 : 22, paddingTop: 2 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: isPending ? WBRAND.muted : WBRAND.ink, letterSpacing: '-0.01em' }}>{s.title}</span>
+                {stamps[i] && <span style={{ fontFamily: WMONO, fontSize: 11, color: WBRAND.muted2 }}>{stamps[i]}</span>}
+              </div>
+              <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3, lineHeight: 1.45 }}>{sub}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 import { WIcon } from './icons.jsx';
 import { WCoinDot } from './coinicons.jsx';
 import { WPill, WMonoNum } from './primitives.jsx';

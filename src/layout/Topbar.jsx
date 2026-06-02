@@ -3,7 +3,7 @@ import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WPill } from '../components/primitives.jsx';
 
-export function WTopbar({ title, sub, onNavigate, onOpenNotifs }) {
+export function WTopbar({ title, sub, onNavigate, onNotifs }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState('Light');
 
@@ -27,7 +27,7 @@ export function WTopbar({ title, sub, onNavigate, onOpenNotifs }) {
         </div>
       </div>
 
-      <button onClick={onOpenNotifs} style={{
+      <button onClick={onNotifs} style={{
         width: 38, height: 38, borderRadius: 8,
         background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
         display: 'grid', placeItems: 'center', cursor: 'pointer',
