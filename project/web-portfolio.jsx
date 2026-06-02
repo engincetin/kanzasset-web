@@ -1,0 +1,668 @@
+// ─── Portfolio dashboard ──────────────────────────────────────
+// Big balance + chart + AHLG focus + assets table + recent activity + vault status
+
+const { useState: useWState } = React;
+
+function WebPortfolio({ navigate }) {
+  const [currency, setCurrency] = useWState('USDT');
+  const [currencyOpen, setCurrencyOpen] = useWState(false);
+  const [range, setRange] = useWState('3M');
+  const [quote, setQuote] = useWState('USDT');
+  const [quoteOpen, setQuoteOpen] = useWState(false);
+
+  const total = wTotalIn(currency);
+  const totalAed = wTotalIn('AED');
+
+  // Asset list (consolidated crypto + fiat), sorted by value — include zero balances
+  const assets = Object.keys(WBALANCES).
+  map((s) => {
+    const bal = WBALANCES[s];
+    const valUSDT = bal * WRATES[s];
+    return {
+      symbol: s, name: WMETA[s].name, kind: WMETA[s].kind,
+      balance: bal, valUSDT,
+      pct24h: s === 'AHLG' ? 0.24 : s === 'USDT' ? 0.00 : s === 'USDC' ? -0.01 : 0.08,
+      alloc: 0 // filled below
+    };
+  }).
+  sort((a, b) => b.valUSDT - a.valUSDT);
+  const sumUSDT = assets.reduce((a, c) => a + c.valUSDT, 0);
+  assets.forEach((a) => {a.alloc = a.valUSDT / sumUSDT * 100;});
+
+  // Composition by kind (gold / crypto / fiat)
+  const BALANCES_BY_KIND = {
+    gold: assets.filter((a) => a.symbol === 'AHLG').reduce((s, a) => s + a.valUSDT, 0),
+    crypto: assets.filter((a) => a.kind === 'crypto' && a.symbol !== 'AHLG').reduce((s, a) => s + a.valUSDT, 0),
+    fiat: assets.filter((a) => a.kind === 'fiat').reduce((s, a) => s + a.valUSDT, 0)
+  };
+
+  const priceData = wMakePriceData(90);
+
+  // Quote pair conversion — base series is in USDT, scale by AHLG→quote rate.
+  const QUOTES = ['USDT', 'USDC', 'USD', 'AED', 'EUR', 'GBP'];
+  const quoteRate = WRATES[quote] || 1;
+  const quotedPriceData = priceData.map((d) => ({ t: d.t, v: d.v / quoteRate }));
+  const quotedSpot = WRATES.AHLG / quoteRate;
+  const quotedFirst = quotedPriceData[0].v;
+  const quotedDiff = quotedSpot - quotedFirst;
+  const quotedPct = quotedDiff / quotedFirst * 100;
+
+  return (
+    <div style={{ padding: '28px 32px 48px', minHeight: '100%' }}>
+
+      {/* ── Hero row: Total + AHLG holdings ─────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 20, marginBottom: 20 }}>
+
+        {/* Total portfolio */}
+        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ padding: '24px 28px 24px', flex: 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <WEyebrow>Total portfolio value</WEyebrow>
+              <div style={{ position: 'relative' }}>
+                <button onClick={() => setCurrencyOpen(!currencyOpen)} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  background: WBRAND.surface, border: 'none', padding: '4px 10px', borderRadius: 6,
+                  fontFamily: WFONT, fontWeight: 700, fontSize: 12, color: WBRAND.ink,
+                  cursor: 'pointer', letterSpacing: '0.02em'
+                }}>
+                  {currency}
+                  {WIcon.arrowDown(WBRAND.muted)}
+                </button>
+                {currencyOpen &&
+                <>
+                    <div onClick={() => setCurrencyOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 40 }} />
+                    <div style={{
+                    position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+                    background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
+                    borderRadius: 10, padding: 6, minWidth: 220, zIndex: 50,
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.08)'
+                  }}>
+                      {[
+                    { label: 'Crypto', items: ['USDT', 'USDC', 'AHLG'] },
+                    { label: 'Fiat', items: ['USD', 'AED', 'EUR', 'GBP'] }].
+                    map((grp, gi) =>
+                    <div key={grp.label} style={{
+                      marginTop: gi > 0 ? 4 : 0,
+                      paddingTop: gi > 0 ? 4 : 0,
+                      borderTop: gi > 0 ? `1px solid ${WBRAND.line}` : 'none'
+                    }}>
+                          <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px 4px' }}>{grp.label}</div>
+                          {grp.items.map((c) => {
+                        const on = c === currency;
+                        const v = wTotalIn(c);
+                        return (
+                          <button key={c} onClick={() => {setCurrency(c);setCurrencyOpen(false);}} style={{
+                            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                            padding: '8px 10px', borderRadius: 6, border: 'none',
+                            background: on ? WBRAND.surface : 'transparent',
+                            cursor: 'pointer', textAlign: 'left'
+                          }}>
+                                <span style={{ flex: 1, fontFamily: WFONT, fontSize: 12, fontWeight: on ? 700 : 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{c}</span>
+                                <WMonoNum size={11} color={on ? WBRAND.ink : WBRAND.muted}>{wfmt(v, wdecimals(c))}</WMonoNum>
+                              </button>);
+
+                      })}
+                        </div>
+                    )}
+                    </div>
+                  </>
+                }
+              </div>
+            </div>
+
+            <div style={{
+              display: 'flex', alignItems: 'baseline', gap: 12, marginTop: 14
+            }}>
+              <span style={{
+                fontFamily: WFONT, fontWeight: 800, fontSize: 52,
+                color: WBRAND.ink, letterSpacing: '-0.04em',
+                fontVariantNumeric: 'tabular-nums', lineHeight: 1
+              }}>{wfmt(total, wdecimals(currency))}</span>
+              <span style={{
+                fontFamily: WFONT, fontWeight: 700, fontSize: 18, color: WBRAND.muted,
+                letterSpacing: '-0.01em'
+              }}>{currency}</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
+              <WPill tone="positive" style={{ fontSize: 12, padding: '5px 10px' }}>
+                <span style={{ fontVariantNumeric: 'tabular-nums' }}>▲ +2.81%</span>
+              </WPill>
+              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.positive, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
+                +{wfmt(total * 0.0281, wdecimals(currency))} {currency}
+              </span>
+              {currency !== 'AED' &&
+              <>
+                  <span style={{ width: 1, height: 12, background: WBRAND.line }} />
+                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontVariantNumeric: 'tabular-nums' }}>
+                    ≈ AED {wfmt(totalAed)}
+                  </span>
+                </>
+              }
+            </div>
+          </div>
+
+          {/* KPI strip — fixed height for alignment with AHLG card footer */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+            borderTop: `1px solid ${WBRAND.line}`,
+            height: 80, flexShrink: 0
+          }}>
+            {[
+            { l: '24 hours', v: '+0.24%', abs: '+1,130 USDT' },
+            { l: '7 days', v: '+1.92%', abs: '+8,856 USDT' },
+            { l: '30 days', v: '+4.41%', abs: '+19,892 USDT' },
+            { l: 'All-time', v: '+18.32%', abs: '+72,948 USDT' }].
+            map((k, i) =>
+            <div key={i} style={{
+              padding: '12px 18px',
+              borderRight: i < 3 ? `1px solid ${WBRAND.line}` : 'none',
+              display: 'flex', flexDirection: 'column', justifyContent: 'center'
+            }}>
+                <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{k.l}</div>
+                <div style={{
+                fontFamily: WFONT, fontSize: 16, fontWeight: 800,
+                color: WBRAND.positive,
+                fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.015em',
+                marginTop: 4
+              }}>{k.v}</div>
+                <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, fontWeight: 500, marginTop: 2 }}>{k.abs}</div>
+              </div>
+            )}
+          </div>
+        </WCard>
+
+        {/* AHLG holdings */}
+        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{
+            padding: '24px 28px 24px', flex: 1,
+            background: WBRAND.ink, color: '#fff',
+            borderTopLeftRadius: 16, borderTopRightRadius: 16,
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <div style={{
+              position: 'absolute', top: -80, right: -80,
+              width: 240, height: 240, borderRadius: 120,
+              background: WBRAND.red, opacity: 0.18, filter: 'blur(50px)'
+            }} />
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                fontFamily: WFONT, fontSize: 11, fontWeight: 700,
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.55)'
+              }}>AHL Gold holdings</div>
+            </div>
+
+            <div style={{
+              display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative'
+            }}>
+              <span style={{
+                fontFamily: WFONT, fontWeight: 800, fontSize: 52, color: '#fff',
+                letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1
+              }}>2,500</span>
+              <span style={{
+                fontFamily: WFONT, fontWeight: 700, fontSize: 18, color: 'rgba(255,255,255,0.55)',
+                letterSpacing: '-0.01em'
+              }}>AHLG</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative' }}>
+              <WPill tone="inkInv" style={{ fontSize: 12, padding: '5px 10px', background: 'rgba(255,255,255,0.14)', color: '#fff' }}>
+                2.5 kg in vault
+              </WPill>
+              <span style={{
+                fontFamily: WFONT, fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 700,
+                fontVariantNumeric: 'tabular-nums'
+              }}>≈ $378,900.00</span>
+            </div>
+          </div>
+
+          {/* AHLG price + actions — same fixed height as Total card KPI strip */}
+          <div style={{
+            height: 80, flexShrink: 0,
+            padding: '0 24px',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+          }}>
+            <div>
+              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>AHLG price</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 4 }}>
+                <WNum size={18} weight={800} style={{ letterSpacing: '-0.02em' }}>$151.56</WNum>
+                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.positive, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>+0.24%</span>
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              <WPrimary
+                size="md"
+                onClick={() => navigate('mint')}
+                style={{ width: '100%', justifyContent: 'center' }}
+                icon={
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                    <path d="M12 9v6M9 12h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </svg>
+                }>
+                Mint</WPrimary>
+              <WSecondary
+                size="md"
+                onClick={() => navigate('redeem')}
+                style={{ width: '100%', justifyContent: 'center', height: 44 }}
+                icon={
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="8" width="18" height="4" rx="1" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                    <path d="M5 12v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                    <path d="M12 8v13" stroke="currentColor" strokeWidth="1.8" />
+                  </svg>
+                }>
+                Redeem</WSecondary>
+            </div>
+          </div>
+        </WCard>
+      </div>
+
+      {/* ── AHLG/USDT price chart ───────────────────────────── */}
+      <WCard padding={0} style={{ marginBottom: 20 }}>
+        <div style={{
+          padding: '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`,
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'
+        }}>
+          <div>
+            {/* Pair selector */}
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <button onClick={() => setQuoteOpen(!quoteOpen)} style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                background: WBRAND.surface, border: 'none', padding: '6px 12px', borderRadius: 6,
+                cursor: 'pointer',
+                fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em'
+              }}>
+                <span>AHLG / {quote}</span>
+                {WIcon.arrowDown(WBRAND.muted)}
+              </button>
+              {quoteOpen &&
+              <>
+                  <div onClick={() => setQuoteOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 40 }} />
+                  <div style={{
+                  position: 'absolute', top: 'calc(100% + 8px)', left: 0,
+                  background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
+                  borderRadius: 10, padding: 6, minWidth: 220, zIndex: 50,
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.08)'
+                }}>
+                    {[
+                  { label: 'Crypto', items: ['USDT', 'USDC'] },
+                  { label: 'Fiat', items: ['USD', 'AED', 'EUR', 'GBP'] }].
+                  map((grp, gi) =>
+                  <div key={grp.label} style={{
+                    marginTop: gi > 0 ? 4 : 0,
+                    paddingTop: gi > 0 ? 4 : 0,
+                    borderTop: gi > 0 ? `1px solid ${WBRAND.line}` : 'none'
+                  }}>
+                        <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px 4px' }}>{grp.label}</div>
+                        {grp.items.map((q) => {
+                      const on = q === quote;
+                      const r = WRATES.AHLG / (WRATES[q] || 1);
+                      return (
+                        <button key={q} onClick={() => {setQuote(q);setQuoteOpen(false);}} style={{
+                          width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                          padding: '8px 10px', borderRadius: 6, border: 'none',
+                          background: on ? WBRAND.surface : 'transparent',
+                          cursor: 'pointer', textAlign: 'left'
+                        }}>
+                              <span style={{ flex: 1, fontFamily: WFONT, fontSize: 12, fontWeight: on ? 700 : 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>
+                                AHLG / {q}
+                              </span>
+                              <WMonoNum size={11} color={on ? WBRAND.ink : WBRAND.muted}>{wfmt(r, 2)}</WMonoNum>
+                            </button>);
+
+                    })}
+                      </div>
+                  )}
+                  </div>
+                </>
+              }
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
+              <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>
+                {quote === 'USDT' || quote === 'USDC' || quote === 'USD' ? '$' : ''}{wfmt(quotedSpot, 2)}
+              </WNum>
+              <span style={{ fontFamily: WFONT, fontSize: 13, color: quotedPct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
+                {quotedPct >= 0 ? '+' : ''}{wfmt(quotedDiff, 2)} ({quotedPct >= 0 ? '+' : ''}{wfmt(quotedPct, 2)}%)
+              </span>
+            </div>
+          </div>
+          <WRangeTabs value={range} onChange={setRange} />
+        </div>
+        <div style={{ padding: '12px 16px 18px' }}>
+          <WPriceChart data={quotedPriceData} width={1300} height={280} color={WBRAND.red} />
+        </div>
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)',
+          borderTop: `1px solid ${WBRAND.line}`
+        }}>
+          {(() => {
+            const vals = quotedPriceData.map((d) => d.v);
+            const open = vals[0];
+            const high = Math.max(...vals);
+            const low = Math.min(...vals);
+            const prefix = quote === 'USDT' || quote === 'USDC' || quote === 'USD' ? '$' : '';
+            return [
+            { l: 'Open', v: `${prefix}${wfmt(open, 2)}` },
+            { l: 'High', v: `${prefix}${wfmt(high, 2)}` },
+            { l: 'Low', v: `${prefix}${wfmt(low, 2)}` },
+            { l: 'Volume 24h', v: '$8.41M' },
+            { l: 'Market cap', v: '$21.6M' }];
+
+          })().map((k, i) =>
+          <div key={i} style={{
+            padding: '14px 20px',
+            borderRight: i < 4 ? `1px solid ${WBRAND.line}` : 'none'
+          }}>
+              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{k.l}</div>
+              <WMonoNum size={14} style={{ marginTop: 4, display: 'block' }}>{k.v}</WMonoNum>
+            </div>
+          )}
+        </div>
+      </WCard>
+
+      {/* ── Bottom row: Top holdings + Side panels ──────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20 }}>
+
+        {/* Top holdings (compact) */}
+        <WCard padding={0}>
+          <div style={{
+            padding: '18px 22px 14px',
+            borderBottom: `1px solid ${WBRAND.line}`,
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+          }}>
+            <WSectionTitle title="Balances" sub={`${assets.length} assets · sorted by value`} style={{ marginBottom: 0 }} />
+            <button onClick={() => navigate('wallet')} style={{
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red,
+              display: 'flex', alignItems: 'center', gap: 4
+            }}>View full wallet {WIcon.arrowRight(WBRAND.red)}</button>
+          </div>
+
+          {/* Header */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '2fr 1.2fr 1.2fr 0.7fr 1fr 200px',
+            gap: 12, padding: '10px 22px',
+            borderBottom: `1px solid ${WBRAND.line}`,
+            background: WBRAND.surface2
+          }}>
+            {['Asset', 'Balance', 'Value', '24h', 'Allocation', 'Actions'].map((h, i) =>
+            <div key={i} style={{
+              fontFamily: WFONT, fontSize: 10, fontWeight: 700,
+              color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase',
+              textAlign: i >= 1 && i <= 3 ? 'right' : i === 5 ? 'right' : 'left'
+            }}>{h}</div>
+            )}
+          </div>
+
+          {/* All assets — zero balances faded, with action buttons */}
+          {assets.map((a, i, arr) => {
+            const isAhlg = a.symbol === 'AHLG';
+            const zero = a.balance === 0;
+            return (
+              <div key={a.symbol} style={{
+                display: 'grid',
+                gridTemplateColumns: '2fr 1.2fr 1.2fr 0.7fr 1fr 200px',
+                gap: 12, padding: '14px 22px', alignItems: 'center',
+                borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: zero ? 0.65 : 1 }}>
+                  <WCoinDot symbol={a.symbol} size={32} />
+                  <div>
+                    <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{a.name}</div>
+                    <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 500, marginTop: 1 }}>{a.symbol} · {a.kind}</div>
+                  </div>
+                </div>
+                <WMonoNum size={13} color={zero ? WBRAND.muted2 : WBRAND.ink} style={{ textAlign: 'right' }}>{wfmt(a.balance, wdecimals(a.symbol))}</WMonoNum>
+                <WMonoNum size={13} weight={600} color={zero ? WBRAND.muted2 : WBRAND.ink} style={{ textAlign: 'right' }}>${wfmt(a.valUSDT)}</WMonoNum>
+                <span style={{
+                  fontFamily: WFONT, fontSize: 12, fontWeight: 700,
+                  color: zero ? WBRAND.muted2 : a.pct24h >= 0 ? WBRAND.positive : WBRAND.red,
+                  textAlign: 'right', fontVariantNumeric: 'tabular-nums'
+                }}>{a.pct24h >= 0 ? '+' : ''}{wfmt(a.pct24h, 2)}%</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: zero ? 0.5 : 1 }}>
+                  <div style={{ flex: 1, height: 4, background: WBRAND.surface, borderRadius: 2, overflow: 'hidden' }}>
+                    <div style={{
+                      width: `${a.alloc}%`, height: '100%',
+                      background: a.symbol === 'AHLG' ? WBRAND.red : WBRAND.ink
+                    }} />
+                  </div>
+                  <WMonoNum size={11} color={WBRAND.muted}>{wfmt(a.alloc, 1)}%</WMonoNum>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
+                  {isAhlg ?
+                  <>
+                      <AssetActionBtn label="Mint" onClick={() => navigate('mint')} accent />
+                      <AssetActionBtn label="Redeem" onClick={() => navigate('redeem')} disabled={zero} />
+                    </> :
+
+                  <>
+                      <AssetActionBtn label="Deposit" onClick={() => navigate('deposit')} />
+                      <AssetActionBtn label="Withdraw" onClick={() => navigate('withdraw')} disabled={zero} />
+                    </>
+                  }
+                </div>
+              </div>);
+
+          })}
+        </WCard>
+
+        {/* Right column: vault + audit + notifications */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+          {/* Vault attestation */}
+          <WCard padding={20}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: 8,
+                background: WBRAND.surface, display: 'grid', placeItems: 'center'
+              }}>{WIcon.vault()}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>Vault attestation</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>Ahlatcı Metal Refinery FZCO
+audited by Bureau Veritas</div>
+              </div>
+              <WPill tone="positive">{WIcon.check(WBRAND.positive)} Verified</WPill>
+            </div>
+            <div style={{ borderTop: `1px solid ${WBRAND.line}`, paddingTop: 12 }}>
+              {[{ k: 'Tokens in circulation', v: '142,718.4203 AHLG' },
+              { k: 'Physical gold reserve', v: '142.72 kg' },
+              { k: 'Last audit', v: 'Apr 30, 2026' },
+              { k: 'Reserve ratio', v: '100.00%' }].
+              map((r, i) =>
+              <div key={i} style={{
+                display: 'flex', justifyContent: 'space-between',
+                padding: '7px 0', borderBottom: i === 3 ? 'none' : `1px dashed ${WBRAND.line}`
+              }}>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.k}</span>
+                  <WMonoNum size={12}>{r.v}</WMonoNum>
+                </div>
+              )}
+            </div>
+            <button style={{
+              width: '100%', marginTop: 12, padding: '10px 12px', borderRadius: 8,
+              background: WBRAND.surface, border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink
+            }}>
+              <span>View proof-of-reserves report</span>
+              {WIcon.external(WBRAND.muted)}
+            </button>
+          </WCard>
+
+          {/* Notifications */}
+          <WCard padding={0}>
+            <div style={{
+              padding: '14px 18px 12px', borderBottom: `1px solid ${WBRAND.line}`,
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>Notifications</span>
+                <WPill tone="accent">3 new</WPill>
+              </div>
+              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.muted }}>Mark all read</button>
+            </div>
+            {[
+            { tone: 'pos', title: 'Mint completed', sub: '1.2000 AHLG · 12 min ago', unread: true },
+            { tone: 'warn', title: 'New whitelist pending', sub: 'USDC address · 24h review · 8h left', unread: true },
+            { tone: 'neu', title: 'Vault audit published', sub: 'April attestation available', unread: true },
+            { tone: 'neu', title: 'Price alert', sub: 'AHLG crossed $150 threshold', unread: false }].
+            map((n, i, arr) => {
+              const dotColor = n.tone === 'pos' ? WBRAND.positive : n.tone === 'warn' ? WBRAND.warn : WBRAND.muted;
+              return (
+                <div key={i} style={{
+                  padding: '12px 18px',
+                  borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`,
+                  display: 'flex', alignItems: 'flex-start', gap: 10,
+                  background: n.unread ? '#FCFCFA' : 'transparent'
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 3, background: dotColor, marginTop: 6, flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{n.title}</div>
+                    <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{n.sub}</div>
+                  </div>
+                </div>);
+
+            })}
+          </WCard>
+        </div>
+      </div>
+
+      {/* ── Recent activity table ───────────────────────────── */}
+      <div style={{ marginTop: 20 }}>
+        <WCard padding={0}>
+          <div style={{
+            padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`,
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+          }}>
+            <WSectionTitle title="Recent activity" sub="Last 7 days" style={{ marginBottom: 0 }} />
+            <button onClick={() => navigate('activity')} style={{
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red,
+              display: 'flex', alignItems: 'center', gap: 4
+            }}>View all activity {WIcon.arrowRight(WBRAND.red)}</button>
+          </div>
+
+          {/* Table */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1fr 1fr 110px',
+            gap: 12, padding: '10px 22px',
+            borderBottom: `1px solid ${WBRAND.line}`,
+            background: WBRAND.surface2
+          }}>
+            {['', 'Type', 'Asset', 'Amount', 'Counterparty', 'Date', 'Status'].map((h, i) =>
+            <div key={i} style={{
+              fontFamily: WFONT, fontSize: 10, fontWeight: 700,
+              color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase'
+            }}>{h}</div>
+            )}
+          </div>
+
+          {WTXS.slice(0, 6).map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1} />)}
+        </WCard>
+      </div>
+    </div>);
+
+}
+
+// ─── Transaction row (shared with Activity) ───────────────────
+function WTxRow({ tx, last, expanded }) {
+  const typeIcon = {
+    Mint: <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke={WBRAND.ink} strokeWidth="1.6" /><path d="M12 8v8M8 12h8" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinecap="round" /></svg>,
+    Redeem: <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 19h16" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+    Deposit: WIcon.download(WBRAND.ink),
+    Withdraw: WIcon.upload(WBRAND.ink),
+    Transfer: WIcon.swap(WBRAND.ink)
+  };
+  const pos = tx.amount > 0;
+  const date = tx.ts.slice(0, 10).split('-').reverse().join('/');
+  const time = tx.ts.slice(11, 16);
+
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1fr 1fr 110px',
+      gap: 12, padding: '14px 22px', alignItems: 'center',
+      borderBottom: last ? 'none' : `1px solid ${WBRAND.line}`
+    }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: 8, background: WBRAND.surface,
+        display: 'grid', placeItems: 'center'
+      }}>{typeIcon[tx.type]}</div>
+      <div>
+        <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{tx.type}</div>
+        <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.id}</div>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <WCoinDot symbol={tx.asset} size={22} />
+        <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink }}>{tx.asset}</span>
+      </div>
+      <WMonoNum size={13} weight={500} color={pos ? WBRAND.positive : WBRAND.ink}>
+        {pos ? '+' : ''}{wfmt(tx.amount, wdecimals(tx.asset))}
+      </WMonoNum>
+      <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{tx.paid}</span>
+      <div>
+        <WMonoNum size={12}>{date}</WMonoNum>
+        <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{time}</div>
+      </div>
+      <div>
+        <WPill tone={tx.status === 'completed' ? 'positive' : tx.status === 'pending' ? 'warn' : 'negative'}>
+          {tx.status === 'completed' && WIcon.check(WBRAND.positive)}
+          {tx.status[0].toUpperCase() + tx.status.slice(1)}
+        </WPill>
+      </div>
+    </div>);
+
+}
+
+// ─── Per-asset action button (compact) ────────────────────────
+function AssetActionBtn({ label, onClick, icon, accent = false, disabled = false }) {
+  return (
+    <button
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      title={label}
+      style={{
+        height: 28, minWidth: 76, padding: icon ? '0 10px' : '0 12px',
+        border: `1px solid ${accent ? WBRAND.red : WBRAND.line2}`,
+        background: accent ? WBRAND.red : WBRAND.white,
+        color: accent ? '#fff' : WBRAND.ink,
+        borderRadius: 6,
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.4 : 1,
+        fontFamily: WFONT, fontWeight: 600, fontSize: 11,
+        letterSpacing: '-0.005em',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+        flexShrink: 0
+      }}>
+      {icon}
+      {label}
+    </button>);
+
+}
+
+// ─── Allocation bar (single row) ──────────────────────────────
+function AllocBar({ label, value, total, color }) {
+  const pct = total > 0 ? value / total * 100 : 0;
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 8, height: 8, borderRadius: 2, background: color }} />
+          <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{label}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+          <WMonoNum size={13} weight={700}>{wfmt(pct, 1)}%</WMonoNum>
+          <WMonoNum size={10} color={WBRAND.muted}>${wfmt(value, 0)}</WMonoNum>
+        </div>
+      </div>
+      <div style={{ height: 6, background: WBRAND.surface, borderRadius: 3, overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 3 }} />
+      </div>
+    </div>);
+
+}
+
+Object.assign(window, { WebPortfolio, WTxRow, AssetActionBtn, AllocBar });

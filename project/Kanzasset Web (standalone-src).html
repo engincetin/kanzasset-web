@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kanzasset — AHLG web app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="ext-resource-dependency" content="assets/kanzasset-mark-transparent.png" data-resource-id="ahlgMark" />
+<template id="__bundler_thumbnail" data-bg-color="#0A0A0A">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0A0A0A"/>
+    <circle cx="600" cy="360" r="150" fill="none" stroke="#D4202B" stroke-width="10"/>
+    <text x="600" y="392" font-family="Manrope, sans-serif" font-size="120" font-weight="800" fill="#fff" text-anchor="middle">A</text>
+    <text x="600" y="560" font-family="Manrope, sans-serif" font-size="56" font-weight="800" fill="#fff" letter-spacing="-2" text-anchor="middle">Kanzasset</text>
+    <text x="600" y="610" font-family="monospace" font-size="26" fill="#7A7A7E" text-anchor="middle">AHLG · web app</text>
+  </svg>
+</template>
+<style>
+  html, body, #root { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Manrope', 'Avenir Next', -apple-system, system-ui, sans-serif;
+    background: #F4F4F2;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  * { box-sizing: border-box; }
+  button, input, select, textarea { font-family: inherit; }
+  /* Webkit scrollbars — slim, neutral */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #E0E0DE; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: #C8C8C5; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="web-shared.jsx"></script>
+<script type="text/babel" src="web-chrome.jsx"></script>
+<script type="text/babel" src="web-portfolio.jsx"></script>
+<script type="text/babel" src="web-flows.jsx"></script>
+<script type="text/babel" src="web-mint.jsx"></script>
+<script type="text/babel" src="web-redeem.jsx"></script>
+<script type="text/babel" src="web-activity.jsx"></script>
+<script type="text/babel" src="web-profile.jsx"></script>
+<script type="text/babel" src="web-app.jsx"></script>
+</body>
+</html>
