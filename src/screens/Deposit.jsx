@@ -6,7 +6,7 @@ import { WCard, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/prim
 import { FauxWebQR } from '../components/shared.jsx';
 
 export function WebDeposit({ navigate, initialAsset }) {
-  const cryptoAssets = ['USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name }));
+  const cryptoAssets = ['AHLG', 'USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name }));
   const fiatAssets   = ['AED', 'USD', 'EUR', 'GBP'].map(s => ({ symbol: s, name: WMETA[s].name }));
   const initialKind  = initialAsset && WMETA[initialAsset]?.kind === 'fiat' ? 'fiat' : 'crypto';
 
