@@ -52,7 +52,7 @@ export default function App() {
         active={active}
         onNavigate={navigate}
         collapsed={collapsed}
-        onCollapse={() => setCollapsed(c => !c)}
+        onToggleCollapse={() => setCollapsed(c => !c)}
       />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', minWidth: 0 }}>
