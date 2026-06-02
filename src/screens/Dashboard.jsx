@@ -285,9 +285,9 @@ export function WebPortfolio({ navigate }) {
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.2fr 1.2fr 1.6fr 188px', gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 188px', gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
             {['Asset', 'Balance', 'Value', 'Allocation', 'Actions'].map((h, i) => (
-              <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i >= 1 && i <= 2 ? 'right' : i === 4 ? 'right' : 'left' }}>{h}</div>
+              <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i === 0 ? 'left' : 'right' }}>{h}</div>
             ))}
           </div>
 
@@ -295,7 +295,7 @@ export function WebPortfolio({ navigate }) {
             const isAhlg = a.symbol === 'AHLG';
             const zero = a.balance === 0;
             return (
-              <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.2fr 1.2fr 1.6fr 188px', gap: 20, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+              <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 188px', gap: 20, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: zero ? 0.65 : 1 }}>
                   <WCoinDot symbol={a.symbol} size={32}/>
                   <div>
@@ -305,11 +305,11 @@ export function WebPortfolio({ navigate }) {
                 </div>
                 <WMonoNum size={13} color={zero ? WBRAND.muted2 : WBRAND.ink} style={{ textAlign: 'right' }}>{wfmt(a.balance, wdecimals(a.symbol))}</WMonoNum>
                 <WMonoNum size={13} weight={600} color={zero ? WBRAND.muted2 : WBRAND.ink} style={{ textAlign: 'right' }}>${wfmt(a.valUSDT)}</WMonoNum>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: zero ? 0.5 : 1 }}>
-                  <div style={{ flex: 1, height: 4, background: WBRAND.surface, borderRadius: 2, overflow: 'hidden' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, opacity: zero ? 0.5 : 1 }}>
+                  <div style={{ width: 72, height: 4, background: WBRAND.surface, borderRadius: 2, overflow: 'hidden' }}>
                     <div style={{ width: `${a.alloc}%`, height: '100%', background: a.symbol === 'AHLG' ? WBRAND.red : WBRAND.ink }}/>
                   </div>
-                  <WMonoNum size={11} color={WBRAND.muted}>{wfmt(a.alloc, 1)}%</WMonoNum>
+                  <WMonoNum size={11} color={WBRAND.muted} style={{ minWidth: 38, textAlign: 'right' }}>{wfmt(a.alloc, 1)}%</WMonoNum>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
                   {isAhlg ? (
