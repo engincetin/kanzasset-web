@@ -6,7 +6,7 @@ import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '..
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector } from '../components/shared.jsx';
 
-export function WebMint({ navigate }) {
+export function WebMint({ navigate, onOpenTx }) {
   const sources = Object.keys(WBALANCES)
     .filter(s => s !== 'AHLG' && WBALANCES[s] > 0)
     .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AHLG }));
@@ -174,7 +174,11 @@ export function WebMint({ navigate }) {
               ))}
             </div>
             {WTXS.filter(t => t.type === 'Mint').slice(0, 4).map((tx, i, arr) => (
-              <div key={tx.id} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+              <div key={tx.id}
+                onClick={() => onOpenTx && onOpenTx(tx)}
+                onMouseEnter={onOpenTx ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
+                onMouseLeave={onOpenTx ? (e => e.currentTarget.style.background = 'transparent') : undefined}
+                style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
                 <div>
                   <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>

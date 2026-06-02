@@ -11,7 +11,9 @@ import { WebRedeem } from './screens/Redeem.jsx';
 import { WebDeposit } from './screens/Deposit.jsx';
 import { WebWithdraw } from './screens/Withdraw.jsx';
 import { WebActivity } from './screens/Activity.jsx';
+import { WebSupport } from './screens/Support.jsx';
 import { WebProfile } from './screens/Profile.jsx';
+import { WTxDetailModal } from './components/TxDetailModal.jsx';
 
 const TITLES = {
   dashboard: { title: 'Welcome back, Ahmet', sub: null },
@@ -21,20 +23,22 @@ const TITLES = {
   deposit:   { title: 'Deposit',              sub: 'Add crypto or fiat' },
   withdraw:  { title: 'Withdraw',             sub: 'Send to whitelisted destination' },
   activity:  { title: 'Activity',             sub: 'All transaction history' },
+  support:   { title: 'Support',              sub: 'Help & tickets' },
   profile:   { title: 'Account settings',     sub: 'Tier 3 · institutional' },
 };
 
-function Screen({ active, navigate, onLogout, profileSection, profileKey }) {
+function Screen({ active, navigate, onLogout, onOpenTx, profileSection, profileKey, supportTx, supportKey }) {
   switch (active) {
-    case 'dashboard': return <WebPortfolio navigate={navigate} />;
+    case 'dashboard': return <WebPortfolio navigate={navigate} onOpenTx={onOpenTx} />;
     case 'wallet':    return <WebWallet    navigate={navigate} />;
-    case 'mint':      return <WebMint      navigate={navigate} />;
-    case 'redeem':    return <WebRedeem    navigate={navigate} />;
+    case 'mint':      return <WebMint      navigate={navigate} onOpenTx={onOpenTx} />;
+    case 'redeem':    return <WebRedeem    navigate={navigate} onOpenTx={onOpenTx} />;
     case 'deposit':   return <WebDeposit   navigate={navigate} />;
     case 'withdraw':  return <WebWithdraw  navigate={navigate} />;
-    case 'activity':  return <WebActivity  navigate={navigate} />;
+    case 'activity':  return <WebActivity  navigate={navigate} onOpenTx={onOpenTx} />;
+    case 'support':   return <WebSupport   key={supportKey} navigate={navigate} prefillTx={supportTx} />;
     case 'profile':   return <WebProfile   key={profileKey} navigate={navigate} onLogout={onLogout} initialSection={profileSection} />;
-    default:          return <WebPortfolio navigate={navigate} />;
+    default:          return <WebPortfolio navigate={navigate} onOpenTx={onOpenTx} />;
   }
 }
 
@@ -44,6 +48,9 @@ function AppShell({ onLogout }) {
   const [notifsOpen, setNotifsOpen] = useState(false);
   const [profileSection, setProfileSection] = useState('account');
   const [profileKey, setProfileKey] = useState(0);
+  const [detailTx, setDetailTx] = useState(null);
+  const [supportTx, setSupportTx] = useState(null);
+  const [supportKey, setSupportKey] = useState(0);
 
   const { title, sub } = TITLES[active] ?? TITLES.dashboard;
 
@@ -53,6 +60,19 @@ function AppShell({ onLogout }) {
       setProfileSection(section || 'account');
       setProfileKey(k => k + 1);
     }
+    // Opening Support from the sidebar/menu starts fresh (no linked tx)
+    if (screen === 'support' && !section) {
+      setSupportTx(null);
+      setSupportKey(k => k + 1);
+    }
+  };
+
+  // "Get help" from a transaction detail → open Support with that tx pre-linked
+  const openSupportFor = (tx) => {
+    setDetailTx(null);
+    setSupportTx(tx);
+    setSupportKey(k => k + 1);
+    setActive('support');
   };
 
   return (
@@ -73,11 +93,28 @@ function AppShell({ onLogout }) {
           onLogout={onLogout}
         />
         <main style={{ flex: 1, minHeight: 0, overflow: 'hidden', background: WBRAND.surface }}>
-          <Screen active={active} navigate={navigate} onLogout={onLogout} profileSection={profileSection} profileKey={profileKey} />
+          <Screen
+            active={active}
+            navigate={navigate}
+            onLogout={onLogout}
+            onOpenTx={setDetailTx}
+            profileSection={profileSection}
+            profileKey={profileKey}
+            supportTx={supportTx}
+            supportKey={supportKey}
+          />
         </main>
       </div>
 
       <WNotificationsDrawer open={notifsOpen} onClose={() => setNotifsOpen(false)} />
+
+      {detailTx && (
+        <WTxDetailModal
+          tx={detailTx}
+          onClose={() => setDetailTx(null)}
+          onSupport={openSupportFor}
+        />
+      )}
     </div>
   );
 }

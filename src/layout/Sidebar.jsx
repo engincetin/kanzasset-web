@@ -78,6 +78,12 @@ export const NAV_GROUPS = [
         </svg>,
       },
       {
+        id: 'support', label: 'Support',
+        icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke={c} strokeWidth="1.7" strokeLinejoin="round"/>
+        </svg>,
+      },
+      {
         id: 'profile', label: 'Profile',
         icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="9" r="3.5" stroke={c} strokeWidth="1.7"/>

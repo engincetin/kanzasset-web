@@ -378,7 +378,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
   );
 }
 
-export function WebRedeem({ navigate }) {
+export function WebRedeem({ navigate, onOpenTx }) {
   const [mode, setMode] = useState('digital');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
@@ -488,7 +488,11 @@ export function WebRedeem({ navigate }) {
               ))}
             </div>
             {WTXS.filter(t => t.type === 'Redeem').slice(0, 4).map((tx, i, arr) => (
-              <div key={tx.id} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+              <div key={tx.id}
+                onClick={() => onOpenTx && onOpenTx(tx)}
+                onMouseEnter={onOpenTx ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
+                onMouseLeave={onOpenTx ? (e => e.currentTarget.style.background = 'transparent') : undefined}
+                style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
                 <div>
                   <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>

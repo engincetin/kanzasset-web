@@ -75,8 +75,43 @@ import { WIcon } from './icons.jsx';
 import { WCoinDot } from './coinicons.jsx';
 import { WPill, WMonoNum } from './primitives.jsx';
 
+// ─── Select field (form-style dropdown, used by Profile + Support) ─
+export function SelectField({ value, options, groups, onChange }) {
+  const [open, setOpen] = useState(false);
+  const renderGroups = groups ?? [{ label: null, options: options ?? [] }];
+  return (
+    <div style={{ position: 'relative' }}>
+      <button onClick={() => setOpen(!open)} style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', height: 40, padding: '0 14px', borderRadius: 8, background: WBRAND.white, border: `1px solid ${open ? WBRAND.ink : WBRAND.line2}`, cursor: 'pointer', textAlign: 'left' }}>
+        <span style={{ flex: 1, fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, fontWeight: 500, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{value}</span>
+        <span style={{ transform: open ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform .15s ease', display: 'inline-grid', placeItems: 'center' }}>{WIcon.arrowDown(WBRAND.muted)}</span>
+      </button>
+      {open && (
+        <>
+          <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 40 }}/>
+          <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 10, padding: 6, zIndex: 50, boxShadow: '0 8px 24px rgba(0,0,0,0.08)', maxHeight: 280, overflowY: 'auto' }}>
+            {renderGroups.map((grp, gi) => (
+              <div key={gi} style={{ marginTop: gi > 0 ? 4 : 0, paddingTop: gi > 0 ? 4 : 0, borderTop: gi > 0 ? `1px solid ${WBRAND.line}` : 'none' }}>
+                {grp.label && <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px 4px' }}>{grp.label}</div>}
+                {grp.options.map(o => {
+                  const on = o === value;
+                  return (
+                    <button key={o} onClick={() => { onChange(o); setOpen(false); }} style={{ width: '100%', padding: '8px 10px', borderRadius: 6, border: 'none', background: on ? WBRAND.surface : 'transparent', cursor: 'pointer', textAlign: 'left', fontFamily: WFONT, fontSize: 12, fontWeight: on ? 700 : 500, color: WBRAND.ink, display: 'flex', alignItems: 'center', justifyContent: 'space-between', letterSpacing: '-0.005em' }}>
+                      {o}
+                      {on && WIcon.check(WBRAND.ink)}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── Transaction row (used in Dashboard + Activity) ───────────
-export function WTxRow({ tx, last }) {
+export function WTxRow({ tx, last, onOpen }) {
   const typeIcon = {
     Mint:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke={WBRAND.ink} strokeWidth="1.6" /><path d="M12 8v8M8 12h8" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinecap="round" /></svg>,
     Redeem:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 19h16" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>,
@@ -89,12 +124,18 @@ export function WTxRow({ tx, last }) {
   const time = tx.ts.slice(11, 16);
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1.2fr 1fr 110px',
-      gap: 12, padding: '14px 22px', alignItems: 'center',
-      borderBottom: last ? 'none' : `1px solid ${WBRAND.line}`,
-    }}>
+    <div
+      onClick={() => onOpen && onOpen(tx)}
+      onMouseEnter={onOpen ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
+      onMouseLeave={onOpen ? (e => e.currentTarget.style.background = 'transparent') : undefined}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1.2fr 1fr 110px',
+        gap: 12, padding: '14px 22px', alignItems: 'center',
+        borderBottom: last ? 'none' : `1px solid ${WBRAND.line}`,
+        cursor: onOpen ? 'pointer' : 'default',
+        transition: 'background .12s',
+      }}>
       <div style={{
         width: 32, height: 32, borderRadius: 8, background: WBRAND.surface,
         display: 'grid', placeItems: 'center',

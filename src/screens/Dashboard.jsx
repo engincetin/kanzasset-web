@@ -27,7 +27,7 @@ function AllocBar({ label, value, total, color }) {
   );
 }
 
-export function WebPortfolio({ navigate }) {
+export function WebPortfolio({ navigate, onOpenTx }) {
   const [currency, setCurrency] = useState('USDT');
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [range, setRange] = useState('3M');
@@ -407,7 +407,7 @@ export function WebPortfolio({ navigate }) {
             ))}
           </div>
 
-          {WTXS.slice(0, 6).map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1}/>)}
+          {WTXS.slice(0, 6).map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1} onOpen={onOpenTx}/>)}
         </WCard>
       </div>
     </div>

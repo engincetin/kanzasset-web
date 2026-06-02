@@ -48,7 +48,7 @@ function FilterChip({ label, onClear }) {
   );
 }
 
-export function WebActivity({ navigate }) {
+export function WebActivity({ navigate, onOpenTx }) {
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('All');
   const [assetFilter, setAssetFilter] = useState('All');
@@ -151,7 +151,7 @@ export function WebActivity({ navigate }) {
 
         {filtered.length === 0 ? (
           <div style={{ padding: '60px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 14, color: WBRAND.muted }}>No transactions match the current filters.</div>
-        ) : filtered.map((tx, i) => <WTxRow key={tx.id} tx={tx} last={i === filtered.length - 1}/>)}
+        ) : filtered.map((tx, i) => <WTxRow key={tx.id} tx={tx} last={i === filtered.length - 1} onOpen={onOpenTx}/>)}
 
         <div style={{ padding: '14px 22px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>Page 1 of 8 · 120 total</span>
