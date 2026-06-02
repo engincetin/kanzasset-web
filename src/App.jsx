@@ -3,6 +3,7 @@ import { WBRAND } from './lib/index.js';
 import { WSidebar } from './layout/Sidebar.jsx';
 import { WTopbar } from './layout/Topbar.jsx';
 import { WNotificationsDrawer } from './layout/NotificationsDrawer.jsx';
+import { WebAuth } from './screens/Login.jsx';
 import { WebPortfolio } from './screens/Dashboard.jsx';
 import { WebWallet } from './screens/Wallet.jsx';
 import { WebMint } from './screens/Mint.jsx';
@@ -23,7 +24,7 @@ const TITLES = {
   profile:   { title: 'Account settings',     sub: 'Tier 3 · institutional' },
 };
 
-function Screen({ active, navigate }) {
+function Screen({ active, navigate, onLogout }) {
   switch (active) {
     case 'dashboard': return <WebPortfolio navigate={navigate} />;
     case 'wallet':    return <WebWallet    navigate={navigate} />;
@@ -32,12 +33,12 @@ function Screen({ active, navigate }) {
     case 'deposit':   return <WebDeposit   navigate={navigate} />;
     case 'withdraw':  return <WebWithdraw  navigate={navigate} />;
     case 'activity':  return <WebActivity  navigate={navigate} />;
-    case 'profile':   return <WebProfile   navigate={navigate} />;
+    case 'profile':   return <WebProfile   navigate={navigate} onLogout={onLogout} />;
     default:          return <WebPortfolio navigate={navigate} />;
   }
 }
 
-export default function App() {
+function AppShell({ onLogout }) {
   const [active, setActive] = useState('dashboard');
   const [collapsed, setCollapsed] = useState(false);
   const [notifsOpen, setNotifsOpen] = useState(false);
@@ -61,13 +62,22 @@ export default function App() {
           sub={sub}
           onNotifs={() => setNotifsOpen(o => !o)}
           onNavigate={navigate}
+          onLogout={onLogout}
         />
         <main style={{ flex: 1, minHeight: 0, overflow: 'hidden', background: WBRAND.surface }}>
-          <Screen active={active} navigate={navigate} />
+          <Screen active={active} navigate={navigate} onLogout={onLogout} />
         </main>
       </div>
 
       <WNotificationsDrawer open={notifsOpen} onClose={() => setNotifsOpen(false)} />
     </div>
   );
+}
+
+export default function App() {
+  const [authed, setAuthed] = useState(false);
+
+  if (!authed) return <WebAuth onAuthed={() => setAuthed(true)} />;
+
+  return <AppShell onLogout={() => setAuthed(false)} />;
 }

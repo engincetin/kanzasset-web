@@ -3,7 +3,7 @@ import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WPill } from '../components/primitives.jsx';
 
-export function WTopbar({ title, sub, onNavigate, onNotifs }) {
+export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState('Light');
 
@@ -132,7 +132,7 @@ export function WTopbar({ title, sub, onNavigate, onNotifs }) {
                   <span style={{ flex: 1 }}>Help & support</span>
                   {WIcon.external(WBRAND.muted)}
                 </button>
-                <button style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '9px 12px', borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.red, letterSpacing: '-0.005em' }}>
+                <button onClick={() => { setMenuOpen(false); onLogout && onLogout(); }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '9px 12px', borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.red, letterSpacing: '-0.005em' }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 12H4M4 12l4-4M4 12l4 4" stroke={WBRAND.red} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M9 4h9a2 2 0 012 2v12a2 2 0 01-2 2H9" stroke={WBRAND.red} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   <span style={{ flex: 1 }}>Sign out</span>
                 </button>

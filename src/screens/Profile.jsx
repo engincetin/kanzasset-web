@@ -438,7 +438,7 @@ function ProfHelp() {
   );
 }
 
-export function WebProfile({ navigate }) {
+export function WebProfile({ navigate, onLogout }) {
   const [section, setSection] = useState('account');
 
   const sections = [
@@ -500,7 +500,7 @@ export function WebProfile({ navigate }) {
           </WCard>
 
           <WCard padding={16}>
-            <button style={{ width: '100%', padding: '8px 12px', borderRadius: 8, background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 600, color: WBRAND.red, textAlign: 'left' }}>Sign out of all devices</button>
+            <button onClick={onLogout} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 600, color: WBRAND.red, textAlign: 'left' }}>Sign out of all devices</button>
           </WCard>
         </div>
 
