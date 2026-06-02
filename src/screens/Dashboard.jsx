@@ -248,7 +248,7 @@ export function WebPortfolio({ navigate }) {
           <WRangeTabs value={range} onChange={setRange}/>
         </div>
         <div style={{ padding: '12px 16px 18px' }}>
-          <WPriceChart data={quotedPriceData} width={1300} height={280} color={WBRAND.red}/>
+          <WPriceChart data={quotedPriceData} height={280} color={WBRAND.red}/>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
           {(() => {

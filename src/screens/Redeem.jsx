@@ -270,7 +270,7 @@ export function WebRedeem({ navigate }) {
               <WRangeTabs value={range} onChange={setRange}/>
             </div>
             <div style={{ padding: '12px 16px 18px' }}>
-              <WPriceChart data={quotedData} width={600} height={280}/>
+              <WPriceChart data={quotedData} height={280}/>
             </div>
           </WCard>
 
