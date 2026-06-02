@@ -283,7 +283,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
             </div>
           </WCard>
 
-          <WPrimary size="lg" onClick={() => setVerifying(true)} style={{ width: '100%', justifyContent: 'center' }} icon={WIcon.shield('#fff')}>
+          <WPrimary size="lg" onClick={() => amt > 0 && setVerifying(true)} disabled={amt <= 0} style={{ width: '100%', justifyContent: 'center' }} icon={WIcon.shield('#fff')}>
             Confirm withdrawal
           </WPrimary>
 
