@@ -5,7 +5,7 @@ export function WMark({ size = 24 }) {
   const w = Math.round(size * (384 / 304));
   return (
     <img
-      src="/assets/kanzasset-mark-transparent.png"
+      src={`${import.meta.env.BASE_URL}assets/kanzasset-mark-transparent.png`}
       alt="Kanzasset"
       width={w}
       height={size}
