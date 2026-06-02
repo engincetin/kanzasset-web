@@ -50,14 +50,14 @@ export const NAV_GROUPS = [
     label: 'AHL Gold',
     items: [
       {
-        id: 'mint', label: 'Mint', badge: 'NEW',
+        id: 'mint', label: 'Mint',
         icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" stroke={c} strokeWidth="1.7" strokeLinejoin="round"/>
           <path d="M12 9v6M9 12h6" stroke={c} strokeWidth="1.7" strokeLinecap="round"/>
         </svg>,
       },
       {
-        id: 'redeem', label: 'Redeem',
+        id: 'redeem', label: 'Redeem', badge: 'NEW',
         icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <rect x="3" y="8" width="18" height="4" rx="1" stroke={c} strokeWidth="1.7" strokeLinejoin="round"/>
           <path d="M5 12v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke={c} strokeWidth="1.7" strokeLinejoin="round"/>
