@@ -49,10 +49,7 @@ export function WebMint({ navigate, onOpenTx }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <WCard padding={0}>
             <div style={{ padding: '22px 24px 20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <WEyebrow>You pay</WEyebrow>
-                <button onClick={() => setAmount(String(from.balance))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Use max</button>
-              </div>
+              <WEyebrow>You pay</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <input value={amount} onChange={e => setAmount(e.target.value)} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 <WAssetSelector value={from.symbol} options={sources} onChange={s => setFrom(sources.find(x => x.symbol === s))}/>
@@ -63,6 +60,7 @@ export function WebMint({ navigate, onOpenTx }) {
                   {[25, 50, 75].map(p => (
                     <button key={p} onClick={() => setAmount(String(from.balance * p / 100))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
                   ))}
+                  <button onClick={() => setAmount(String(from.balance))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>MAX</button>
                 </span>
               </div>
             </div>

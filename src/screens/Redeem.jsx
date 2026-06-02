@@ -15,10 +15,7 @@ function RedeemDigital({ targets, to, setTo }) {
     <>
       <WCard padding={0}>
         <div style={{ padding: '22px 24px 20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <WEyebrow>You burn</WEyebrow>
-            <button onClick={() => setAmount(String(WBALANCES.AHLG))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Use max</button>
-          </div>
+          <WEyebrow>You burn</WEyebrow>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
             <input value={amount} onChange={e => setAmount(e.target.value)} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
             <div style={{ background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line2}`, borderRadius: 999, padding: '6px 14px 6px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -26,8 +23,14 @@ function RedeemDigital({ targets, to, setTo }) {
               <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AHLG</span>
             </div>
           </div>
-          <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8 }}>
-            Balance: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG
+          <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
+            <span>Balance: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
+            <span style={{ display: 'flex', gap: 6 }}>
+              {[25, 50, 75].map(p => (
+                <button key={p} onClick={() => setAmount(String(WBALANCES.AHLG * p / 100))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
+              ))}
+              <button onClick={() => setAmount(String(WBALANCES.AHLG))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>MAX</button>
+            </span>
           </div>
         </div>
 

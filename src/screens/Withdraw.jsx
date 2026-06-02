@@ -200,10 +200,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
           {/* Amount */}
           <WCard padding={0}>
             <div style={{ padding: '20px 22px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <WEyebrow>From</WEyebrow>
-                <button onClick={() => setAmount(String(asset.balance))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Use max</button>
-              </div>
+              <WEyebrow>From</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="0.00" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 30, color: WBRAND.ink, letterSpacing: '-0.03em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 <WAssetSelector
@@ -223,6 +220,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
                   {[25, 50, 75].map(p => (
                     <button key={p} onClick={() => setAmount(String(asset.balance * p / 100))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
                   ))}
+                  <button onClick={() => setAmount(String(asset.balance))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>MAX</button>
                 </span>
               </div>
             </div>
