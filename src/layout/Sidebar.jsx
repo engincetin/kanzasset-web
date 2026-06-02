@@ -1,5 +1,5 @@
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
-import { WMark, WLogotype } from '../components/coinicons.jsx';
+import { WMark, WLogotype, AHLGMark } from '../components/coinicons.jsx';
 
 export const NAV_GROUPS = [
   {
@@ -195,7 +195,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
                 background: WBRAND.red, opacity: 0.22, filter: 'blur(14px)',
               }}/>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, position: 'relative' }}>
-                <WMark size={14}/>
+                <AHLGMark size={16}/>
                 <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)' }}>AHLG · USDT</span>
               </div>
               <div style={{
@@ -227,7 +227,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
               padding: '10px 6px', display: 'flex', flexDirection: 'column',
               alignItems: 'center', gap: 2,
             }}>
-              <WMark size={14}/>
+              <AHLGMark size={16}/>
               <span style={{ fontFamily: WMONO, fontSize: 10, fontWeight: 700, marginTop: 2 }}>$151</span>
               <span style={{ fontFamily: WFONT, fontSize: 9, color: '#7DD3A2', fontWeight: 700 }}>+0.24%</span>
             </div>

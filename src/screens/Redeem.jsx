@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
-import { WMark } from '../components/coinicons.jsx';
+import { AHLGMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector } from '../components/shared.jsx';
@@ -21,7 +21,7 @@ function RedeemDigital({ targets, to, setTo }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
             <input value={amount} onChange={e => setAmount(e.target.value)} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
             <div style={{ background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line2}`, borderRadius: 999, padding: '6px 14px 6px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 28, height: 28, borderRadius: 14, background: WBRAND.white, border: `1.5px solid ${WBRAND.red}`, display: 'grid', placeItems: 'center' }}><WMark size={16}/></div>
+              <AHLGMark size={28}/>
               <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AHLG</span>
             </div>
           </div>

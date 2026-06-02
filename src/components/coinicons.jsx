@@ -1,6 +1,17 @@
 import { WBRAND, WFONT } from '../lib/index.js';
 
-// ─── Brand mark ───────────────────────────────────────────────
+// ─── AHLG token mark — gold circle + white "A" ────────────────
+export function AHLGMark({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 800 800" fill="none" style={{ display: 'block', flexShrink: 0 }}>
+      <path d="M400 800C620.914 800 800 620.914 800 400C800 179.086 620.914 0 400 0C179.086 0 0 179.086 0 400C0 620.914 179.086 800 400 800Z" fill="#FAC043"/>
+      <path d="M194.025 594C185.728 594 179.934 585.78 182.724 577.966L305.908 232.88C311.876 216.161 327.711 205 345.463 205H454.47C472.203 205 488.025 216.137 494.008 232.83L617.698 577.951C620.499 585.769 614.705 594 606.401 594H556.566C551.379 594 546.779 590.667 545.163 585.738L444.139 277.596H354.134L254.158 585.704C252.553 590.65 247.945 594 242.744 594H194.025Z" fill="white"/>
+      <path d="M238.706 449.387H464.181C468.153 449.387 471.655 451.99 472.799 455.794L490.31 513.991C491.469 517.842 488.586 521.72 484.565 521.72H214.047L238.706 449.387Z" fill="white"/>
+    </svg>
+  );
+}
+
+// ─── Kanzasset platform mark (PNG) ────────────────────────────
 export function WMark({ size = 24 }) {
   const w = Math.round(size * (384 / 304));
   return (
@@ -118,16 +129,7 @@ export function WCoinDot({ symbol, size = 32 }) {
   const meta = COIN_ICONS[symbol];
 
   if (isAhlg) {
-    return (
-      <div style={{
-        width: size, height: size, borderRadius: size / 2,
-        background: WBRAND.white,
-        border: `1.5px solid ${WBRAND.red}`,
-        display: 'grid', placeItems: 'center', flexShrink: 0,
-      }}>
-        <WMark size={size * 0.58} />
-      </div>
-    );
+    return <AHLGMark size={size} />;
   }
 
   if (meta && meta.kind === 'flag') {
