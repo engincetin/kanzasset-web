@@ -91,7 +91,7 @@ function Toggle({ on }) {
   );
 }
 
-function ProfAccount() {
+function ProfAccount({ navigate }) {
   return (
     <SectionCard
       title="Personal details"
@@ -104,7 +104,7 @@ function ProfAccount() {
               Need to update something? Our team will verify and change it for you.
             </span>
           </div>
-          <WPrimary
+          <WPrimary onClick={() => navigate && navigate('support')}
             icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round"/></svg>}>
             Contact support
           </WPrimary>
@@ -575,18 +575,18 @@ function ProfPrefs() {
   );
 }
 
-function ProfHelp() {
+function ProfHelp({ navigate }) {
   return (
     <>
       <SectionCard title="Get help">
         <div style={{ padding: '4px 22px 18px' }}>
           {[
-            { l: 'Contact support',         sub: 'Average response · 2 hours · 24/7' },
+            { l: 'Contact support',         sub: 'Open & track tickets · 2h response · 24/7', go: 'support' },
             { l: 'Schedule a private call', sub: 'Tier 3 desk · Mon–Fri · 09:00–18:00 GST' },
             { l: 'Help center',             sub: 'Articles, guides and FAQs' },
             { l: 'Report a security issue', sub: 'security@kanzasset.com · PGP encrypted' },
           ].map((r, i, arr) => (
-            <button key={i} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+            <button key={i} onClick={() => r.go && navigate && navigate(r.go)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{r.l}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{r.sub}</div>
@@ -688,12 +688,12 @@ export function WebProfile({ navigate, onLogout, initialSection = 'account' }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {section === 'account'      && <ProfAccount/>}
+          {section === 'account'      && <ProfAccount navigate={navigate}/>}
           {section === 'security'     && <ProfSecurity/>}
           {section === 'kyc'          && <ProfKYC/>}
           {section === 'destinations' && <ProfDestinations/>}
           {section === 'prefs'        && <ProfPrefs/>}
-          {section === 'help'         && <ProfHelp/>}
+          {section === 'help'         && <ProfHelp navigate={navigate}/>}
           {section === 'close'        && <ProfCloseAccount onLogout={onLogout}/>}
         </div>
       </div>
