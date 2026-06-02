@@ -10,13 +10,22 @@ import { AddDestinationModal } from './Profile.jsx';
 function RedeemDigital({ targets, to, setTo }) {
   const [amount, setAmount] = useState('1');
   const [redeeming, setRedeeming] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const out = wparse(amount) * to.rate;
 
   return (
     <>
       <WCard padding={0}>
-        <div style={{ padding: '22px 24px 20px' }}>
-          <WEyebrow>You burn</WEyebrow>
+        <div style={{ padding: '22px 24px 20px', minHeight: 140, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <WEyebrow>You redeem</WEyebrow>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>Minimum redeem · <WMonoNum size={11} color={WBRAND.ink}>1</WMonoNum> AHLG</span>
+              <button onClick={() => setInfoOpen(true)} title="Redeem rules" style={{ width: 20, height: 20, borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white, cursor: 'pointer', display: 'grid', placeItems: 'center', color: WBRAND.muted, padding: 0, flexShrink: 0 }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 11v6M12 7.5v.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="12" cy="12" r="9.2" stroke="currentColor" strokeWidth="1.5"/></svg>
+              </button>
+            </div>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
             <input value={amount} onChange={e => setAmount(e.target.value)} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
             <div style={{ background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line2}`, borderRadius: 999, padding: '6px 14px 6px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -89,6 +98,41 @@ function RedeemDigital({ targets, to, setTo }) {
           onClose={() => setRedeeming(false)}
           onTrack={() => setRedeeming(false)}
         />
+      )}
+      {infoOpen && (
+        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+            <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
+                  <AHLGMark size={24}/>
+                </div>
+                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>Digital redeem rules</h2>
+              </div>
+              <button onClick={() => setInfoOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', flexShrink: 0, background: WBRAND.surface, cursor: 'pointer', color: WBRAND.ink, display: 'grid', placeItems: 'center' }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              </button>
+            </div>
+            <div style={{ padding: '18px 24px 8px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {[
+                { t: 'Minimum 1 AHLG', d: 'Digital redemption starts at 1 AHLG — equal to 1 gram of vaulted gold.' },
+                { t: 'Fractional amounts allowed', d: 'Unlike physical delivery, you can redeem any amount from 1 AHLG upward, including fractions (e.g. 1.5, 12.25).' },
+                { t: 'Instant settlement', d: `Funds are credited to your Kanzasset ${to.symbol} balance immediately at the live rate.` },
+              ].map((r, i) => (
+                <div key={i} style={{ display: 'flex', gap: 12 }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 11, background: WBRAND.redSoft, color: WBRAND.red, display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>{i + 1}</div>
+                  <div>
+                    <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{r.t}</div>
+                    <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3, lineHeight: 1.5 }}>{r.d}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ padding: '16px 24px 20px' }}>
+              <WPrimary size="lg" onClick={() => setInfoOpen(false)} style={{ width: '100%', justifyContent: 'center' }}>Got it</WPrimary>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );
@@ -171,44 +215,58 @@ function RedeemPhysicalWeb() {
   const [addrId, setAddrId] = useState('h');
   const [shipping, setShipping] = useState(false);
   const [shipAddOpen, setShipAddOpen] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const addr = addresses.find(a => a.id === addrId);
 
   return (
     <>
       <WCard padding={0}>
-        <div style={{ padding: '20px 22px 22px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-            <WEyebrow>How much gold</WEyebrow>
-            <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>Min 1 kg · Max <WMonoNum size={11} color={WBRAND.ink}>{maxKg}</WMonoNum> kg available</span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 18, marginTop: 18, padding: '14px 0' }}>
-            <button onClick={() => setKgPicked(Math.max(1, kgPicked - 1))} disabled={kgPicked <= 1} style={{ width: 44, height: 44, borderRadius: 22, background: WBRAND.white, border: `1px solid ${kgPicked <= 1 ? WBRAND.line : WBRAND.line2}`, cursor: kgPicked <= 1 ? 'not-allowed' : 'pointer', color: kgPicked <= 1 ? WBRAND.muted2 : WBRAND.ink, display: 'grid', placeItems: 'center', opacity: kgPicked <= 1 ? 0.5 : 1 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
-            </button>
-            <div style={{ textAlign: 'center', minWidth: 120 }}>
-              <div style={{ fontFamily: WFONT, fontSize: 44, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.035em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
-                {kgPicked} <span style={{ fontSize: 22, color: WBRAND.muted, fontWeight: 700 }}>kg</span>
-              </div>
-              <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 6, fontVariantNumeric: 'tabular-nums' }}>
-                Burns {wfmt(kgPicked * 1000, 0)} AHLG · ≈ ${wfmt(kgPicked * 1000 * WRATES.AHLG, 0)}
-              </div>
+        {/* You redeem */}
+        <div style={{ padding: '22px 24px 20px', minHeight: 140, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <WEyebrow>You redeem</WEyebrow>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>Min 1 kg · Max <WMonoNum size={11} color={WBRAND.ink}>{maxKg}</WMonoNum> kg</span>
+              <button onClick={() => setInfoOpen(true)} title="Delivery rules" style={{ width: 20, height: 20, borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white, cursor: 'pointer', display: 'grid', placeItems: 'center', color: WBRAND.muted, padding: 0, flexShrink: 0 }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 11v6M12 7.5v.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="12" cy="12" r="9.2" stroke="currentColor" strokeWidth="1.5"/></svg>
+              </button>
             </div>
-            <button onClick={() => setKgPicked(Math.min(maxKg, kgPicked + 1))} disabled={kgPicked >= maxKg} style={{ width: 44, height: 44, borderRadius: 22, background: WBRAND.white, border: `1px solid ${kgPicked >= maxKg ? WBRAND.line : WBRAND.line2}`, cursor: kgPicked >= maxKg ? 'not-allowed' : 'pointer', color: kgPicked >= maxKg ? WBRAND.muted2 : WBRAND.ink, display: 'grid', placeItems: 'center', opacity: kgPicked >= maxKg ? 0.5 : 1 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5v14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
-            </button>
           </div>
-
-          <div style={{ padding: '10px 14px', background: WBRAND.surface2, borderRadius: 8, fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, lineHeight: 1.5 }}>
-            Cast as <strong style={{ color: WBRAND.ink, fontWeight: 700 }}>{kgPicked} × 1 kg bars</strong> · 999.5 fine · Ahlatci Gold Refinery mint
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'baseline', gap: 8 }}>
+              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums' }}>{kgPicked}</span>
+              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 18, color: WBRAND.muted }}>kg</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button onClick={() => setKgPicked(Math.max(1, kgPicked - 1))} disabled={kgPicked <= 1} style={{ width: 38, height: 38, borderRadius: 19, background: WBRAND.white, border: `1px solid ${kgPicked <= 1 ? WBRAND.line : WBRAND.line2}`, cursor: kgPicked <= 1 ? 'not-allowed' : 'pointer', color: kgPicked <= 1 ? WBRAND.muted2 : WBRAND.ink, display: 'grid', placeItems: 'center', opacity: kgPicked <= 1 ? 0.5 : 1 }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
+              </button>
+              <button onClick={() => setKgPicked(Math.min(maxKg, kgPicked + 1))} disabled={kgPicked >= maxKg} style={{ width: 38, height: 38, borderRadius: 19, background: WBRAND.white, border: `1px solid ${kgPicked >= maxKg ? WBRAND.line : WBRAND.line2}`, cursor: kgPicked >= maxKg ? 'not-allowed' : 'pointer', color: kgPicked >= maxKg ? WBRAND.muted2 : WBRAND.ink, display: 'grid', placeItems: 'center', opacity: kgPicked >= maxKg ? 0.5 : 1 }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5v14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
+              </button>
+            </div>
+          </div>
+          <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, fontVariantNumeric: 'tabular-nums', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <span>Balance: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
+            <button onClick={() => setKgPicked(maxKg)} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, flexShrink: 0 }}>MAX</button>
           </div>
         </div>
-      </WCard>
 
-      <WCard padding={0}>
-        <div style={{ padding: '18px 22px' }}>
+        {/* Divider with parcel chevron */}
+        <div style={{ borderTop: `1px solid ${WBRAND.line}`, position: 'relative' }}>
+          <div style={{ position: 'absolute', top: -16, left: '50%', transform: 'translateX(-50%)', width: 32, height: 32, borderRadius: 16, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, display: 'grid', placeItems: 'center', zIndex: 1, color: WBRAND.ink }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="8" width="18" height="4" rx="1" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/>
+              <path d="M5 12v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/>
+              <path d="M12 8v13" stroke="currentColor" strokeWidth="1.7"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* Ship to */}
+        <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2 }}>
           <WEyebrow>Ship to</WEyebrow>
-          <div style={{ marginTop: 12 }}>
+          <div style={{ marginTop: 10 }}>
             <SelectField
               value={(() => { const a = addresses.find(x => x.id === addrId) || addresses[0]; return `${a.label} · ${a.city} — ${a.line}, ${a.country}`; })()}
               options={addresses.map(a => `${a.label} · ${a.city} — ${a.line}, ${a.country}`)}
@@ -227,11 +285,9 @@ function RedeemPhysicalWeb() {
         </div>
         <div style={{ padding: '4px 22px 8px' }}>
           {[
-            { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 fine` },
-            { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 4)} AHLG` },
-            { l: 'Casting',           v: 'Ahlatci Gold Refinery' },
-            { l: 'Shipping',          v: 'Brinks · AED 120' },
-            { l: 'Insurance',         v: 'Included' },
+            { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 fine · Ahlatci Gold Refinery` },
+            { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AHLG · ≈ $${wfmt(kgPicked * 1000 * WRATES.AHLG, 0)}` },
+            { l: 'Shipping',          v: 'Brinks · AED 120 · fully insured' },
             { l: 'Estimated arrival', v: '3–5 business days' },
           ].map((r, i, arr) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
@@ -263,6 +319,46 @@ function RedeemPhysicalWeb() {
       )}
 
       {shipAddOpen && <AddDestinationModal tab="shipping" onClose={() => setShipAddOpen(false)}/>}
+
+      {infoOpen && (
+        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+            <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="8" width="18" height="4" rx="1" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/>
+                    <path d="M5 12v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/>
+                    <path d="M12 8v13" stroke={WBRAND.ink} strokeWidth="1.7"/>
+                  </svg>
+                </div>
+                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>Physical delivery rules</h2>
+              </div>
+              <button onClick={() => setInfoOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', flexShrink: 0, background: WBRAND.surface, cursor: 'pointer', color: WBRAND.ink, display: 'grid', placeItems: 'center' }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              </button>
+            </div>
+            <div style={{ padding: '18px 24px 8px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {[
+                { t: 'Minimum 1 kg', d: 'Physical redemption starts at one 1 kg bar — equal to 1,000 AHLG.' },
+                { t: 'Whole-kilogram multiples', d: 'Bars are cast in 1 kg units, so you can only redeem whole kilograms (1, 2, 3 …). Fractional amounts stay in your digital balance.' },
+                { t: 'Up to your balance', d: `With ${wfmt(WBALANCES.AHLG, 0)} AHLG you can take delivery of up to ${maxKg} kg right now.` },
+              ].map((r, i) => (
+                <div key={i} style={{ display: 'flex', gap: 12 }}>
+                  <div style={{ width: 22, height: 22, borderRadius: 11, background: WBRAND.redSoft, color: WBRAND.red, display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>{i + 1}</div>
+                  <div>
+                    <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{r.t}</div>
+                    <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3, lineHeight: 1.5 }}>{r.d}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ padding: '16px 24px 20px' }}>
+              <WPrimary size="lg" onClick={() => setInfoOpen(false)} style={{ width: '100%', justifyContent: 'center' }}>Got it</WPrimary>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
