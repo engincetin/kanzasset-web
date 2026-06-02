@@ -16,10 +16,17 @@ function FormRow({ label, hint, children }) {
   );
 }
 
-function TextField({ value, placeholder, disabled = false, suffix }) {
+function TextField({ value, placeholder, disabled = false, locked = false, suffix }) {
+  const ro = disabled || locked;
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8, height: 40, padding: '0 14px', borderRadius: 8, background: disabled ? WBRAND.surface : WBRAND.white, border: `1px solid ${WBRAND.line2}` }}>
-      <input defaultValue={value} placeholder={placeholder} disabled={disabled} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, fontWeight: 500 }}/>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, height: 40, padding: '0 14px', borderRadius: 8, background: ro ? WBRAND.surface : WBRAND.white, border: `1px solid ${WBRAND.line2}` }}>
+      <input defaultValue={value} placeholder={placeholder} disabled={ro} readOnly={locked} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 13, color: ro ? WBRAND.muted : WBRAND.ink, fontWeight: 500 }}/>
+      {locked && (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+          <rect x="5" y="11" width="14" height="9" rx="2" stroke={WBRAND.muted2} strokeWidth="1.7"/>
+          <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke={WBRAND.muted2} strokeWidth="1.7"/>
+        </svg>
+      )}
       {suffix && <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{suffix}</span>}
     </div>
   );
@@ -86,33 +93,50 @@ function Toggle({ on }) {
 
 function ProfAccount() {
   return (
-    <SectionCard title="Personal details" sub="Information shown on your profile and used for verification." footer={<><WSecondary>Cancel</WSecondary><WPrimary>Save changes</WPrimary></>}>
+    <SectionCard
+      title="Personal details"
+      sub="These details are locked because they're used for identity verification."
+      footer={
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%' }}>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8 }}>
+            {WIcon.shield(WBRAND.muted)}
+            <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>
+              Need to update something? Our team will verify and change it for you.
+            </span>
+          </div>
+          <WPrimary
+            icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round"/></svg>}>
+            Contact support
+          </WPrimary>
+        </div>
+      }
+    >
       <FormRow label="Full legal name" hint="Must match your government-issued ID exactly.">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          <TextField value="Ahmet"/>
-          <TextField value="Yılmaz"/>
+          <TextField value="Ahmet" locked/>
+          <TextField value="Yılmaz" locked/>
         </div>
       </FormRow>
       <FormRow label="Email" hint="Used for sign-in and important account notifications.">
         <div style={{ display: 'flex', gap: 8 }}>
-          <TextField value="ahmet@kanzasset.com"/>
+          <TextField value="ahmet@kanzasset.com" locked/>
           <WPill tone="positive" style={{ alignSelf: 'center' }}>{WIcon.check(WBRAND.positive)} Verified</WPill>
         </div>
       </FormRow>
       <FormRow label="Phone number" hint="Used for SMS 2FA and large-withdrawal confirmation.">
         <div style={{ display: 'flex', gap: 8 }}>
-          <TextField value="+90 532 444 7890"/>
+          <TextField value="+90 532 444 7890" locked/>
           <WPill tone="positive" style={{ alignSelf: 'center' }}>{WIcon.check(WBRAND.positive)} Verified</WPill>
         </div>
       </FormRow>
       <FormRow label="Country of residence" hint="Determines available payment rails and shipping zones.">
-        <TextField value="🇹🇷 Türkiye"/>
+        <TextField value="🇹🇷 Türkiye" locked/>
       </FormRow>
       <FormRow label="Date of birth" hint="Used to verify legal age and identity.">
-        <TextField value="14 March 1986" disabled/>
+        <TextField value="14 March 1986" locked/>
       </FormRow>
       <FormRow label="Tax residency" hint="Required for reporting jurisdictions where applicable.">
-        <TextField value="Türkiye · TR-VKN 9043221854"/>
+        <TextField value="Türkiye · TR-VKN 9043221854" locked/>
       </FormRow>
     </SectionCard>
   );
