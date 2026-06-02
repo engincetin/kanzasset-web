@@ -40,7 +40,7 @@ export const WRATES = {
 };
 
 export const WBALANCES = {
-  AHLG: 2500, USDT: 10000, USDC: 5000,
+  AHLG: 7500, USDT: 10000, USDC: 5000,
   AED: 100000, USD: 50000, EUR: 0, GBP: 0,
 };
 
