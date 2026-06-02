@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
@@ -66,7 +66,7 @@ export function WebSupport({ navigate, prefillTx }) {
       <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24 }}>
         <div style={{ flex: 1 }}>
           <WEyebrow>Support</WEyebrow>
-          <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Help & tickets</h1>
+          <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Support center</h1>
           <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
             Open a ticket about a transaction or account issue. Our desk replies within 2 hours, 24/7.
           </div>
@@ -91,7 +91,7 @@ export function WebSupport({ navigate, prefillTx }) {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: 20, alignItems: 'start' }}>
         {/* Ticket list */}
         <WCard padding={0}>
           <div style={{ padding: '16px 20px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -163,6 +163,10 @@ export function WebSupport({ navigate, prefillTx }) {
 // ─── Ticket thread ────────────────────────────────────────────
 function TicketThread({ ticket, onReply }) {
   const [draft, setDraft] = useState('');
+  const scrollRef = useRef(null);
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [ticket.messages.length, ticket.id]);
   return (
     <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', maxHeight: 600 }}>
       <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
@@ -178,7 +182,7 @@ function TicketThread({ ticket, onReply }) {
         </div>
       </div>
 
-      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '18px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div ref={scrollRef} style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '18px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
         {ticket.messages.map((msg, i) => {
           const mine = msg.from === 'user';
           return (
