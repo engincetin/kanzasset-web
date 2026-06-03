@@ -141,7 +141,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
       </div>
 
       <nav style={{ display: 'flex', flexDirection: 'column' }}>
-        {NAV_GROUPS.map((g, gi) => (
+        {NAV_GROUPS.slice(0, -1).map((g, gi) => (
           <div key={g.id} style={{ marginTop: gi === 0 ? 0 : (collapsed ? 10 : 14) }}>
             {!collapsed && (
               <div style={{
@@ -202,6 +202,47 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
       </nav>
 
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {/* Pinned last nav group (Help) — items only, no label */}
+        {(() => {
+          const g = NAV_GROUPS[NAV_GROUPS.length - 1];
+          return (
+            <div>
+              {!collapsed
+                ? <div style={{ height: 8 }}/>
+                : <div style={{ width: 20, height: 1, background: WBRAND.line, margin: '0 auto 8px' }}/>}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {g.items.map(it => {
+                  const on = it.id === active;
+                  return (
+                    <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : onNavigate(it.id)}
+                      title={collapsed ? it.label : undefined}
+                      style={{
+                        display: 'flex', alignItems: 'center',
+                        gap: collapsed ? 0 : 12,
+                        padding: collapsed ? '10px 0' : '9px 12px',
+                        justifyContent: collapsed ? 'center' : 'flex-start',
+                        borderRadius: 8,
+                        background: on ? WBRAND.ink : 'transparent',
+                        color: on ? '#fff' : WBRAND.ink,
+                        border: 'none', cursor: 'pointer', textAlign: 'left',
+                        fontFamily: WFONT, fontWeight: on ? 700 : 500, fontSize: 13,
+                        letterSpacing: '-0.005em', position: 'relative',
+                      }}>
+                      {it.icon(on ? '#fff' : WBRAND.muted)}
+                      {!collapsed && <span style={{ flex: 1 }}>{navT(it.label)}</span>}
+                      {!collapsed && it.external && !on && (
+                        <span style={{ display: 'inline-grid', placeItems: 'center', opacity: 0.7 }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M9 5h10v10M19 5L9 15M5 9v10h10" stroke={WBRAND.muted} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
+
         {!collapsed ? (
           <>
             <div style={{
