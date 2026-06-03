@@ -212,6 +212,7 @@ function TicketThread({ ticket, onReply }) {
             <textarea value={draft} onChange={e => setDraft(e.target.value)} placeholder={t('Type your reply…')} rows={2} style={{
               flex: 1, resize: 'none', border: `1px solid ${WBRAND.line2}`, borderRadius: 10,
               padding: '10px 12px', outline: 'none', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink,
+              background: WBRAND.white,
             }}/>
             <WPrimary onClick={() => { if (draft.trim()) { onReply(draft.trim()); setDraft(''); } }}
               style={{ opacity: draft.trim() ? 1 : 0.5, pointerEvents: draft.trim() ? 'auto' : 'none' }}>{t('Send')}</WPrimary>
@@ -287,6 +288,7 @@ function TicketComposer({ prefillTx, onCancel, onSubmit }) {
           <textarea value={body} onChange={e => setBody(e.target.value)} placeholder={t("Describe what happened and what you'd like us to do…")} rows={5} style={{
             width: '100%', resize: 'vertical', border: `1px solid ${WBRAND.line2}`, borderRadius: 10,
             padding: '12px 14px', outline: 'none', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, lineHeight: 1.5,
+            background: WBRAND.white,
           }}/>
         </div>
       </div>
