@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals, WBALANCES, WMETA } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
-import { WCard, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/primitives.jsx';
+import { WCard, WSecondary, WEyebrow, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
 import { FauxWebQR } from '../components/shared.jsx';
 
 export function WebDeposit({ navigate, initialAsset }) {
@@ -93,7 +93,7 @@ export function WebDeposit({ navigate, initialAsset }) {
                       <WEyebrow>Address</WEyebrow>
                       <div style={{ marginTop: 8, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10, fontFamily: WMONO, fontSize: 13, color: WBRAND.ink, wordBreak: 'break-all', lineHeight: 1.5 }}>0x7A4f3B9c2De04A8FbE9eC1A2eE9c2A1d3b7E5C09</div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
-                        <WSecondary size="md" icon={WIcon.copy(WBRAND.ink)} style={{ width: '100%', justifyContent: 'center' }}>Copy address</WSecondary>
+                        <WCopyButton size="md" label="Copy address" text="0x7A4f3B9c2De04A8FbE9eC1A2eE9c2A1d3b7E5C09" style={{ width: '100%', justifyContent: 'center' }}/>
                         <WSecondary size="md" icon={WIcon.share(WBRAND.ink)} style={{ width: '100%', justifyContent: 'center' }}>Share</WSecondary>
                       </div>
                     </div>
@@ -146,7 +146,7 @@ export function WebDeposit({ navigate, initialAsset }) {
                         <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' }}>{r.l}</div>
                         <div style={{ fontFamily: r.mono ? WMONO : WFONT, fontSize: 14, fontWeight: 700, color: r.accent ? WBRAND.red : WBRAND.ink, marginTop: 4, letterSpacing: r.mono ? 0 : '-0.005em', wordBreak: 'break-all' }}>{r.v}</div>
                       </div>
-                      <WSecondary size="sm" icon={WIcon.copy(WBRAND.ink)}>Copy</WSecondary>
+                      <WCopyButton text={r.v}/>
                     </div>
                   ))}
                 </div>

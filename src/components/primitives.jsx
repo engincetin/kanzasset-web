@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WIcon } from './icons.jsx';
 
@@ -50,6 +51,41 @@ export function WSecondary({ children, onClick, style = {}, size = 'md', icon, d
       {icon}
       {children}
     </button>
+  );
+}
+
+// ─── Copy-to-clipboard button (shows a "Copied" state) ────────
+export function WCopyButton({ text, label = 'Copy', copiedLabel = 'Copied', size = 'sm', style = {} }) {
+  const [copied, setCopied] = useState(false);
+
+  const doCopy = async (e) => {
+    e?.stopPropagation?.();
+    const value = String(text ?? '');
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = value;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch { /* noop */ }
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  return (
+    <WSecondary
+      size={size}
+      onClick={doCopy}
+      icon={copied ? WIcon.check(WBRAND.positive) : WIcon.copy(WBRAND.ink)}
+      style={copied ? { color: WBRAND.positive, borderColor: WBRAND.positive, ...style } : style}
+    >
+      {copied ? copiedLabel : label}
+    </WSecondary>
   );
 }
 

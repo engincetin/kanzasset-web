@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { AHLGMark } from '../components/coinicons.jsx';
-import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
+import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
 import { AddDestinationModal } from './Profile.jsx';
@@ -438,7 +438,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
                   <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Tracking number</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
                     <WMonoNum size={15} weight={500} style={{ flex: 1 }}>{tracking}</WMonoNum>
-                    <WSecondary size="sm" icon={WIcon.copy(WBRAND.ink)}>Copy</WSecondary>
+                    <WCopyButton text={tracking}/>
                   </div>
                   <a href={`https://${trackUrl}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12, height: 42, borderRadius: 10, background: WBRAND.white, border: `1px solid ${WBRAND.line2}`, textDecoration: 'none', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink }}>
                     Track shipment on Brinks

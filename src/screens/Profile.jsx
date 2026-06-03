@@ -6,7 +6,7 @@ import { toast } from '../components/Toast.jsx';
 const NUMFMT_US = '1,234.56  ·  US / UK';
 const NUMFMT_EU = '1.234,56  ·  Europe';
 import { WIcon } from '../components/icons.jsx';
-import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
+import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
 
 function FormRow({ label, hint, children }) {
   return (
@@ -374,7 +374,7 @@ function ProfDestinations() {
                 <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{r.ch} · added {r.added}</span>
               </div>
             </div>
-            <WSecondary size="sm" icon={WIcon.copy(WBRAND.ink)}>Copy</WSecondary>
+            <WCopyButton text={r.a}/>
             <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>Remove</button>
           </div>
         ))}

@@ -1,7 +1,7 @@
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
 import { WIcon } from './icons.jsx';
 import { WCoinDot } from './coinicons.jsx';
-import { WPill, WMonoNum, WPrimary, WSecondary } from './primitives.jsx';
+import { WPill, WMonoNum, WPrimary, WSecondary, WCopyButton } from './primitives.jsx';
 
 // Per-type metadata for the detail view
 export function txMeta(tx) {
@@ -92,7 +92,7 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
               <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Transaction hash</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', background: WBRAND.surface, borderRadius: 10 }}>
                 <WMonoNum size={12} style={{ flex: 1, wordBreak: 'break-all' }}>{hash.slice(0, 26)}…</WMonoNum>
-                <WSecondary size="sm" icon={WIcon.copy(WBRAND.ink)}>Copy</WSecondary>
+                <WCopyButton text={hash}/>
               </div>
               <a href={`https://${explorer}`} target="_blank" rel="noreferrer" style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
