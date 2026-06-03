@@ -51,6 +51,12 @@ export const NAV_GROUPS = [
           <path d="M4 4h16" stroke={c} strokeWidth="1.7" strokeLinecap="round"/>
         </svg>,
       },
+      {
+        id: 'activity', label: 'Activity',
+        icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12h4l3-7 4 14 3-7h4" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>,
+      },
     ],
   },
   {
@@ -77,14 +83,8 @@ export const NAV_GROUPS = [
   },
   {
     id: 'account',
-    label: 'Account',
+    label: 'Help',
     items: [
-      {
-        id: 'activity', label: 'Activity',
-        icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M3 12h4l3-7 4 14 3-7h4" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>,
-      },
       {
         id: 'support', label: 'Support',
         icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -92,10 +92,10 @@ export const NAV_GROUPS = [
         </svg>,
       },
       {
-        id: 'profile', label: 'Profile',
+        id: 'docs', label: 'Documentation', external: 'https://docs.kanzasset.com',
         icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="9" r="3.5" stroke={c} strokeWidth="1.7"/>
-          <path d="M5 20c1.5-3.5 4.2-5 7-5s5.5 1.5 7 5" stroke={c} strokeWidth="1.7" strokeLinecap="round"/>
+          <path d="M5 4a1 1 0 011-1h9l4 4v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4z" stroke={c} strokeWidth="1.7" strokeLinejoin="round"/>
+          <path d="M14 3v5h5M8 13h8M8 17h5" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>,
       },
     ],
@@ -158,7 +158,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
               {g.items.map(it => {
                 const on = it.id === active;
                 return (
-                  <button key={it.id} onClick={() => onNavigate(it.id)}
+                  <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : onNavigate(it.id)}
                     title={collapsed ? it.label : undefined}
                     style={{
                       display: 'flex', alignItems: 'center',
@@ -175,6 +175,11 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
                     }}>
                     {it.icon(on ? '#fff' : WBRAND.muted)}
                     {!collapsed && <span style={{ flex: 1 }}>{navT(it.label)}</span>}
+                    {!collapsed && it.external && !on && (
+                      <span style={{ display: 'inline-grid', placeItems: 'center', opacity: 0.7 }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M9 5h10v10M19 5L9 15M5 9v10h10" stroke={WBRAND.muted} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </span>
+                    )}
                     {!collapsed && it.badge && !on && (
                       <span style={{
                         fontFamily: WFONT, fontSize: 9, fontWeight: 800,

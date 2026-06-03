@@ -520,4 +520,6 @@ export const tr = {
   "Your request to send": "Şu tutarı gönderme talebiniz:",
   "Your tickets": "Talepleriniz",
   "Your verification tier unlocks higher daily limits and physical delivery.": "Doğrulama kademeniz daha yüksek günlük limitler ve fiziki teslimat sağlar.",
+  "Help": "Yardım",
+  "Documentation": "Dokümantasyon",
 };
