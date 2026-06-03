@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { WBRAND, subscribeNumberStyle } from './lib/index.js';
+import { t, subscribeLang } from './lib/i18n.js';
 import { WSidebar } from './layout/Sidebar.jsx';
 import { WTopbar } from './layout/Topbar.jsx';
 import { WNotificationsDrawer } from './layout/NotificationsDrawer.jsx';
@@ -16,17 +17,17 @@ import { WebSupport } from './screens/Support.jsx';
 import { WebProfile } from './screens/Profile.jsx';
 import { WTxDetailModal } from './components/TxDetailModal.jsx';
 
-const TITLES = {
-  dashboard: { title: 'Welcome back, Ahmet', sub: null },
-  wallet:    { title: 'Wallet',               sub: 'Balances & holdings' },
-  mint:      { title: 'Mint AHLG',            sub: 'Live rate · refreshed every 10s' },
-  redeem:    { title: 'Redeem AHLG',          sub: 'Live rate · refreshed every 10s' },
-  deposit:   { title: 'Deposit',              sub: 'Add crypto or fiat' },
-  withdraw:  { title: 'Withdraw',             sub: 'Send to whitelisted destination' },
-  activity:  { title: 'Activity',             sub: 'All transaction history' },
-  support:   { title: 'Support',              sub: 'Help & tickets' },
-  profile:   { title: 'Account settings',     sub: 'Tier 3 · institutional' },
-};
+const titlesFor = () => ({
+  dashboard: { title: t('Welcome back, Ahmet', 'Tekrar hoş geldiniz, Ahmet'), sub: null },
+  wallet:    { title: t('Wallet', 'Cüzdan'),            sub: t('Balances & holdings', 'Bakiyeler ve varlıklar') },
+  mint:      { title: t('Mint AHLG', 'AHLG Üret'),      sub: t('Live rate · refreshed every 10s', 'Canlı kur · her 10 sn’de yenilenir') },
+  redeem:    { title: t('Redeem AHLG', 'AHLG Boz'),     sub: t('Live rate · refreshed every 10s', 'Canlı kur · her 10 sn’de yenilenir') },
+  deposit:   { title: t('Deposit', 'Para Yatır'),       sub: t('Add crypto or fiat', 'Kripto veya fiat ekle') },
+  withdraw:  { title: t('Withdraw', 'Para Çek'),         sub: t('Send to whitelisted destination', 'Beyaz listedeki adrese gönder') },
+  activity:  { title: t('Activity', 'İşlemler'),         sub: t('All transaction history', 'Tüm işlem geçmişi') },
+  support:   { title: t('Support', 'Destek'),            sub: t('Help & tickets', 'Yardım ve talepler') },
+  profile:   { title: t('Account settings', 'Hesap ayarları'), sub: t('Tier 3 · institutional', 'Kademe 3 · kurumsal') },
+});
 
 function Screen({ active, navigate, onLogout, onOpenTx, profileSection, profileKey, supportTx, supportKey }) {
   switch (active) {
@@ -53,6 +54,7 @@ function AppShell({ onLogout }) {
   const [supportTx, setSupportTx] = useState(null);
   const [supportKey, setSupportKey] = useState(0);
 
+  const TITLES = titlesFor();
   const { title, sub } = TITLES[active] ?? TITLES.dashboard;
 
   const navigate = (screen, section) => {
@@ -124,8 +126,9 @@ export default function App() {
   const [authed, setAuthed] = useState(false);
   const [, force] = useState(0);
 
-  // Re-render the whole app when the number-format preference changes
+  // Re-render the whole app when the number-format or language preference changes
   useEffect(() => subscribeNumberStyle(() => force(n => n + 1)), []);
+  useEffect(() => subscribeLang(() => force(n => n + 1)), []);
 
   return (
     <>

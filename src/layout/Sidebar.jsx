@@ -1,5 +1,13 @@
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
+import { t } from '../lib/i18n.js';
 import { WMark, WLogotype, AHLGMark } from '../components/coinicons.jsx';
+
+const NAV_TR = {
+  Overview: 'Genel', Funds: 'Fonlar', 'AHL Gold': 'AHL Altın', Account: 'Hesap',
+  Dashboard: 'Panel', Wallet: 'Cüzdan', Deposit: 'Para Yatır', Withdraw: 'Para Çek',
+  Mint: 'Üret', Redeem: 'Boz', Activity: 'İşlemler', Support: 'Destek', Profile: 'Profil',
+};
+const navT = (s) => t(s, NAV_TR[s] ?? s);
 
 export const NAV_GROUPS = [
   {
@@ -141,7 +149,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
                 color: WBRAND.muted2, letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 padding: gi === 0 ? '0 12px 6px' : '8px 12px 6px',
-              }}>{g.label}</div>
+              }}>{navT(g.label)}</div>
             )}
             {collapsed && gi > 0 && (
               <div style={{ width: 20, height: 1, background: WBRAND.line, margin: '4px auto 8px' }}/>
@@ -166,13 +174,13 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
                       position: 'relative',
                     }}>
                     {it.icon(on ? '#fff' : WBRAND.muted)}
-                    {!collapsed && <span style={{ flex: 1 }}>{it.label}</span>}
+                    {!collapsed && <span style={{ flex: 1 }}>{navT(it.label)}</span>}
                     {!collapsed && it.badge && !on && (
                       <span style={{
                         fontFamily: WFONT, fontSize: 9, fontWeight: 800,
                         color: WBRAND.red, background: WBRAND.redSoft,
                         padding: '2px 6px', borderRadius: 4, letterSpacing: '0.04em',
-                      }}>{it.badge}</span>
+                      }}>{t(it.badge, 'YENİ')}</span>
                     )}
                     {collapsed && it.badge && !on && (
                       <span style={{
@@ -223,7 +231,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
               padding: '8px 10px', borderRadius: 8, background: WBRAND.surface,
             }}>
               <span style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.positive, boxShadow: `0 0 0 3px rgba(15,122,71,0.16)` }}/>
-              <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>All systems operational</span>
+              <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t('All systems operational', 'Tüm sistemler çalışıyor')}</span>
             </div>
           </>
         ) : (

@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, getNumberStyle, setNumberStyle } from '../lib/index.js';
 import { getAuthChannel, setAuthChannel } from '../lib/authChannel.js';
+import { getLang, setLang, t } from '../lib/i18n.js';
 import { toast } from '../components/Toast.jsx';
 
+const LANG_EN = 'English';
+const LANG_TR = 'Türkçe';
 const NUMFMT_US = '1,234.56  ·  US / UK';
 const NUMFMT_EU = '1.234,56  ·  Europe';
 import { WIcon } from '../components/icons.jsx';
@@ -535,15 +538,15 @@ export function AddDestinationModal({ tab, onClose }) {
 }
 
 function ProfPrefs() {
-  const [lang, setLang] = useState('English · United Kingdom');
+  const [lang, setLangSel] = useState(getLang() === 'tr' ? LANG_TR : LANG_EN);
   const [ccy, setCcy]   = useState('USDT — US dollar tether');
   const [tz, setTz]     = useState('Europe/Istanbul (UTC+03:00)');
   const [numFmt, setNumFmt] = useState(getNumberStyle() === 'eu' ? NUMFMT_EU : NUMFMT_US);
 
   return (
-    <SectionCard title="Preferences" sub="Language, currency, and notification settings." footer={<WPrimary onClick={() => toast('Preferences saved', { title: 'Saved' })}>Save preferences</WPrimary>}>
-      <FormRow label="Display language" hint="Used across the web and mobile apps.">
-        <SelectField value={lang} onChange={setLang} options={['English · United Kingdom', 'English · United States', 'Türkçe · Türkiye', 'العربية · الإمارات', 'Français · France', 'Deutsch · Deutschland', '中文 · 简体']}/>
+    <SectionCard title={t('Preferences', 'Tercihler')} sub={t('Language, currency, and notification settings.', 'Dil, para birimi ve bildirim ayarları.')} footer={<WPrimary onClick={() => toast(t('Preferences saved', 'Tercihler kaydedildi'), { title: t('Saved', 'Kaydedildi') })}>{t('Save preferences', 'Tercihleri kaydet')}</WPrimary>}>
+      <FormRow label={t('Display language', 'Görüntüleme dili')} hint={t('Used across the web and mobile apps.', 'Web ve mobil uygulamalar genelinde kullanılır.')}>
+        <SelectField value={lang} onChange={(v) => { setLangSel(v); setLang(v === LANG_TR ? 'tr' : 'en'); toast(v === LANG_TR ? 'Dil Türkçe olarak ayarlandı' : 'Language set to English', { title: v === LANG_TR ? 'Dil güncellendi' : 'Language updated' }); }} options={[LANG_EN, LANG_TR]}/>
       </FormRow>
       <FormRow label="Display currency" hint="Default currency for portfolio totals and quotes.">
         <SelectField value={ccy} onChange={setCcy} groups={[
