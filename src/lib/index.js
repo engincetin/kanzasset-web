@@ -48,6 +48,7 @@ const _resolve = (t) => t === 'system'
   : t;
 
 export const getTheme = () => _theme;
+export const isDark = () => _resolve(_theme) === 'dark';
 export const applyTheme = (t) => {
   if (t !== 'light' && t !== 'dark' && t !== 'system') return;
   _theme = t;

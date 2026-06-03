@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wTotalIn, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wTotalIn, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData, isDark } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WSectionTitle } from '../components/primitives.jsx';
@@ -156,29 +156,40 @@ export function WebPortfolio({ navigate, onOpenTx }) {
 
         {/* AHLG holdings */}
         <WCard padding={0} style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '24px 28px 24px', flex: 1, background: WBRAND.heroBg, color: '#fff', borderTopLeftRadius: 16, borderTopRightRadius: 16, position: 'relative', overflow: 'hidden' }}>
-            <style>{`@keyframes kzDotDrift{from{background-position:0 0}to{background-position:40px 40px}}`}</style>
-            <div style={{
-              position: 'absolute', inset: 0, pointerEvents: 'none',
-              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1.5px)',
-              backgroundSize: '20px 20px',
-              animation: 'kzDotDrift 16s linear infinite',
-              WebkitMaskImage: 'radial-gradient(130% 110% at 100% 0%, #000 25%, transparent 72%)',
-              maskImage: 'radial-gradient(130% 110% at 100% 0%, #000 25%, transparent 72%)',
-            }}/>
-            <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: 120, background: WBRAND.red, opacity: 0.18, filter: 'blur(50px)' }}/>
-            <div style={{ position: 'relative' }}>
-              <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>{t('AHL Gold holdings')}</div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative' }}>
-              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 52, color: '#fff', letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(WBALANCES.AHLG, 0)}</span>
-              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 18, color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.01em' }}>AHLG</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative' }}>
-              <WPill tone="inkInv" style={{ fontSize: 12, padding: '5px 10px', background: 'rgba(255,255,255,0.14)', color: '#fff' }}>{(WBALANCES.AHLG / 1000).toFixed(1)} {t('kg in vault')}</WPill>
-              <span style={{ fontFamily: WFONT, fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AHLG * WRATES.AHLG)}</span>
-            </div>
-          </div>
+          {(() => {
+            const dark = isDark();
+            const heroBg    = dark ? WBRAND.heroBg : WBRAND.white;
+            const heroText  = dark ? '#fff' : WBRAND.ink;
+            const heroLabel = dark ? 'rgba(255,255,255,0.55)' : WBRAND.muted;
+            const heroPillBg   = dark ? 'rgba(255,255,255,0.14)' : WBRAND.surface;
+            const heroPillText = dark ? '#fff' : WBRAND.ink;
+            const dotColor  = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.05)';
+            return (
+              <div style={{ padding: '24px 28px 24px', flex: 1, background: heroBg, color: heroText, borderTopLeftRadius: 16, borderTopRightRadius: 16, borderBottom: `1px solid ${WBRAND.line}`, position: 'relative', overflow: 'hidden' }}>
+                <style>{`@keyframes kzDotDrift{from{background-position:0 0}to{background-position:40px 40px}}`}</style>
+                <div style={{
+                  position: 'absolute', inset: 0, pointerEvents: 'none',
+                  backgroundImage: `radial-gradient(circle, ${dotColor} 1px, transparent 1.5px)`,
+                  backgroundSize: '20px 20px',
+                  animation: 'kzDotDrift 16s linear infinite',
+                  WebkitMaskImage: 'radial-gradient(130% 110% at 100% 0%, #000 25%, transparent 72%)',
+                  maskImage: 'radial-gradient(130% 110% at 100% 0%, #000 25%, transparent 72%)',
+                }}/>
+                <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: 120, background: WBRAND.red, opacity: dark ? 0.18 : 0.16, filter: 'blur(50px)' }}/>
+                <div style={{ position: 'relative' }}>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: heroLabel }}>{t('AHL Gold holdings')}</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative' }}>
+                  <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 52, color: heroText, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(WBALANCES.AHLG, 0)}</span>
+                  <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 18, color: heroLabel, letterSpacing: '-0.01em' }}>AHLG</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative' }}>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, padding: '5px 10px', borderRadius: 6, background: heroPillBg, color: heroPillText, fontVariantNumeric: 'tabular-nums' }}>{(WBALANCES.AHLG / 1000).toFixed(1)} {t('kg in vault')}</span>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, color: heroLabel, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AHLG * WRATES.AHLG)}</span>
+                </div>
+              </div>
+            );
+          })()}
 
           <div style={{ height: 80, flexShrink: 0, padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
