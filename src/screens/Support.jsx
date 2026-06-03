@@ -196,7 +196,7 @@ function TicketThread({ ticket, onReply }) {
               </div>
               <div style={{
                 maxWidth: '85%', padding: '10px 14px', borderRadius: 12,
-                background: mine ? WBRAND.ink : WBRAND.surface,
+                background: mine ? WBRAND.panel : WBRAND.surface,
                 color: mine ? '#fff' : WBRAND.ink,
                 fontFamily: WFONT, fontSize: 13, lineHeight: 1.5,
                 borderBottomRightRadius: mine ? 3 : 12, borderBottomLeftRadius: mine ? 12 : 3,

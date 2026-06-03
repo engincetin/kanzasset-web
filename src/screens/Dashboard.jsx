@@ -369,7 +369,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             ].map((n, i, arr) => {
               const dotColor = n.tone === 'pos' ? WBRAND.positive : n.tone === 'warn' ? WBRAND.warn : WBRAND.muted;
               return (
-                <div key={i} style={{ padding: '12px 18px', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', gap: 10, background: n.unread ? '#FCFCFA' : 'transparent' }}>
+                <div key={i} style={{ padding: '12px 18px', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', gap: 10, background: n.unread ? WBRAND.surface2 : 'transparent' }}>
                   <span style={{ width: 6, height: 6, borderRadius: 3, background: dotColor, marginTop: 6, flexShrink: 0 }}/>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{n.title}</div>

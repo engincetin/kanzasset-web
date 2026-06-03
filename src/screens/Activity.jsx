@@ -159,7 +159,7 @@ export function WebActivity({ navigate, onOpenTx }) {
           <div style={{ display: 'flex', gap: 6 }}>
             <WSecondary size="sm">← {t('Previous')}</WSecondary>
             {[1, 2, 3, 4].map(p => (
-              <button key={p} style={{ width: 32, height: 32, borderRadius: 8, background: p === 1 ? WBRAND.ink : WBRAND.white, color: p === 1 ? '#fff' : WBRAND.ink, border: `1px solid ${p === 1 ? WBRAND.ink : WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>{p}</button>
+              <button key={p} style={{ width: 32, height: 32, borderRadius: 8, background: p === 1 ? WBRAND.panel : WBRAND.white, color: p === 1 ? '#fff' : WBRAND.ink, border: `1px solid ${p === 1 ? WBRAND.panel : WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>{p}</button>
             ))}
             <span style={{ display: 'grid', placeItems: 'center', padding: '0 4px', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>…</span>
             <button style={{ width: 32, height: 32, borderRadius: 8, background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>8</button>
