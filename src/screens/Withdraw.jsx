@@ -114,8 +114,8 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
               <div style={{ background: WBRAND.surface2, border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: '4px 16px' }}>
                 {[
                   { l: 'Reference',         v: 'WD-' + Math.floor(100000 + Math.random() * 899999) },
-                  { l: 'Status',            v: 'Processing', pill: true },
-                  { l: 'Estimated arrival', v: kind === 'crypto' ? '≈ 3 minutes' : '1–2 business days' },
+                  { l: 'Status',            v: t('Processing'), pill: true },
+                  { l: 'Estimated arrival', v: kind === 'crypto' ? t('≈ 3 minutes') : t('1–2 business days') },
                 ].map((r, i, arr) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
                     <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{t(r.l)}</span>
@@ -221,7 +221,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
                   {[25, 50, 75].map(p => (
                     <button key={p} onClick={() => setAmount(wgroup(String(asset.balance * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
                   ))}
-                  <button onClick={() => setAmount(wgroup(String(asset.balance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>MAX</button>
+                  <button onClick={() => setAmount(wgroup(String(asset.balance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
                 </span>
               </div>
             </div>
@@ -270,9 +270,9 @@ export function WebWithdraw({ navigate, initialAsset }) {
                 { l: 'Send',             v: `${amt > 0 ? wfmt(amt, wdecimals(asset.symbol)) : '—'} ${asset.symbol}`, accent: true },
                 { l: 'Network / Rail',   v: kind === 'crypto' ? 'Ethereum · ERC-20' : asset.symbol + ' · SWIFT' },
                 { l: 'Destination',      v: whitelist.find(w => w.id === destId)?.title ?? '—' },
-                { l: 'Network fee',      v: kind === 'crypto' ? 'Covered by Kanzasset' : 'Bank charges may apply' },
+                { l: 'Network fee',      v: kind === 'crypto' ? t('Covered by Kanzasset') : t('Bank charges may apply') },
                 { l: 'Receive',          v: `${wfmt(receive, wdecimals(asset.symbol))} ${asset.symbol}` },
-                { l: 'Estimated arrival', v: kind === 'crypto' ? '≈ 3 minutes' : '1–2 business days' },
+                { l: 'Estimated arrival', v: kind === 'crypto' ? t('≈ 3 minutes') : t('1–2 business days') },
               ].map((r, i, arr) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
                   <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{t(r.l)}</span>

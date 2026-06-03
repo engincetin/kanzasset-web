@@ -40,7 +40,7 @@ function RedeemDigital({ targets, to, setTo }) {
               {[25, 50, 75].map(p => (
                 <button key={p} onClick={() => setAmount(wgroup(String(WBALANCES.AHLG * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
               ))}
-              <button onClick={() => setAmount(wgroup(String(WBALANCES.AHLG)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>MAX</button>
+              <button onClick={() => setAmount(wgroup(String(WBALANCES.AHLG)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
             </span>
           </div>
         </div>
@@ -250,7 +250,7 @@ function RedeemPhysicalWeb() {
           </div>
           <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, fontVariantNumeric: 'tabular-nums', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
-            <button onClick={() => setKgPicked(maxKg)} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, flexShrink: 0 }}>MAX</button>
+            <button onClick={() => setKgPicked(maxKg)} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, flexShrink: 0 }}>{t('MAX')}</button>
           </div>
         </div>
 
