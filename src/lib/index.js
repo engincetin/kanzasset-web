@@ -17,6 +17,7 @@ const WLIGHT = {
   positive:'#0F7A47',
   warn:    '#B7791F',
   panel:   '#0A0A0A',   // dark accent surface (white text on top)
+  heroBg:  '#2C2D33',   // holdings hero (charcoal grey in light)
 };
 
 const WDARK = {
@@ -35,6 +36,7 @@ const WDARK = {
   positive:'#3DD68C',
   warn:    '#E0A042',
   panel:   '#24252C',
+  heroBg:  '#121317',   // holdings hero (deep, distinct from page in dark)
 };
 
 export const WBRAND = { ...WLIGHT };
