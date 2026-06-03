@@ -161,12 +161,12 @@ export function WebPortfolio({ navigate, onOpenTx }) {
               <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>AHL Gold holdings</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative' }}>
-              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 52, color: '#fff', letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>2,500</span>
+              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 52, color: '#fff', letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(WBALANCES.AHLG, 0)}</span>
               <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 18, color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.01em' }}>AHLG</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative' }}>
-              <WPill tone="inkInv" style={{ fontSize: 12, padding: '5px 10px', background: 'rgba(255,255,255,0.14)', color: '#fff' }}>2.5 kg in vault</WPill>
-              <span style={{ fontFamily: WFONT, fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ $378,900.00</span>
+              <WPill tone="inkInv" style={{ fontSize: 12, padding: '5px 10px', background: 'rgba(255,255,255,0.14)', color: '#fff' }}>{(WBALANCES.AHLG / 1000).toFixed(1)} kg in vault</WPill>
+              <span style={{ fontFamily: WFONT, fontSize: 12, color: 'rgba(255,255,255,0.65)', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AHLG * WRATES.AHLG)}</span>
             </div>
           </div>
 
