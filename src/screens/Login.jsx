@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { t } from '../lib/i18n.js';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
@@ -30,17 +31,17 @@ function WAuthLayout({ children }) {
 
         <div style={{ position: 'relative' }}>
           <AHLGMark size={52}/>
-          <h2 style={{ margin: '24px 0 0', fontFamily: WFONT, fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}>Gold you can hold,<br/>tokenised.</h2>
+          <h2 style={{ margin: '24px 0 0', fontFamily: WFONT, fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}>{t('Gold you can hold,')}<br/>{t('tokenised.')}</h2>
           <p style={{ margin: '16px 0 0', fontFamily: WFONT, fontSize: 14, lineHeight: 1.6, color: 'rgba(255,255,255,0.6)', maxWidth: 360 }}>
-            Mint, redeem and take delivery of investment-grade gold — backed 1:1 by bullion in the Ahlatcı Metal Refinery vault.
+            {t('Mint, redeem and take delivery of investment-grade gold — backed 1:1 by bullion in the Ahlatcı Metal Refinery vault.')}
           </p>
         </div>
 
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 18 }}>
           {[
-            { k: 'Reserve ratio', v: '100%' },
-            { k: 'Vaulted gold', v: '142.7 kg' },
-            { k: 'Audited', v: 'Monthly' },
+            { k: t('Reserve ratio'), v: '100%' },
+            { k: t('Vaulted gold'), v: '142.7 kg' },
+            { k: t('Audited'), v: 'Monthly' },
           ].map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
               {i > 0 && <span style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.14)' }}/>}
@@ -92,16 +93,16 @@ function WebLogin({ onContinue }) {
   return (
     <WAuthLayout>
       <div>
-        <h1 style={{ margin: 0, fontFamily: WFONT, fontSize: 26, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Sign in</h1>
-        <p style={{ margin: '8px 0 0', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>Welcome back. Enter your credentials to continue.</p>
+        <h1 style={{ margin: 0, fontFamily: WFONT, fontSize: 26, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Sign in')}</h1>
+        <p style={{ margin: '8px 0 0', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>{t('Welcome back. Enter your credentials to continue.')}</p>
 
         <form onSubmit={e => { e.preventDefault(); onContinue(); }} style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <AuthField label="Email address">
+          <AuthField label={t('Email address')}>
             <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="you@company.com" style={authInput}/>
           </AuthField>
 
-          <AuthField label="Password" trailing={
-            <button type="button" onClick={() => setShowPw(!showPw)} style={authLink}>{showPw ? 'Hide' : 'Show'}</button>
+          <AuthField label={t('Password')} trailing={
+            <button type="button" onClick={() => setShowPw(!showPw)} style={authLink}>{showPw ? t('Hide') : t('Show')}</button>
           }>
             <input value={pw} onChange={e => setPw(e.target.value)} type={showPw ? 'text' : 'password'} placeholder="••••••••" style={authInput}/>
           </AuthField>
@@ -111,29 +112,29 @@ function WebLogin({ onContinue }) {
               <span style={{ width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${WBRAND.red}`, background: WBRAND.red, display: 'grid', placeItems: 'center' }}>
                 {WIcon.check('#fff')}
               </span>
-              <span style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, fontWeight: 500 }}>Keep me signed in</span>
+              <span style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, fontWeight: 500 }}>{t('Keep me signed in')}</span>
             </label>
-            <button type="button" style={authLink}>Forgot password?</button>
+            <button type="button" style={authLink}>{t('Forgot password?')}</button>
           </div>
 
           <WPrimary size="lg" onClick={onContinue} style={{ width: '100%', justifyContent: 'center', marginTop: 8 }}>
-            Continue
+            {t('Continue')}
           </WPrimary>
         </form>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '22px 0' }}>
           <span style={{ flex: 1, height: 1, background: WBRAND.line }}/>
-          <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted2, fontWeight: 600, letterSpacing: '0.04em' }}>OR</span>
+          <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted2, fontWeight: 600, letterSpacing: '0.04em' }}>{t('OR')}</span>
           <span style={{ flex: 1, height: 1, background: WBRAND.line }}/>
         </div>
 
         <WSecondary size="lg" onClick={onContinue} style={{ width: '100%', justifyContent: 'center', height: 52 }}
           icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/></svg>}>
-          Sign in with passkey
+          {t('Sign in with passkey')}
         </WSecondary>
 
         <p style={{ margin: '24px 0 0', textAlign: 'center', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>
-          New to Kanzasset? <button style={{ ...authLink, fontSize: 13 }}>Request access</button>
+          {t('New to Kanzasset?')} <button style={{ ...authLink, fontSize: 13 }}>{t('Request access')}</button>
         </p>
       </div>
     </WAuthLayout>
@@ -165,15 +166,15 @@ function WebVerify2FA({ onVerified, onBack }) {
           cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 600, color: WBRAND.muted, padding: 0, marginBottom: 18,
         }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          Back
+          {t('Back')}
         </button>
 
         <div style={{ width: 44, height: 44, borderRadius: 11, background: WBRAND.redSoft, display: 'grid', placeItems: 'center', marginBottom: 16 }}>
           {WIcon.shield(WBRAND.red)}
         </div>
-        <h1 style={{ margin: 0, fontFamily: WFONT, fontSize: 26, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Two-factor verification</h1>
+        <h1 style={{ margin: 0, fontFamily: WFONT, fontSize: 26, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Two-factor verification')}</h1>
         <p style={{ margin: '8px 0 0', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, lineHeight: 1.5 }}>
-          Enter the 6-digit code we sent to <strong style={{ color: WBRAND.ink }}>{masked}</strong>.
+          {t('Enter the 6-digit code we sent to')} <strong style={{ color: WBRAND.ink }}>{masked}</strong>.
         </p>
 
         {/* Selected channel (fixed from Security settings) */}
@@ -184,7 +185,7 @@ function WebVerify2FA({ onVerified, onBack }) {
               : <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="6" y="2.5" width="12" height="19" rx="2.5" stroke="currentColor" strokeWidth="1.7"/><path d="M10.5 18.5h3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink }}>Code sent via {channel === 'email' ? 'email' : 'SMS'}</div>
+            <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink }}>{channel === 'email' ? t('Code sent via email') : t('Code sent via SMS')}</div>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{masked}</div>
           </div>
           <WPill tone="neutral">2FA</WPill>
@@ -204,13 +205,13 @@ function WebVerify2FA({ onVerified, onBack }) {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 14 }}>
-          <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>Didn't get a code?</span>
-          <button style={authLink}>Resend</button>
+          <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>{t("Didn't get a code?")}</span>
+          <button style={authLink}>{t('Resend')}</button>
           <span style={{ marginLeft: 'auto', fontSize: 11, color: WBRAND.muted2 }}><WCountdown seconds={299}/></span>
         </div>
 
         <WPrimary size="lg" onClick={() => full && onVerified()} style={{ width: '100%', justifyContent: 'center', marginTop: 24, opacity: full ? 1 : 0.45, pointerEvents: full ? 'auto' : 'none' }}>
-          Verify & sign in
+          {t('Verify & sign in')}
         </WPrimary>
       </div>
     </WAuthLayout>

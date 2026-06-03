@@ -5,6 +5,7 @@ import { AHLGMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector } from '../components/shared.jsx';
+import { t } from '../lib/i18n.js';
 
 export function WebMint({ navigate, onOpenTx }) {
   const sources = Object.keys(WBALANCES)
@@ -36,10 +37,10 @@ export function WebMint({ navigate, onOpenTx }) {
   return (
     <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
       <div style={{ marginBottom: 20 }}>
-        <WEyebrow>Mint AHLG</WEyebrow>
-        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Convert cash to vaulted gold</h1>
+        <WEyebrow>{t('Mint AHLG')}</WEyebrow>
+        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Convert cash to vaulted gold')}</h1>
         <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-          Mint AHL Gold tokens backed 1:1 by physical bullion held in the Ahlatcı Metal Refinery FZCO vault.
+          {t('Mint AHL Gold tokens backed 1:1 by physical bullion held in the Ahlatcı Metal Refinery FZCO vault.')}
         </div>
       </div>
 
@@ -49,18 +50,18 @@ export function WebMint({ navigate, onOpenTx }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <WCard padding={0}>
             <div style={{ padding: '22px 24px 20px' }}>
-              <WEyebrow>You pay</WEyebrow>
+              <WEyebrow>{t('You pay')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 <WAssetSelector value={from.symbol} options={sources} onChange={s => setFrom(sources.find(x => x.symbol === s))}/>
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-                <span>Balance: <WMonoNum size={12}>{wfmt(from.balance, wdecimals(from.symbol))}</WMonoNum> {from.symbol}</span>
+                <span>{t('Balance:')} <WMonoNum size={12}>{wfmt(from.balance, wdecimals(from.symbol))}</WMonoNum> {from.symbol}</span>
                 <span style={{ display: 'flex', gap: 6 }}>
                   {[25, 50, 75].map(p => (
                     <button key={p} onClick={() => setAmount(wgroup(String(from.balance * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
                   ))}
-                  <button onClick={() => setAmount(wgroup(String(from.balance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>MAX</button>
+                  <button onClick={() => setAmount(wgroup(String(from.balance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
                 </span>
               </div>
             </div>
@@ -72,7 +73,7 @@ export function WebMint({ navigate, onOpenTx }) {
             </div>
 
             <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2 }}>
-              <WEyebrow>You receive</WEyebrow>
+              <WEyebrow>{t('You receive')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums' }}>{wfmt(out, 4)}</div>
                 <div style={{ background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line2}`, borderRadius: 999, padding: '6px 14px 6px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -81,7 +82,7 @@ export function WebMint({ navigate, onOpenTx }) {
                 </div>
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8 }}>
-                Equivalent to <WMonoNum size={12}>{wfmt(out, 4)} g</WMonoNum> of physical gold
+                {t('Equivalent to')} <WMonoNum size={12}>{wfmt(out, 4)} g</WMonoNum> {t('of physical gold')}
               </div>
             </div>
           </WCard>
@@ -90,18 +91,18 @@ export function WebMint({ navigate, onOpenTx }) {
             <div style={{ padding: '16px 22px 8px', borderBottom: `1px solid ${WBRAND.line}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>Quote details</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>Refreshes every 10 seconds</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Quote details')}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Refreshes every 10 seconds')}</div>
                 </div>
                 <WQuoteCountdown seconds={10}/>
               </div>
             </div>
             <div style={{ padding: '4px 22px 8px' }}>
               {[
-                { l: 'Spot rate',  v: `1 AHLG = ${wfmt(WRATES.AHLG)} USDT` },
-                { l: 'Network',    v: 'Ethereum · ERC-20' },
-                { l: 'Mint fee',   v: '0.00% — promotional' },
-                { l: 'Settlement', v: 'Instant on-chain' },
+                { l: t('Spot rate'),  v: `1 AHLG = ${wfmt(WRATES.AHLG)} USDT` },
+                { l: t('Network'),    v: 'Ethereum · ERC-20' },
+                { l: t('Mint fee'),   v: `0.00% — ${t('promotional')}` },
+                { l: t('Settlement'), v: t('Instant on-chain') },
               ].map((r, i, arr) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
                   <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.l}</span>
@@ -112,13 +113,13 @@ export function WebMint({ navigate, onOpenTx }) {
           </WCard>
 
           <WPrimary size="lg" onClick={() => out > 0 && setMinting(true)} disabled={out <= 0} style={{ width: '100%', justifyContent: 'center' }}>
-            Mint {wfmt(out, 4)} AHLG
+            {t('Mint')} {wfmt(out, 4)} AHLG
           </WPrimary>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.redSoft, borderRadius: 10 }}>
             <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
-              By minting, you acknowledge AHLG tokens are backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas. <span style={{ color: WBRAND.red, fontWeight: 700, cursor: 'pointer' }}>Read full terms</span>
+              {t('By minting, you acknowledge AHLG tokens are backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.')} <span style={{ color: WBRAND.red, fontWeight: 700, cursor: 'pointer' }}>{t('Read full terms')}</span>
             </div>
           </div>
         </div>
@@ -143,10 +144,10 @@ export function WebMint({ navigate, onOpenTx }) {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
               {[
-                { l: 'Open',       v: px(openV) },
-                { l: 'High',       v: px(high) },
-                { l: 'Low',        v: px(low) },
-                { l: 'Volume 24h', v: '$8.41M' },
+                { l: t('Open'),       v: px(openV) },
+                { l: t('High'),       v: px(high) },
+                { l: t('Low'),        v: px(low) },
+                { l: t('Volume 24h'), v: '$8.41M' },
               ].map((k, i) => (
                 <div key={i} style={{ padding: '12px 20px', borderRight: i < 3 ? `1px solid ${WBRAND.line}` : 'none' }}>
                   <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{k.l}</div>
@@ -159,15 +160,15 @@ export function WebMint({ navigate, onOpenTx }) {
           <WCard padding={0}>
             <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>Your recent mints</div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>Last 30 days</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent mints')}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
               </div>
               <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>
-                View all {WIcon.arrowRight(WBRAND.red)}
+                {t('View all')} {WIcon.arrowRight(WBRAND.red)}
               </button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-              {['Date', 'Paid', 'Received', 'Rate', 'Status'].map((h, i) => (
+              {['Date', 'Paid', 'Received', 'Rate', 'Status'].map(h => t(h)).map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h}</div>
               ))}
             </div>
@@ -218,10 +219,10 @@ function WSpinner() {
 
 function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
   const STEPS = [
-    { id: 'submitted', title: 'Mint request received', sub: 'Order accepted and queued' },
-    { id: 'locked',    title: 'Payment locked',         sub: () => `${wfmt(paid, wdecimals(from.symbol))} ${from.symbol} reserved from balance` },
-    { id: 'minting',   title: 'Minting on-chain',       sub: 'Issuing tokens against vaulted gold' },
-    { id: 'done',      title: 'AHLG minted',            sub: () => `${wfmt(amount, 4)} AHLG credited to your wallet` },
+    { id: 'submitted', title: t('Mint request received'), sub: t('Order accepted and queued') },
+    { id: 'locked',    title: t('Payment locked'),         sub: () => `${wfmt(paid, wdecimals(from.symbol))} ${from.symbol} ${t('reserved from balance')}` },
+    { id: 'minting',   title: t('Minting on-chain'),       sub: t('Issuing tokens against vaulted gold') },
+    { id: 'done',      title: t('AHLG minted'),            sub: () => `${wfmt(amount, 4)} AHLG ${t('credited to your wallet')}` },
   ];
   const [active, setActive] = useState(0);
   const [stamps, setStamps] = useState({});
@@ -255,7 +256,7 @@ function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <AHLGMark size={44}/>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? 'Mint complete' : 'Minting'}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? t('Mint complete') : t('Minting')}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{wfmt(amount, 4)} AHLG</div>
               </div>
             </div>
@@ -308,15 +309,15 @@ function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
           {done ? (
             <>
               <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>
-                Track in Activity
+                {t('Track in Activity')}
               </WPrimary>
               <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>
-                Done
+                {t('Done')}
               </WSecondary>
             </>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 0', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>
-              You can safely close this — minting continues in the background.
+              {t('You can safely close this — minting continues in the background.')}
             </div>
           )}
         </div>

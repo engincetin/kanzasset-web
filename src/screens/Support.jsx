@@ -6,6 +6,7 @@ import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '..
 import { SelectField } from '../components/shared.jsx';
 import { txMeta } from '../components/TxDetailModal.jsx';
 import { toast } from '../components/Toast.jsx';
+import { t } from '../lib/i18n.js';
 
 // ─── Seed tickets ─────────────────────────────────────────────
 const WTICKETS = [
@@ -66,21 +67,21 @@ export function WebSupport({ navigate, prefillTx }) {
       {/* Header */}
       <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24 }}>
         <div style={{ flex: 1 }}>
-          <WEyebrow>Support</WEyebrow>
-          <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Support center</h1>
+          <WEyebrow>{t('Support')}</WEyebrow>
+          <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Support center')}</h1>
           <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-            Open a ticket about a transaction or account issue. Our desk replies within 2 hours, 24/7.
+            {t('Open a ticket about a transaction or account issue. Our desk replies within 2 hours, 24/7.')}
           </div>
         </div>
-        <WPrimary size="md" onClick={() => { setActivePrefill(null); setComposing(true); setOpenId(null); }} icon={WIcon.plus('#fff')}>New ticket</WPrimary>
+        <WPrimary size="md" onClick={() => { setActivePrefill(null); setComposing(true); setOpenId(null); }} icon={WIcon.plus('#fff')}>{t('New ticket')}</WPrimary>
       </div>
 
       {/* KPI row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 20 }}>
         {[
-          { l: 'Open', v: stats.open, tone: WBRAND.red },
-          { l: 'Pending', v: stats.pending, tone: WBRAND.warn },
-          { l: 'Resolved', v: stats.resolved, tone: WBRAND.positive },
+          { l: t('Open'), v: stats.open, tone: WBRAND.red },
+          { l: t('Pending'), v: stats.pending, tone: WBRAND.warn },
+          { l: t('Resolved'), v: stats.resolved, tone: WBRAND.positive },
         ].map((k, i) => (
           <WCard key={i} padding={18}>
             <WEyebrow>{k.l}</WEyebrow>
@@ -96,7 +97,7 @@ export function WebSupport({ navigate, prefillTx }) {
         {/* Ticket list */}
         <WCard padding={0}>
           <div style={{ padding: '16px 20px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>Your tickets</div>
+            <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('Your tickets')}</div>
             <div style={{ display: 'flex', gap: 2, padding: 3, background: WBRAND.surface, borderRadius: 8 }}>
               {['all', 'open', 'resolved'].map(f => {
                 const on = filter === f;
@@ -106,7 +107,7 @@ export function WebSupport({ navigate, prefillTx }) {
                     background: on ? WBRAND.white : 'transparent', color: on ? WBRAND.ink : WBRAND.muted,
                     borderRadius: 6, fontFamily: WFONT, fontWeight: 700, fontSize: 11, textTransform: 'capitalize',
                     boxShadow: on ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-                  }}>{f}</button>
+                  }}>{t(f)}</button>
                 );
               })}
             </div>
@@ -151,9 +152,9 @@ export function WebSupport({ navigate, prefillTx }) {
                   <div style={{ width: 56, height: 56, borderRadius: 28, background: WBRAND.surface, display: 'grid', placeItems: 'center', marginBottom: 16 }}>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke={WBRAND.muted} strokeWidth="1.7" strokeLinejoin="round"/></svg>
                   </div>
-                  <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 700, color: WBRAND.ink }}>Select a ticket</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 700, color: WBRAND.ink }}>{t('Select a ticket')}</div>
                   <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6, maxWidth: 280, lineHeight: 1.5 }}>
-                    Choose a ticket from the list to view the conversation, or open a new ticket.
+                    {t('Choose a ticket from the list to view the conversation, or open a new ticket.')}
                   </div>
                 </div>
               </WCard>}
@@ -180,7 +181,7 @@ function TicketThread({ ticket, onReply }) {
           <WMonoNum size={11} color={WBRAND.muted}>{ticket.id}</WMonoNum>
           <span style={{ width: 1, height: 10, background: WBRAND.line }}/>
           <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{ticket.category}</span>
-          {ticket.tx && <><span style={{ width: 1, height: 10, background: WBRAND.line }}/><span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>Linked: <WMonoNum size={11} color={WBRAND.ink}>{ticket.tx}</WMonoNum></span></>}
+          {ticket.tx && <><span style={{ width: 1, height: 10, background: WBRAND.line }}/><span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{t('Linked')}: <WMonoNum size={11} color={WBRAND.ink}>{ticket.tx}</WMonoNum></span></>}
         </div>
       </div>
 
@@ -208,18 +209,18 @@ function TicketThread({ ticket, onReply }) {
       {ticket.status !== 'resolved' ? (
         <div style={{ padding: '14px 22px 18px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
-            <textarea value={draft} onChange={e => setDraft(e.target.value)} placeholder="Type your reply…" rows={2} style={{
+            <textarea value={draft} onChange={e => setDraft(e.target.value)} placeholder={t('Type your reply…')} rows={2} style={{
               flex: 1, resize: 'none', border: `1px solid ${WBRAND.line2}`, borderRadius: 10,
               padding: '10px 12px', outline: 'none', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink,
             }}/>
             <WPrimary onClick={() => { if (draft.trim()) { onReply(draft.trim()); setDraft(''); } }}
-              style={{ opacity: draft.trim() ? 1 : 0.5, pointerEvents: draft.trim() ? 'auto' : 'none' }}>Send</WPrimary>
+              style={{ opacity: draft.trim() ? 1 : 0.5, pointerEvents: draft.trim() ? 'auto' : 'none' }}>{t('Send')}</WPrimary>
           </div>
         </div>
       ) : (
         <div style={{ padding: '14px 22px 18px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
           {WIcon.check(WBRAND.positive)}
-          <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>This ticket is resolved. Reopen by starting a new ticket.</span>
+          <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{t('This ticket is resolved. Reopen by starting a new ticket.')}</span>
         </div>
       )}
     </WCard>
@@ -255,8 +256,8 @@ function TicketComposer({ prefillTx, onCancel, onSubmit }) {
   return (
     <WCard padding={0}>
       <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}` }}>
-        <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>New support ticket</div>
-        <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3 }}>Our desk typically replies within 2 hours.</div>
+        <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('New support ticket')}</div>
+        <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3 }}>{t('Our desk typically replies within 2 hours.')}</div>
       </div>
       <div style={{ padding: '18px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
         {prefillTx && (
@@ -266,32 +267,32 @@ function TicketComposer({ prefillTx, onCancel, onSubmit }) {
               <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink }}>{txMeta(prefillTx).title} · {prefillTx.asset}</div>
               <WMonoNum size={11} color={WBRAND.muted} style={{ marginTop: 1, display: 'block' }}>{prefillTx.id} · {prefillTx.ts.slice(0, 10)}</WMonoNum>
             </div>
-            <WPill tone="neutral">Linked</WPill>
+            <WPill tone="neutral">{t('Linked')}</WPill>
           </div>
         )}
         <div>
-          <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, marginBottom: 7 }}>Category</div>
+          <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, marginBottom: 7 }}>{t('Category')}</div>
           <SelectField value={cat} options={cats} onChange={setCat}/>
         </div>
         <div>
-          <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, marginBottom: 7 }}>Subject</div>
+          <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, marginBottom: 7 }}>{t('Subject')}</div>
           <div style={{ display: 'flex', alignItems: 'center', height: 44, padding: '0 14px', borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white }}>
-            <input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Brief summary of your issue" style={{
+            <input value={subject} onChange={e => setSubject(e.target.value)} placeholder={t('Brief summary of your issue')} style={{
               flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, fontWeight: 500,
             }}/>
           </div>
         </div>
         <div>
-          <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, marginBottom: 7 }}>Message</div>
-          <textarea value={body} onChange={e => setBody(e.target.value)} placeholder="Describe what happened and what you'd like us to do…" rows={5} style={{
+          <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, marginBottom: 7 }}>{t('Message')}</div>
+          <textarea value={body} onChange={e => setBody(e.target.value)} placeholder={t("Describe what happened and what you'd like us to do…")} rows={5} style={{
             width: '100%', resize: 'vertical', border: `1px solid ${WBRAND.line2}`, borderRadius: 10,
             padding: '12px 14px', outline: 'none', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, lineHeight: 1.5,
           }}/>
         </div>
       </div>
       <div style={{ padding: '0 22px 20px', display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-        <WSecondary size="lg" onClick={onCancel} style={{ height: 50 }}>Cancel</WSecondary>
-        <WPrimary size="lg" onClick={submit} style={{ opacity: ok ? 1 : 0.5, pointerEvents: ok ? 'auto' : 'none' }}>Submit ticket</WPrimary>
+        <WSecondary size="lg" onClick={onCancel} style={{ height: 50 }}>{t('Cancel')}</WSecondary>
+        <WPrimary size="lg" onClick={submit} style={{ opacity: ok ? 1 : 0.5, pointerEvents: ok ? 'auto' : 'none' }}>{t('Submit ticket')}</WPrimary>
       </div>
     </WCard>
   );

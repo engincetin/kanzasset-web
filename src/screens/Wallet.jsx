@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { WBRAND, WFONT, wfmt, wdecimals, wTotalIn, WRATES, WBALANCES, WMETA } from '../lib/index.js';
+import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WSecondary, WGhost, WEyebrow, WNum, WMonoNum, WSectionTitle } from '../components/primitives.jsx';
@@ -38,10 +39,10 @@ export function WebWallet({ navigate }) {
     <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
 
       <div style={{ marginBottom: 20 }}>
-        <WEyebrow>Wallet</WEyebrow>
-        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Balances & holdings</h1>
+        <WEyebrow>{t('Wallet')}</WEyebrow>
+        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Balances & holdings')}</h1>
         <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-          All assets across crypto and fiat. Deposit, withdraw, or move between currencies directly from each row.
+          {t('All assets across crypto and fiat. Deposit, withdraw, or move between currencies directly from each row.')}
         </div>
       </div>
 
@@ -49,51 +50,51 @@ export function WebWallet({ navigate }) {
         <WCard padding={22}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <WEyebrow>Total balance</WEyebrow>
+              <WEyebrow>{t('Total balance')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
                 <WNum size={34} weight={800} style={{ letterSpacing: '-0.03em' }}>{wfmt(total, wdecimals(currency))}</WNum>
                 <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14, color: WBRAND.muted }}>{currency}</span>
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
-                ≈ AED {wfmt(totalAed)} · <span style={{ color: WBRAND.positive, fontWeight: 700 }}>+2.81% past month</span>
+                ≈ AED {wfmt(totalAed)} · <span style={{ color: WBRAND.positive, fontWeight: 700 }}>+2.81% {t('past month')}</span>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 6 }}>
-              <WSecondary size="sm" onClick={() => navigate('deposit')} icon={WIcon.download(WBRAND.ink)}>Deposit</WSecondary>
-              <WSecondary size="sm" onClick={() => navigate('withdraw')} icon={WIcon.upload(WBRAND.ink)}>Withdraw</WSecondary>
+              <WSecondary size="sm" onClick={() => navigate('deposit')} icon={WIcon.download(WBRAND.ink)}>{t('Deposit')}</WSecondary>
+              <WSecondary size="sm" onClick={() => navigate('withdraw')} icon={WIcon.upload(WBRAND.ink)}>{t('Withdraw')}</WSecondary>
             </div>
           </div>
         </WCard>
         <WCard padding={22}>
-          <WEyebrow>Crypto</WEyebrow>
+          <WEyebrow>{t('Crypto')}</WEyebrow>
           <WNum size={22} weight={800} style={{ marginTop: 8, display: 'block', letterSpacing: '-0.025em' }}>${wfmt(crypto)}</WNum>
-          <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, fontWeight: 500 }}>{wfmt(crypto / totalUSDT * 100, 1)}% of portfolio</div>
+          <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, fontWeight: 500 }}>{wfmt(crypto / totalUSDT * 100, 1)}% {t('of portfolio')}</div>
         </WCard>
         <WCard padding={22}>
-          <WEyebrow>Fiat</WEyebrow>
+          <WEyebrow>{t('Fiat')}</WEyebrow>
           <WNum size={22} weight={800} style={{ marginTop: 8, display: 'block', letterSpacing: '-0.025em' }}>${wfmt(fiat)}</WNum>
-          <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, fontWeight: 500 }}>{wfmt(fiat / totalUSDT * 100, 1)}% of portfolio</div>
+          <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, fontWeight: 500 }}>{wfmt(fiat / totalUSDT * 100, 1)}% {t('of portfolio')}</div>
         </WCard>
       </div>
 
       <WCard padding={0}>
         <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <WSectionTitle title="All assets" sub={`${assets.length} of ${allAssets.length} shown · sorted by value`} style={{ marginBottom: 0 }}/>
+          <WSectionTitle title={t('All assets')} sub={`${assets.length} ${t('of')} ${allAssets.length} ${t('shown · sorted by value')}`} style={{ marginBottom: 0 }}/>
           <div style={{ display: 'flex', gap: 4 }}>
-            <WGhost active={kindFilter === 'all'}    onClick={() => setKindFilter('all')}>All</WGhost>
-            <WGhost active={kindFilter === 'crypto'} onClick={() => setKindFilter('crypto')}>Crypto</WGhost>
-            <WGhost active={kindFilter === 'fiat'}   onClick={() => setKindFilter('fiat')}>Fiat</WGhost>
+            <WGhost active={kindFilter === 'all'}    onClick={() => setKindFilter('all')}>{t('All')}</WGhost>
+            <WGhost active={kindFilter === 'crypto'} onClick={() => setKindFilter('crypto')}>{t('Crypto')}</WGhost>
+            <WGhost active={kindFilter === 'fiat'}   onClick={() => setKindFilter('fiat')}>{t('Fiat')}</WGhost>
           </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 0.9fr 1.2fr 0.7fr 1fr 200px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
           {['Asset', 'Balance', 'Price', 'Value (USDT)', '24h', 'Allocation', 'Actions'].map((h, i) => (
-            <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i >= 1 && i <= 4 ? 'right' : i === 6 ? 'right' : 'left' }}>{h}</div>
+            <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i >= 1 && i <= 4 ? 'right' : i === 6 ? 'right' : 'left' }}>{t(h)}</div>
           ))}
         </div>
 
         {assets.length === 0 ? (
-          <div style={{ padding: '40px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>No assets match this filter.</div>
+          <div style={{ padding: '40px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>{t('No assets match this filter.')}</div>
         ) : assets.map((a, i) => {
           const zero = a.balance === 0;
           const priceStr = a.symbol === 'AHLG' ? '$151.56' : a.symbol === 'AED' ? '$0.272' : a.symbol === 'EUR' ? '$1.080' : a.symbol === 'GBP' ? '$1.270' : '$1.000';
@@ -120,8 +121,8 @@ export function WebWallet({ navigate }) {
                 <WMonoNum size={11} color={WBRAND.muted}>{wfmt(a.alloc, 1)}%</WMonoNum>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
-                <AssetActionBtn label="Deposit"  onClick={() => navigate('deposit')}/>
-                <AssetActionBtn label="Withdraw" onClick={() => navigate('withdraw')} disabled={zero}/>
+                <AssetActionBtn label={t('Deposit')}  onClick={() => navigate('deposit')}/>
+                <AssetActionBtn label={t('Withdraw')} onClick={() => navigate('withdraw')} disabled={zero}/>
               </div>
             </div>
           );

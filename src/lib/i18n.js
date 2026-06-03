@@ -1,3 +1,5 @@
+import { tr } from './translations.js';
+
 // App-wide language: 'en' | 'tr'
 let _lang = 'en';
 const _subs = new Set();
@@ -10,5 +12,6 @@ export const setLang = (l) => {
 };
 export const subscribeLang = (fn) => { _subs.add(fn); return () => _subs.delete(fn); };
 
-// t('English', 'Türkçe') → returns the string for the active language.
-export const t = (en, tr) => (_lang === 'tr' ? (tr ?? en) : en);
+// t('English text') → Turkish from the dictionary when active, else English.
+// Missing keys fall back to the English text, so nothing ever breaks.
+export const t = (en) => (_lang === 'tr' ? (tr[en] ?? en) : en);

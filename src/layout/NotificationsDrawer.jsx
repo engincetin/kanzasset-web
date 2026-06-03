@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WPill } from '../components/primitives.jsx';
+import { t } from '../lib/i18n.js';
 
 const NOTIF_GROUPS = [
   {
@@ -76,7 +77,7 @@ function WNotifRow({ n, last }) {
               fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red,
               display: 'inline-flex', alignItems: 'center', gap: 3,
             }}>
-              {n.actionLabel}
+              {t(n.actionLabel)}
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
           )}
@@ -119,11 +120,11 @@ export function WNotificationsDrawer({ open, onClose }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 20, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>Notifications</h2>
-                {unreadCount > 0 && <WPill tone="accent" style={{ fontSize: 11, padding: '4px 9px' }}>{unreadCount} new</WPill>}
+                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 20, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t('Notifications')}</h2>
+                {unreadCount > 0 && <WPill tone="accent" style={{ fontSize: 11, padding: '4px 9px' }}>{unreadCount} {t('new')}</WPill>}
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 4 }}>
-                Account events, transactions and security alerts
+                {t('Account events, transactions and security alerts')}
               </div>
             </div>
             <button onClick={onClose} style={{
@@ -140,8 +141,8 @@ export function WNotificationsDrawer({ open, onClose }) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14 }}>
             <div style={{ display: 'flex', gap: 2, padding: 3, background: WBRAND.surface, borderRadius: 8 }}>
               {[
-                { id: 'all',    label: 'All',    count: allItems.length },
-                { id: 'unread', label: 'Unread', count: unreadCount },
+                { id: 'all',    label: t('All'),    count: allItems.length },
+                { id: 'unread', label: t('Unread'), count: unreadCount },
               ].map(t => {
                 const on = tab === t.id;
                 return (
@@ -163,14 +164,14 @@ export function WNotificationsDrawer({ open, onClose }) {
               background: 'transparent', border: 'none', cursor: 'pointer',
               fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.muted,
               letterSpacing: '0.02em',
-            }}>Mark all read</button>
+            }}>{t('Mark all read')}</button>
           </div>
         </div>
 
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
           {visibleGroups.length === 0 ? (
             <div style={{ padding: '60px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>
-              No {tab === 'unread' ? 'unread' : ''} notifications.
+              {tab === 'unread' ? t('No unread notifications.') : t('No notifications.')}
             </div>
           ) : visibleGroups.map((g, gi) => (
             <div key={g.label}>
@@ -180,7 +181,7 @@ export function WNotificationsDrawer({ open, onClose }) {
                 borderTop: gi > 0 ? `1px solid ${WBRAND.line}` : 'none',
                 fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700,
                 letterSpacing: '0.1em', textTransform: 'uppercase',
-              }}>{g.label}</div>
+              }}>{t(g.label)}</div>
               {g.items.map((n, i) => <WNotifRow key={n.id} n={n} last={i === g.items.length - 1}/>)}
             </div>
           ))}
@@ -200,9 +201,9 @@ export function WNotificationsDrawer({ open, onClose }) {
               <circle cx="12" cy="12" r="3" stroke={WBRAND.ink} strokeWidth="1.7"/>
               <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.01a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.01a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke={WBRAND.ink} strokeWidth="1.5"/>
             </svg>
-            Notification preferences
+            {t('Notification preferences')}
           </button>
-          <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>Last 30 days</span>
+          <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{t('Last 30 days')}</span>
         </div>
       </aside>
     </>

@@ -6,6 +6,7 @@ import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WCopyButt
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
 import { AddDestinationModal } from './Profile.jsx';
+import { t } from '../lib/i18n.js';
 
 function RedeemDigital({ targets, to, setTo }) {
   const [amount, setAmount] = useState('');
@@ -18,10 +19,10 @@ function RedeemDigital({ targets, to, setTo }) {
       <WCard padding={0}>
         <div style={{ padding: '22px 24px 20px', minHeight: 140, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <WEyebrow>You redeem</WEyebrow>
+            <WEyebrow>{t('You redeem')}</WEyebrow>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>Minimum redeem · <WMonoNum size={11} color={WBRAND.ink}>1</WMonoNum> AHLG</span>
-              <button onClick={() => setInfoOpen(true)} title="Redeem rules" style={{ width: 20, height: 20, borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white, cursor: 'pointer', display: 'grid', placeItems: 'center', color: WBRAND.muted, padding: 0, flexShrink: 0 }}>
+              <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>{t('Minimum redeem')} · <WMonoNum size={11} color={WBRAND.ink}>1</WMonoNum> AHLG</span>
+              <button onClick={() => setInfoOpen(true)} title={t('Redeem rules')} style={{ width: 20, height: 20, borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white, cursor: 'pointer', display: 'grid', placeItems: 'center', color: WBRAND.muted, padding: 0, flexShrink: 0 }}>
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 11v6M12 7.5v.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="12" cy="12" r="9.2" stroke="currentColor" strokeWidth="1.5"/></svg>
               </button>
             </div>
@@ -34,7 +35,7 @@ function RedeemDigital({ targets, to, setTo }) {
             </div>
           </div>
           <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-            <span>Balance: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
+            <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
             <span style={{ display: 'flex', gap: 6 }}>
               {[25, 50, 75].map(p => (
                 <button key={p} onClick={() => setAmount(wgroup(String(WBALANCES.AHLG * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
@@ -51,13 +52,13 @@ function RedeemDigital({ targets, to, setTo }) {
         </div>
 
         <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2 }}>
-          <WEyebrow>You receive</WEyebrow>
+          <WEyebrow>{t('You receive')}</WEyebrow>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
             <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums' }}>{wfmt(out, wdecimals(to.symbol))}</div>
             <WAssetSelector value={to.symbol} options={targets} onChange={s => setTo(targets.find(x => x.symbol === s))}/>
           </div>
           <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8 }}>
-            Settles to your Kanzasset {to.symbol} balance instantly
+            {t('Settles to your Kanzasset {sym} balance instantly').replace('{sym}', to.symbol)}
           </div>
         </div>
       </WCard>
@@ -66,8 +67,8 @@ function RedeemDigital({ targets, to, setTo }) {
         <div style={{ padding: '16px 22px 8px', borderBottom: `1px solid ${WBRAND.line}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>Quote details</div>
-              <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>Refreshes every 10 seconds</div>
+              <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Quote details')}</div>
+              <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Refreshes every 10 seconds')}</div>
             </div>
             <WQuoteCountdown seconds={10}/>
           </div>
@@ -75,11 +76,11 @@ function RedeemDigital({ targets, to, setTo }) {
         <div style={{ padding: '4px 22px 8px' }}>
           {[
             { l: 'Spot rate',  v: `1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
-            { l: 'Redeem fee', v: '0.00% — promotional' },
-            { l: 'Settlement', v: 'Instant to balance' },
+            { l: 'Redeem fee', v: t('0.00% — promotional') },
+            { l: 'Settlement', v: t('Instant to balance') },
           ].map((r, i, arr) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
-              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.l}</span>
+              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{t(r.l)}</span>
               <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, fontVariantNumeric: 'tabular-nums' }}>{r.v}</span>
             </div>
           ))}
@@ -87,7 +88,7 @@ function RedeemDigital({ targets, to, setTo }) {
       </WCard>
 
       <WPrimary size="lg" onClick={() => out > 0 && setRedeeming(true)} disabled={out <= 0} style={{ width: '100%', justifyContent: 'center' }}>
-        Redeem {wfmt(out, wdecimals(to.symbol))} {to.symbol}
+        {t('Redeem')} {wfmt(out, wdecimals(to.symbol))} {to.symbol}
       </WPrimary>
 
       {redeeming && (
@@ -107,7 +108,7 @@ function RedeemDigital({ targets, to, setTo }) {
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
                   <AHLGMark size={24}/>
                 </div>
-                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>Digital redeem rules</h2>
+                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t('Digital redeem rules')}</h2>
               </div>
               <button onClick={() => setInfoOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', flexShrink: 0, background: WBRAND.surface, cursor: 'pointer', color: WBRAND.ink, display: 'grid', placeItems: 'center' }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
@@ -115,9 +116,9 @@ function RedeemDigital({ targets, to, setTo }) {
             </div>
             <div style={{ padding: '18px 24px 8px', display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { t: 'Minimum 1 AHLG', d: 'Digital redemption starts at 1 AHLG — equal to 1 gram of vaulted gold.' },
-                { t: 'Fractional amounts allowed', d: 'Unlike physical delivery, you can redeem any amount from 1 AHLG upward, including fractions (e.g. 1.5, 12.25).' },
-                { t: 'Instant settlement', d: `Funds are credited to your Kanzasset ${to.symbol} balance immediately at the live rate.` },
+                { t: t('Minimum 1 AHLG'), d: t('Digital redemption starts at 1 AHLG — equal to 1 gram of vaulted gold.') },
+                { t: t('Fractional amounts allowed'), d: t('Unlike physical delivery, you can redeem any amount from 1 AHLG upward, including fractions (e.g. 1.5, 12.25).') },
+                { t: t('Instant settlement'), d: t('Funds are credited to your Kanzasset {sym} balance immediately at the live rate.').replace('{sym}', to.symbol) },
               ].map((r, i) => (
                 <div key={i} style={{ display: 'flex', gap: 12 }}>
                   <div style={{ width: 22, height: 22, borderRadius: 11, background: WBRAND.redSoft, color: WBRAND.red, display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>{i + 1}</div>
@@ -129,7 +130,7 @@ function RedeemDigital({ targets, to, setTo }) {
               ))}
             </div>
             <div style={{ padding: '16px 24px 20px' }}>
-              <WPrimary size="lg" onClick={() => setInfoOpen(false)} style={{ width: '100%', justifyContent: 'center' }}>Got it</WPrimary>
+              <WPrimary size="lg" onClick={() => setInfoOpen(false)} style={{ width: '100%', justifyContent: 'center' }}>{t('Got it')}</WPrimary>
             </div>
           </div>
         </div>
@@ -140,10 +141,10 @@ function RedeemDigital({ targets, to, setTo }) {
 
 function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
   const STEPS = [
-    { id: 'submitted', title: 'Redeem request received', sub: 'Order accepted and queued' },
-    { id: 'settling',  title: 'Settling to balance',     sub: () => `Converting at 1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
-    { id: 'credited',  title: 'Funds credited',          sub: () => `${wfmt(out, wdecimals(to.symbol))} ${to.symbol} added to your wallet` },
-    { id: 'burning',   title: 'Burning AHLG',            sub: () => `${wfmt(burn, 4)} AHLG removed from circulation` },
+    { id: 'submitted', title: t('Redeem request received'), sub: t('Order accepted and queued') },
+    { id: 'settling',  title: t('Settling to balance'),     sub: () => `${t('Converting at')} 1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
+    { id: 'credited',  title: t('Funds credited'),          sub: () => `${wfmt(out, wdecimals(to.symbol))} ${to.symbol} ${t('added to your wallet')}` },
+    { id: 'burning',   title: t('Burning AHLG'),            sub: () => `${wfmt(burn, 4)} ${t('AHLG removed from circulation')}` },
   ];
   const [active, setActive] = useState(0);
   const [stamps, setStamps] = useState({});
@@ -175,7 +176,7 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <AHLGMark size={40}/>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? 'Redeem complete' : 'Redeeming'}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? t('Redeem complete') : t('Redeeming')}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{wfmt(out, wdecimals(to.symbol))} {to.symbol}</div>
               </div>
             </div>
@@ -190,12 +191,12 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
         <div style={{ padding: '8px 24px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
           {done ? (
             <>
-              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>Track in Activity</WPrimary>
-              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>Done</WSecondary>
+              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>{t('Track in Activity')}</WPrimary>
+              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>{t('Done')}</WSecondary>
             </>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 0', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>
-              You can safely close this — settlement continues in the background.
+              {t('You can safely close this — settlement continues in the background.')}
             </div>
           )}
         </div>
@@ -225,10 +226,10 @@ function RedeemPhysicalWeb() {
         {/* You redeem */}
         <div style={{ padding: '22px 24px 20px', minHeight: 140, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <WEyebrow>You redeem</WEyebrow>
+            <WEyebrow>{t('You redeem')}</WEyebrow>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>Min 1 kg · Max <WMonoNum size={11} color={WBRAND.ink}>{maxKg}</WMonoNum> kg</span>
-              <button onClick={() => setInfoOpen(true)} title="Delivery rules" style={{ width: 20, height: 20, borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white, cursor: 'pointer', display: 'grid', placeItems: 'center', color: WBRAND.muted, padding: 0, flexShrink: 0 }}>
+              <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>{t('Min 1 kg')} · {t('Max')} <WMonoNum size={11} color={WBRAND.ink}>{maxKg}</WMonoNum> kg</span>
+              <button onClick={() => setInfoOpen(true)} title={t('Delivery rules')} style={{ width: 20, height: 20, borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white, cursor: 'pointer', display: 'grid', placeItems: 'center', color: WBRAND.muted, padding: 0, flexShrink: 0 }}>
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 11v6M12 7.5v.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="12" cy="12" r="9.2" stroke="currentColor" strokeWidth="1.5"/></svg>
               </button>
             </div>
@@ -248,7 +249,7 @@ function RedeemPhysicalWeb() {
             </div>
           </div>
           <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, fontVariantNumeric: 'tabular-nums', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-            <span>Balance: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
+            <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
             <button onClick={() => setKgPicked(maxKg)} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, flexShrink: 0 }}>MAX</button>
           </div>
         </div>
@@ -266,7 +267,7 @@ function RedeemPhysicalWeb() {
 
         {/* Ship to */}
         <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2 }}>
-          <WEyebrow>Ship to</WEyebrow>
+          <WEyebrow>{t('Ship to')}</WEyebrow>
           <div style={{ marginTop: 10 }}>
             <SelectField
               value={(() => { const a = addresses.find(x => x.id === addrId) || addresses[0]; return `${a.label} · ${a.city} — ${a.line}, ${a.country}`; })()}
@@ -274,7 +275,7 @@ function RedeemPhysicalWeb() {
               onChange={(v) => { const a = addresses.find(x => `${x.label} · ${x.city} — ${x.line}, ${x.country}` === v); if (a) setAddrId(a.id); }}
             />
             <button onClick={() => setShipAddOpen(true)} style={{ width: '100%', marginTop: 8, padding: '10px 12px', border: `1px dashed ${WBRAND.line2}`, borderRadius: 10, background: 'transparent', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-              {WIcon.plus()} Add new address
+              {WIcon.plus()} {t('Add new address')}
             </button>
           </div>
         </div>
@@ -282,17 +283,17 @@ function RedeemPhysicalWeb() {
 
       <WCard padding={0}>
         <div style={{ padding: '16px 22px 8px', borderBottom: `1px solid ${WBRAND.line}` }}>
-          <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>Order summary</div>
+          <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Order summary')}</div>
         </div>
         <div style={{ padding: '4px 22px 8px' }}>
           {[
-            { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 fine · Ahlatci Gold Refinery` },
+            { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 ${t('fine')} · Ahlatci Gold Refinery` },
             { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AHLG · ≈ $${wfmt(kgPicked * 1000 * WRATES.AHLG, 0)}` },
-            { l: 'Shipping',          v: 'Brinks · AED 120 · fully insured' },
-            { l: 'Estimated arrival', v: '3–5 business days' },
+            { l: 'Shipping',          v: `Brinks · AED 120 · ${t('fully insured')}` },
+            { l: 'Estimated arrival', v: t('3–5 business days') },
           ].map((r, i, arr) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
-              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.l}</span>
+              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{t(r.l)}</span>
               <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, fontVariantNumeric: 'tabular-nums' }}>{r.v}</span>
             </div>
           ))}
@@ -300,13 +301,13 @@ function RedeemPhysicalWeb() {
       </WCard>
 
       <WPrimary size="lg" onClick={() => setConfirmOpen(true)} style={{ width: '100%', justifyContent: 'center' }}>
-        Request {kgPicked} kg delivery
+        {t('Request')} {kgPicked} {t('kg delivery')}
       </WPrimary>
 
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
         {WIcon.shield(WBRAND.ink)}
         <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
-          Bars are cast by Ahlatci Gold Refinery, sealed with tamper-evident packaging, and shipped with a serialised assay certificate. Delivery requires ID verification at the door.
+          {t('Bars are cast by Ahlatci Gold Refinery, sealed with tamper-evident packaging, and shipped with a serialised assay certificate. Delivery requires ID verification at the door.')}
         </div>
       </div>
 
@@ -323,8 +324,8 @@ function RedeemPhysicalWeb() {
                   </svg>
                 </div>
                 <div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Confirm delivery</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{kgPicked} kg physical gold</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t('Confirm delivery')}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{kgPicked} {t('kg physical gold')}</div>
                 </div>
               </div>
               <button onClick={() => setConfirmOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', flexShrink: 0, background: WBRAND.surface, cursor: 'pointer', color: WBRAND.ink, display: 'grid', placeItems: 'center' }}>
@@ -334,14 +335,14 @@ function RedeemPhysicalWeb() {
 
             <div style={{ padding: '6px 24px 4px' }}>
               {[
-                { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 fine · Ahlatci Gold Refinery` },
+                { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 ${t('fine')} · Ahlatci Gold Refinery` },
                 { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AHLG · ≈ $${wfmt(kgPicked * 1000 * WRATES.AHLG, 0)}` },
                 { l: 'Ship to',           v: addr ? `${addr.label} · ${addr.city} — ${addr.line}, ${addr.country}` : '—' },
-                { l: 'Shipping',          v: 'Brinks · AED 120 · fully insured' },
-                { l: 'Estimated arrival', v: '3–5 business days' },
+                { l: 'Shipping',          v: `Brinks · AED 120 · ${t('fully insured')}` },
+                { l: 'Estimated arrival', v: t('3–5 business days') },
               ].map((r, i, arr) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, padding: '13px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
-                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500, flexShrink: 0 }}>{r.l}</span>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500, flexShrink: 0 }}>{t(r.l)}</span>
                   <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, textAlign: 'right' }}>{r.v}</span>
                 </div>
               ))}
@@ -351,15 +352,15 @@ function RedeemPhysicalWeb() {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
                 {WIcon.shield(WBRAND.ink)}
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
-                  Burning AHLG for physical delivery is irreversible. Please confirm the bar count and shipping address are correct.
+                  {t('Burning AHLG for physical delivery is irreversible. Please confirm the bar count and shipping address are correct.')}
                 </div>
               </div>
             </div>
 
             <div style={{ padding: '16px 24px 20px', display: 'flex', gap: 8 }}>
-              <WSecondary size="lg" onClick={() => setConfirmOpen(false)} style={{ flex: 1, justifyContent: 'center', height: 52 }}>Cancel</WSecondary>
+              <WSecondary size="lg" onClick={() => setConfirmOpen(false)} style={{ flex: 1, justifyContent: 'center', height: 52 }}>{t('Cancel')}</WSecondary>
               <WPrimary size="lg" onClick={() => { setConfirmOpen(false); setShipping(true); }} style={{ flex: 1, justifyContent: 'center' }}>
-                Confirm &amp; request
+                {t('Confirm & request')}
               </WPrimary>
             </div>
           </div>
@@ -389,7 +390,7 @@ function RedeemPhysicalWeb() {
                     <path d="M12 8v13" stroke={WBRAND.ink} strokeWidth="1.7"/>
                   </svg>
                 </div>
-                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>Physical delivery rules</h2>
+                <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t('Physical delivery rules')}</h2>
               </div>
               <button onClick={() => setInfoOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', flexShrink: 0, background: WBRAND.surface, cursor: 'pointer', color: WBRAND.ink, display: 'grid', placeItems: 'center' }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
@@ -397,9 +398,9 @@ function RedeemPhysicalWeb() {
             </div>
             <div style={{ padding: '18px 24px 8px', display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { t: 'Minimum 1 kg', d: 'Physical redemption starts at one 1 kg bar — equal to 1,000 AHLG.' },
-                { t: 'Whole-kilogram multiples', d: 'Bars are cast in 1 kg units, so you can only redeem whole kilograms (1, 2, 3 …). Fractional amounts stay in your digital balance.' },
-                { t: 'Up to your balance', d: `With ${wfmt(WBALANCES.AHLG, 0)} AHLG you can take delivery of up to ${maxKg} kg right now.` },
+                { t: t('Minimum 1 kg'), d: t('Physical redemption starts at one 1 kg bar — equal to 1,000 AHLG.') },
+                { t: t('Whole-kilogram multiples'), d: t('Bars are cast in 1 kg units, so you can only redeem whole kilograms (1, 2, 3 …). Fractional amounts stay in your digital balance.') },
+                { t: t('Up to your balance'), d: t('With {bal} AHLG you can take delivery of up to {kg} kg right now.').replace('{bal}', wfmt(WBALANCES.AHLG, 0)).replace('{kg}', maxKg) },
               ].map((r, i) => (
                 <div key={i} style={{ display: 'flex', gap: 12 }}>
                   <div style={{ width: 22, height: 22, borderRadius: 11, background: WBRAND.redSoft, color: WBRAND.red, display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>{i + 1}</div>
@@ -411,7 +412,7 @@ function RedeemPhysicalWeb() {
               ))}
             </div>
             <div style={{ padding: '16px 24px 20px' }}>
-              <WPrimary size="lg" onClick={() => setInfoOpen(false)} style={{ width: '100%', justifyContent: 'center' }}>Got it</WPrimary>
+              <WPrimary size="lg" onClick={() => setInfoOpen(false)} style={{ width: '100%', justifyContent: 'center' }}>{t('Got it')}</WPrimary>
             </div>
           </div>
         </div>
@@ -422,10 +423,10 @@ function RedeemPhysicalWeb() {
 
 function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
   const STEPS = [
-    { id: 'submitted', title: 'Delivery request received', sub: () => `${kg} × 1 kg bar${kg > 1 ? 's' : ''} · ship to ${addr ? addr.label + ', ' + addr.city : 'your address'}` },
-    { id: 'handover',  title: 'Handed to carrier',         sub: 'Brinks Secure Logistics · insured in transit' },
-    { id: 'burning',   title: 'Burning AHLG',              sub: () => `${wfmt(kg * 1000, 4)} AHLG removed from circulation` },
-    { id: 'done',      title: 'Shipped — tracking ready',  sub: 'Your bars are on the way' },
+    { id: 'submitted', title: t('Delivery request received'), sub: () => `${kg} × 1 kg ${t('bar')}${kg > 1 ? t('s') : ''} · ${t('ship to')} ${addr ? addr.label + ', ' + addr.city : t('your address')}` },
+    { id: 'handover',  title: t('Handed to carrier'),         sub: `Brinks Secure Logistics · ${t('insured in transit')}` },
+    { id: 'burning',   title: t('Burning AHLG'),              sub: () => `${wfmt(kg * 1000, 4)} ${t('AHLG removed from circulation')}` },
+    { id: 'done',      title: t('Shipped — tracking ready'),  sub: t('Your bars are on the way') },
   ];
   const [active, setActive] = useState(0);
   const [stamps, setStamps] = useState({});
@@ -467,8 +468,8 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
                 </svg>
               </div>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? 'Order shipped' : 'Processing delivery'}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{kg} kg physical gold</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? t('Order shipped') : t('Processing delivery')}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{kg} {t('kg physical gold')}</div>
               </div>
             </div>
             <WMonoNum size={11} color={WBRAND.muted2}>{orderRef}</WMonoNum>
@@ -487,28 +488,28 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
                   <div style={{ width: 28, height: 28, borderRadius: 6, background: WBRAND.ink, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 10, color: '#fff', letterSpacing: '0.04em' }}>BRX</div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>Brinks Secure Logistics</div>
-                    <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>Fully insured · signature on delivery</div>
+                    <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{t('Fully insured · signature on delivery')}</div>
                   </div>
-                  <WPill tone="warn">In transit</WPill>
+                  <WPill tone="warn">{t('In transit')}</WPill>
                 </div>
                 <div style={{ padding: '14px 16px' }}>
-                  <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Tracking number</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t('Tracking number')}</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
                     <WMonoNum size={15} weight={500} style={{ flex: 1 }}>{tracking}</WMonoNum>
                     <WCopyButton text={tracking}/>
                   </div>
                   <a href={`https://${trackUrl}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12, height: 42, borderRadius: 10, background: WBRAND.white, border: `1px solid ${WBRAND.line2}`, textDecoration: 'none', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink }}>
-                    Track shipment on Brinks
+                    {t('Track shipment on Brinks')}
                     {WIcon.external(WBRAND.muted)}
                   </a>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14, paddingTop: 12, borderTop: `1px dashed ${WBRAND.line}` }}>
                     <div>
-                      <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Ships to</div>
+                      <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t('Ships to')}</div>
                       <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, marginTop: 3 }}>{addr ? `${addr.label} · ${addr.city}` : '—'}</div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Est. arrival</div>
-                      <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, marginTop: 3 }}>3–5 business days</div>
+                      <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t('Est. arrival')}</div>
+                      <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, marginTop: 3 }}>{t('3–5 business days')}</div>
                     </div>
                   </div>
                 </div>
@@ -520,12 +521,12 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
         <div style={{ padding: '14px 24px 20px', flexShrink: 0, borderTop: done ? `1px solid ${WBRAND.line}` : 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
           {done ? (
             <>
-              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>Track in Activity</WPrimary>
-              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>Done</WSecondary>
+              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>{t('Track in Activity')}</WPrimary>
+              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>{t('Done')}</WSecondary>
             </>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '8px 0', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>
-              Preparing your shipment — a tracking number will appear here shortly.
+              {t('Preparing your shipment — a tracking number will appear here shortly.')}
             </div>
           )}
         </div>
@@ -558,10 +559,10 @@ export function WebRedeem({ navigate, onOpenTx }) {
     <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
       <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24 }}>
         <div style={{ flex: 1 }}>
-          <WEyebrow>Redeem AHLG</WEyebrow>
-          <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Convert gold back to cash or claim physical bars</h1>
+          <WEyebrow>{t('Redeem AHLG')}</WEyebrow>
+          <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Convert gold back to cash or claim physical bars')}</h1>
           <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-            Burn AHLG tokens to receive instant settlement in your Kanzasset balance, or request physical delivery to your address.
+            {t('Burn AHLG tokens to receive instant settlement in your Kanzasset balance, or request physical delivery to your address.')}
           </div>
         </div>
       </div>
@@ -571,14 +572,14 @@ export function WebRedeem({ navigate, onOpenTx }) {
           {/* Mode toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
-              { id: 'digital',  label: 'Digital',  sub: 'Crypto or fiat · instant' },
-              { id: 'physical', label: 'Physical', sub: 'Gold bars · 3–5 days' },
-            ].map(t => {
-              const on = mode === t.id;
+              { id: 'digital',  label: t('Digital'),  sub: t('Crypto or fiat · instant') },
+              { id: 'physical', label: t('Physical'), sub: t('Gold bars · 3–5 days') },
+            ].map(opt => {
+              const on = mode === opt.id;
               return (
-                <button key={t.id} onClick={() => setMode(t.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.ink : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
-                  <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{t.label}</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{t.sub}</div>
+                <button key={opt.id} onClick={() => setMode(opt.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.ink : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
+                  <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{opt.label}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{opt.sub}</div>
                 </button>
               );
             })}
@@ -612,14 +613,14 @@ export function WebRedeem({ navigate, onOpenTx }) {
           <WCard padding={0}>
             <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>Your recent redeems</div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>Last 30 days</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent redeems')}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
               </div>
-              <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>View all {WIcon.arrowRight(WBRAND.red)}</button>
+              <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Burned', 'Received', 'Rate', 'Status'].map((h, i) => (
-                <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h}</div>
+                <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
               ))}
             </div>
             {WTXS.filter(t => t.type === 'Redeem').slice(0, 4).map((tx, i, arr) => (
@@ -635,7 +636,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
                 <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 4)} AHLG</WMonoNum>
                 <WMonoNum size={12} color={WBRAND.ink}>{tx.paid}</WMonoNum>
                 <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AHLG)} USDT</WMonoNum>
-                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{tx.status[0].toUpperCase() + tx.status.slice(1)}</WPill>
+                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
           </WCard>

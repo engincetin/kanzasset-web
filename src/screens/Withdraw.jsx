@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WBALANCES, WMETA } from '../lib/index.js';
 import { getAuthChannel } from '../lib/authChannel.js';
+import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WAssetSelector, WCountdown } from '../components/shared.jsx';
@@ -40,9 +41,9 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
                 </button>
               </div>
-              <h2 style={{ margin: '16px 0 0', fontFamily: WFONT, fontSize: 19, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>Verify it's you</h2>
+              <h2 style={{ margin: '16px 0 0', fontFamily: WFONT, fontSize: 19, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t("Verify it's you")}</h2>
               <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6, lineHeight: 1.5 }}>
-                Enter the 6-digit code we sent to <strong style={{ color: WBRAND.ink }}>{masked}</strong> to authorise this withdrawal.
+                {t('Enter the 6-digit code we sent to')} <strong style={{ color: WBRAND.ink }}>{masked}</strong> {t('to authorise this withdrawal.')}
               </div>
             </div>
 
@@ -55,7 +56,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
                     : <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="6" y="2.5" width="12" height="19" rx="2.5" stroke="currentColor" strokeWidth="1.7"/><path d="M10.5 18.5h3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink }}>Code sent via {channel === 'email' ? 'email' : 'SMS'}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink }}>{t('Code sent via')} {channel === 'email' ? t('email') : t('SMS')}</div>
                   <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{masked}</div>
                 </div>
                 <WPill tone="neutral">2FA</WPill>
@@ -79,9 +80,9 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
             </div>
 
             <div style={{ padding: '6px 24px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>Didn't get it?</span>
-              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>Resend code</button>
-              <span style={{ marginLeft: 'auto', fontSize: 11, color: WBRAND.muted2 }}><WCountdown seconds={299} prefix="expires in "/></span>
+              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>{t("Didn't get it?")}</span>
+              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>{t('Resend code')}</button>
+              <span style={{ marginLeft: 'auto', fontSize: 11, color: WBRAND.muted2 }}><WCountdown seconds={299} prefix={t('expires in ')}/></span>
             </div>
 
             <div style={{ padding: '18px 24px 22px' }}>
@@ -90,7 +91,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
                 onClick={() => codeFull && setStep('submitted')}
                 style={{ width: '100%', justifyContent: 'center', opacity: codeFull ? 1 : 0.45, pointerEvents: codeFull ? 'auto' : 'none' }}
               >
-                Authorise withdrawal
+                {t('Authorise withdrawal')}
               </WPrimary>
             </div>
           </>
@@ -103,9 +104,9 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
                   <path d="M7.5 12.5l3 3 6-6.5" stroke={WBRAND.positive} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h2 style={{ margin: '20px 0 0', fontFamily: WFONT, fontSize: 20, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>Withdrawal submitted</h2>
+              <h2 style={{ margin: '20px 0 0', fontFamily: WFONT, fontSize: 20, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t('Withdrawal submitted')}</h2>
               <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 8, lineHeight: 1.55, padding: '0 8px' }}>
-                Your request to send <strong style={{ color: WBRAND.ink }}>{amount > 0 ? wfmt(amount, wdecimals(asset.symbol)) : '0.00'} {asset.symbol}</strong> to <strong style={{ color: WBRAND.ink }}>{destination?.title}</strong> has been verified and is now processing.
+                {t('Your request to send')} <strong style={{ color: WBRAND.ink }}>{amount > 0 ? wfmt(amount, wdecimals(asset.symbol)) : '0.00'} {asset.symbol}</strong> {t('to')} <strong style={{ color: WBRAND.ink }}>{destination?.title}</strong> {t('has been verified and is now processing.')}
               </div>
             </div>
 
@@ -117,7 +118,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
                   { l: 'Estimated arrival', v: kind === 'crypto' ? '≈ 3 minutes' : '1–2 business days' },
                 ].map((r, i, arr) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
-                    <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.l}</span>
+                    <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{t(r.l)}</span>
                     {r.pill ? <WPill tone="warn">{r.v}</WPill> : <WMonoNum size={12}>{r.v}</WMonoNum>}
                   </div>
                 ))}
@@ -125,8 +126,8 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
             </div>
 
             <div style={{ padding: '18px 24px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>Track in Activity</WPrimary>
-              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>Done</WSecondary>
+              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>{t('Track in Activity')}</WPrimary>
+              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>{t('Done')}</WSecondary>
             </div>
           </>
         )}
@@ -172,10 +173,10 @@ export function WebWithdraw({ navigate, initialAsset }) {
   return (
     <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
       <div style={{ marginBottom: 20 }}>
-        <WEyebrow>Withdraw</WEyebrow>
-        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>Send funds to a whitelisted destination</h1>
+        <WEyebrow>{t('Withdraw')}</WEyebrow>
+        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Send funds to a whitelisted destination')}</h1>
         <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-          Withdrawals can only go to pre-approved addresses or bank accounts. New destinations require a 24h security review.
+          {t('Withdrawals can only go to pre-approved addresses or bank accounts. New destinations require a 24h security review.')}
         </div>
       </div>
 
@@ -186,12 +187,12 @@ export function WebWithdraw({ navigate, initialAsset }) {
             {[
               { id: 'crypto', label: 'Crypto', sub: 'USDT / USDC · Ethereum' },
               { id: 'fiat',   label: 'Fiat',   sub: 'Bank wire · 1–2 days' },
-            ].map(t => {
-              const on = kind === t.id;
+            ].map(tk => {
+              const on = kind === tk.id;
               return (
-                <button key={t.id} onClick={() => setKind(t.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.ink : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
-                  <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{t.label}</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{t.sub}</div>
+                <button key={tk.id} onClick={() => setKind(tk.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.ink : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
+                  <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{t(tk.label)}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{t(tk.sub)}</div>
                 </button>
               );
             })}
@@ -200,7 +201,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
           {/* Amount */}
           <WCard padding={0}>
             <div style={{ padding: '20px 22px' }}>
-              <WEyebrow>From</WEyebrow>
+              <WEyebrow>{t('From')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0.00" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 30, color: WBRAND.ink, letterSpacing: '-0.03em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 <WAssetSelector
@@ -214,7 +215,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
                 <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>
-                  Balance: <WMonoNum size={12}>{wfmt(asset.balance, wdecimals(asset.symbol))}</WMonoNum> {asset.symbol}
+                  {t('Balance:')} <WMonoNum size={12}>{wfmt(asset.balance, wdecimals(asset.symbol))}</WMonoNum> {asset.symbol}
                 </span>
                 <span style={{ display: 'flex', gap: 6 }}>
                   {[25, 50, 75].map(p => (
@@ -230,10 +231,10 @@ export function WebWithdraw({ navigate, initialAsset }) {
           <WCard padding={0}>
             <div style={{ padding: '14px 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{kind === 'crypto' ? 'Whitelisted addresses' : 'Bank accounts'}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{whitelist.length} verified</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{kind === 'crypto' ? t('Whitelisted addresses') : t('Bank accounts')}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{whitelist.length} {t('verified')}</div>
               </div>
-              <WSecondary size="sm" icon={WIcon.plus(WBRAND.ink)}>Add new</WSecondary>
+              <WSecondary size="sm" icon={WIcon.plus(WBRAND.ink)}>{t('Add new')}</WSecondary>
             </div>
             <div style={{ padding: '4px 0' }}>
               {whitelist.map((it, i) => {
@@ -246,7 +247,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{it.title}</span>
-                        {it.verified && <WPill tone="positive">{WIcon.check(WBRAND.positive)} Verified</WPill>}
+                        {it.verified && <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>}
                       </div>
                       <div style={{ fontFamily: it.sub.includes('0x') ? 'monospace' : WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{it.sub}</div>
                     </div>
@@ -261,8 +262,8 @@ export function WebWithdraw({ navigate, initialAsset }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <WCard padding={0}>
             <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}` }}>
-              <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>Review withdrawal</div>
-              <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 2 }}>Confirm details before submitting</div>
+              <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('Review withdrawal')}</div>
+              <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 2 }}>{t('Confirm details before submitting')}</div>
             </div>
             <div style={{ padding: '4px 22px 8px' }}>
               {[
@@ -274,7 +275,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
                 { l: 'Estimated arrival', v: kind === 'crypto' ? '≈ 3 minutes' : '1–2 business days' },
               ].map((r, i, arr) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
-                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.l}</span>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{t(r.l)}</span>
                   <span style={{ fontFamily: WFONT, fontSize: r.accent ? 15 : 13, fontWeight: r.accent ? 800 : 600, color: WBRAND.ink, fontVariantNumeric: 'tabular-nums', letterSpacing: r.accent ? '-0.015em' : 0 }}>{r.v}</span>
                 </div>
               ))}
@@ -282,13 +283,13 @@ export function WebWithdraw({ navigate, initialAsset }) {
           </WCard>
 
           <WPrimary size="lg" onClick={() => amt > 0 && setVerifying(true)} disabled={amt <= 0} style={{ width: '100%', justifyContent: 'center' }} icon={WIcon.shield('#fff')}>
-            Confirm withdrawal
+            {t('Confirm withdrawal')}
           </WPrimary>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px', background: WBRAND.redSoft, borderRadius: 10 }}>
             <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
-              You'll be asked to approve this withdrawal with your hardware key. {kind === 'crypto' ? 'Crypto withdrawals are irreversible — double-check the destination address.' : "Bank transfers can take 1–2 business days to settle and are subject to your bank's cut-off times."}
+              {t("You'll be asked to approve this withdrawal with your hardware key.")} {kind === 'crypto' ? t('Crypto withdrawals are irreversible — double-check the destination address.') : t("Bank transfers can take 1–2 business days to settle and are subject to your bank's cut-off times.")}
             </div>
           </div>
         </div>
