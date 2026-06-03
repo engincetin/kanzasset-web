@@ -244,66 +244,17 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
         })()}
 
         {!collapsed ? (
-          <>
-            <div style={{
-              background: WBRAND.panel, color: '#fff', borderRadius: 12,
-              padding: 14, position: 'relative', overflow: 'hidden',
-            }}>
-              <style>{`@keyframes kzDotDrift{from{background-position:0 0}to{background-position:40px 40px}}`}</style>
-              <div style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none',
-                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.11) 1px, transparent 1.5px)',
-                backgroundSize: '16px 16px',
-                animation: 'kzDotDrift 16s linear infinite',
-                WebkitMaskImage: 'radial-gradient(130% 120% at 100% 0%, #000 22%, transparent 75%)',
-                maskImage: 'radial-gradient(130% 120% at 100% 0%, #000 22%, transparent 75%)',
-              }}/>
-              <div style={{
-                position: 'absolute', top: -30, right: -30,
-                width: 100, height: 100, borderRadius: 50,
-                background: WBRAND.red, opacity: 0.22, filter: 'blur(14px)',
-              }}/>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, position: 'relative' }}>
-                <AHLGMark size={16}/>
-                <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.65)' }}>AHLG · USDT</span>
-              </div>
-              <div style={{
-                fontFamily: WFONT, fontSize: 22, fontWeight: 800,
-                color: '#fff', marginTop: 6, letterSpacing: '-0.02em',
-                fontVariantNumeric: 'tabular-nums', position: 'relative',
-              }}>$151.56</div>
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 6, marginTop: 2,
-                fontFamily: WFONT, fontSize: 11, color: '#7DD3A2', fontWeight: 600,
-                fontVariantNumeric: 'tabular-nums', position: 'relative',
-              }}>
-                <span>▲ 0.24%</span>
-                <span style={{ color: 'rgba(255,255,255,0.45)' }}>· 24h</span>
-              </div>
-            </div>
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '8px 10px', borderRadius: 8, background: WBRAND.surface,
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.positive, boxShadow: `0 0 0 3px rgba(15,122,71,0.16)` }}/>
-              <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t('All systems operational', 'Tüm sistemler çalışıyor')}</span>
-            </div>
-          </>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '8px 10px', borderRadius: 8, background: WBRAND.surface,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.positive, boxShadow: `0 0 0 3px rgba(15,122,71,0.16)` }}/>
+            <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t('All systems operational', 'Tüm sistemler çalışıyor')}</span>
+          </div>
         ) : (
-          <>
-            <div title="AHLG · $151.56 (+0.24%)" style={{
-              background: WBRAND.panel, color: '#fff', borderRadius: 10,
-              padding: '10px 6px', display: 'flex', flexDirection: 'column',
-              alignItems: 'center', gap: 2,
-            }}>
-              <AHLGMark size={16}/>
-              <span style={{ fontFamily: WMONO, fontSize: 10, fontWeight: 700, marginTop: 2 }}>$151</span>
-              <span style={{ fontFamily: WFONT, fontSize: 9, color: '#7DD3A2', fontWeight: 700 }}>+0.24%</span>
-            </div>
-            <div title="All systems operational" style={{ display: 'grid', placeItems: 'center', padding: '8px 0' }}>
-              <span style={{ width: 8, height: 8, borderRadius: 4, background: WBRAND.positive, boxShadow: `0 0 0 3px rgba(15,122,71,0.16)` }}/>
-            </div>
-          </>
+          <div title="All systems operational" style={{ display: 'grid', placeItems: 'center', padding: '8px 0' }}>
+            <span style={{ width: 8, height: 8, borderRadius: 4, background: WBRAND.positive, boxShadow: `0 0 0 3px rgba(15,122,71,0.16)` }}/>
+          </div>
         )}
       </div>
     </aside>
