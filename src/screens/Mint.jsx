@@ -12,7 +12,7 @@ export function WebMint({ navigate, onOpenTx }) {
     .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AHLG }));
 
   const [from, setFrom] = useState(sources[0]);
-  const [amount, setAmount] = useState(String(WRATES.AHLG));
+  const [amount, setAmount] = useState('');
   const [range, setRange] = useState('3M');
   const [minting, setMinting] = useState(false);
 
@@ -51,7 +51,7 @@ export function WebMint({ navigate, onOpenTx }) {
             <div style={{ padding: '22px 24px 20px' }}>
               <WEyebrow>You pay</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-                <input value={amount} onChange={e => setAmount(e.target.value)} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
+                <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 <WAssetSelector value={from.symbol} options={sources} onChange={s => setFrom(sources.find(x => x.symbol === s))}/>
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
@@ -111,7 +111,7 @@ export function WebMint({ navigate, onOpenTx }) {
             </div>
           </WCard>
 
-          <WPrimary size="lg" onClick={() => setMinting(true)} style={{ width: '100%', justifyContent: 'center' }}>
+          <WPrimary size="lg" onClick={() => out > 0 && setMinting(true)} disabled={out <= 0} style={{ width: '100%', justifyContent: 'center' }}>
             Mint {wfmt(out, 4)} AHLG
           </WPrimary>
 

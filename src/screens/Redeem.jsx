@@ -8,7 +8,7 @@ import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx
 import { AddDestinationModal } from './Profile.jsx';
 
 function RedeemDigital({ targets, to, setTo }) {
-  const [amount, setAmount] = useState('1');
+  const [amount, setAmount] = useState('');
   const [redeeming, setRedeeming] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const out = wparse(amount) * to.rate;
@@ -27,7 +27,7 @@ function RedeemDigital({ targets, to, setTo }) {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-            <input value={amount} onChange={e => setAmount(e.target.value)} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
+            <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
             <div style={{ background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line2}`, borderRadius: 999, padding: '6px 14px 6px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
               <AHLGMark size={28}/>
               <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AHLG</span>
@@ -86,7 +86,7 @@ function RedeemDigital({ targets, to, setTo }) {
         </div>
       </WCard>
 
-      <WPrimary size="lg" onClick={() => setRedeeming(true)} style={{ width: '100%', justifyContent: 'center' }}>
+      <WPrimary size="lg" onClick={() => out > 0 && setRedeeming(true)} disabled={out <= 0} style={{ width: '100%', justifyContent: 'center' }}>
         Redeem {wfmt(out, wdecimals(to.symbol))} {to.symbol}
       </WPrimary>
 
