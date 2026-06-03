@@ -214,6 +214,7 @@ function RedeemPhysicalWeb() {
   const [kgPicked, setKgPicked] = useState(1);
   const [addrId, setAddrId] = useState('h');
   const [shipping, setShipping] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [shipAddOpen, setShipAddOpen] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
   const addr = addresses.find(a => a.id === addrId);
@@ -298,7 +299,7 @@ function RedeemPhysicalWeb() {
         </div>
       </WCard>
 
-      <WPrimary size="lg" onClick={() => setShipping(true)} style={{ width: '100%', justifyContent: 'center' }}>
+      <WPrimary size="lg" onClick={() => setConfirmOpen(true)} style={{ width: '100%', justifyContent: 'center' }}>
         Request {kgPicked} kg delivery
       </WPrimary>
 
@@ -308,6 +309,62 @@ function RedeemPhysicalWeb() {
           Bars are cast by Ahlatci Gold Refinery, sealed with tamper-evident packaging, and shipped with a serialised assay certificate. Delivery requires ID verification at the door.
         </div>
       </div>
+
+      {confirmOpen && (
+        <div onClick={() => setConfirmOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden' }}>
+            <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="8" width="18" height="4" rx="1" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/>
+                    <path d="M5 12v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/>
+                    <path d="M12 8v13" stroke={WBRAND.ink} strokeWidth="1.7"/>
+                  </svg>
+                </div>
+                <div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Confirm delivery</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{kgPicked} kg physical gold</div>
+                </div>
+              </div>
+              <button onClick={() => setConfirmOpen(false)} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', flexShrink: 0, background: WBRAND.surface, cursor: 'pointer', color: WBRAND.ink, display: 'grid', placeItems: 'center' }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              </button>
+            </div>
+
+            <div style={{ padding: '6px 24px 4px' }}>
+              {[
+                { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 fine · Ahlatci Gold Refinery` },
+                { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AHLG · ≈ $${wfmt(kgPicked * 1000 * WRATES.AHLG, 0)}` },
+                { l: 'Ship to',           v: addr ? `${addr.label} · ${addr.city} — ${addr.line}, ${addr.country}` : '—' },
+                { l: 'Shipping',          v: 'Brinks · AED 120 · fully insured' },
+                { l: 'Estimated arrival', v: '3–5 business days' },
+              ].map((r, i, arr) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, padding: '13px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500, flexShrink: 0 }}>{r.l}</span>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, textAlign: 'right' }}>{r.v}</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ padding: '12px 24px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
+                {WIcon.shield(WBRAND.ink)}
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
+                  Burning AHLG for physical delivery is irreversible. Please confirm the bar count and shipping address are correct.
+                </div>
+              </div>
+            </div>
+
+            <div style={{ padding: '16px 24px 20px', display: 'flex', gap: 8 }}>
+              <WSecondary size="lg" onClick={() => setConfirmOpen(false)} style={{ flex: 1, justifyContent: 'center', height: 52 }}>Cancel</WSecondary>
+              <WPrimary size="lg" onClick={() => { setConfirmOpen(false); setShipping(true); }} style={{ flex: 1, justifyContent: 'center' }}>
+                Confirm &amp; request
+              </WPrimary>
+            </div>
+          </div>
+        </div>
+      )}
 
       {shipping && (
         <RedeemPhysicalModal
