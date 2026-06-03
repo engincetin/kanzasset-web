@@ -112,7 +112,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
       width, background: WBRAND.white,
       borderRight: `1px solid ${WBRAND.line}`,
       display: 'flex', flexDirection: 'column',
-      padding: collapsed ? '28px 10px 16px' : '28px 16px 20px',
+      padding: collapsed ? '0 10px 16px' : '0 16px 20px',
       flexShrink: 0,
       transition: 'width .22s ease, padding .22s ease',
       position: 'relative',
@@ -134,8 +134,9 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
       </button>
 
       <div style={{
-        padding: collapsed ? '0 0 28px' : '0 8px 30px',
-        display: 'flex', justifyContent: collapsed ? 'center' : 'flex-start',
+        height: 72, flexShrink: 0, marginBottom: collapsed ? 18 : 16,
+        padding: collapsed ? 0 : '0 8px',
+        display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start',
       }}>
         {collapsed ? <WMark size={32}/> : <WLogotype mark={32} type={22}/>}
       </div>
