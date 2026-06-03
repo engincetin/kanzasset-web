@@ -485,7 +485,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
             <div style={{ padding: '4px 24px 20px' }}>
               <div style={{ border: `1px solid ${WBRAND.line}`, borderRadius: 12, overflow: 'hidden' }}>
                 <div style={{ padding: '14px 16px', background: WBRAND.surface2, borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 6, background: WBRAND.ink, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 10, color: '#fff', letterSpacing: '0.04em' }}>BRX</div>
+                  <div style={{ width: 28, height: 28, borderRadius: 6, background: WBRAND.panel, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 10, color: '#fff', letterSpacing: '0.04em' }}>BRX</div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>Brinks Secure Logistics</div>
                     <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{t('Fully insured · signature on delivery')}</div>
@@ -577,7 +577,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
             ].map(opt => {
               const on = mode === opt.id;
               return (
-                <button key={opt.id} onClick={() => setMode(opt.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.ink : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
+                <button key={opt.id} onClick={() => setMode(opt.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.panel : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
                   <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{opt.label}</div>
                   <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{opt.sub}</div>
                 </button>

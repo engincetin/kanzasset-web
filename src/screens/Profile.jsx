@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, getNumberStyle, setNumberStyle } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, getNumberStyle, setNumberStyle, getTheme, applyTheme } from '../lib/index.js';
 import { getAuthChannel, setAuthChannel } from '../lib/authChannel.js';
 import { getLang, setLang, t } from '../lib/i18n.js';
 import { toast } from '../components/Toast.jsx';
@@ -354,7 +354,7 @@ function ProfDestinations() {
           return (
             <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: '12px 14px 14px', border: 'none', background: 'transparent', cursor: 'pointer', position: 'relative', fontFamily: WFONT, fontSize: 13, fontWeight: on ? 700 : 500, color: on ? WBRAND.ink : WBRAND.muted, letterSpacing: '-0.005em', display: 'flex', alignItems: 'center', gap: 8, marginBottom: -1 }}>
               <span>{t.label}</span>
-              <span style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, background: on ? WBRAND.ink : WBRAND.surface, color: on ? '#fff' : WBRAND.muted, padding: '2px 7px', borderRadius: 10, fontVariantNumeric: 'tabular-nums' }}>{t.count}</span>
+              <span style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, background: on ? WBRAND.panel : WBRAND.surface, color: on ? '#fff' : WBRAND.muted, padding: '2px 7px', borderRadius: 10, fontVariantNumeric: 'tabular-nums' }}>{t.count}</span>
               {on && <span style={{ position: 'absolute', left: 0, right: 0, bottom: -1, height: 2, background: WBRAND.red }}/>}
             </button>
           );
@@ -578,9 +578,12 @@ function ProfPrefs() {
       </FormRow>
       <FormRow label={t('Appearance')} hint={t('Switch between light, dark, or follow system.')}>
         <div style={{ display: 'inline-flex', gap: 6 }}>
-          {['Light', 'Dark', 'System'].map((m, i) => (
-            <button key={m} style={{ padding: '8px 16px', borderRadius: 8, background: i === 0 ? WBRAND.ink : WBRAND.white, color: i === 0 ? '#fff' : WBRAND.ink, border: `1px solid ${i === 0 ? WBRAND.ink : WBRAND.line2}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>{t(m)}</button>
-          ))}
+          {['Light', 'Dark', 'System'].map((m) => {
+            const on = getTheme() === m.toLowerCase();
+            return (
+              <button key={m} onClick={() => { applyTheme(m.toLowerCase()); toast(t('Appearance') + ': ' + t(m), { title: t('Saved') }); }} style={{ padding: '8px 16px', borderRadius: 8, background: on ? WBRAND.panel : WBRAND.white, color: on ? '#fff' : WBRAND.ink, border: `1px solid ${on ? WBRAND.panel : WBRAND.line2}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>{t(m)}</button>
+            );
+          })}
         </div>
       </FormRow>
     </SectionCard>

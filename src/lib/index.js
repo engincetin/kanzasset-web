@@ -1,20 +1,67 @@
-// ─── Brand tokens ─────────────────────────────────────────────
-export const WBRAND = {
+// ─── Brand tokens + theming ───────────────────────────────────
+// Light / dark palettes. WBRAND is a live object; applyTheme() copies the
+// chosen palette into it and notifies subscribers so the whole app re-renders.
+const WLIGHT = {
   red:     '#D4202B',
   redDeep: '#A8161F',
   redSoft: 'rgba(212,32,43,0.08)',
-  ink:     '#0A0A0A',
+  ink:     '#0A0A0A',   // primary text
   ink2:    '#1F1F1F',
   muted:   '#7A7A7E',
   muted2:  '#A8A8AB',
   line:    '#ECECEA',
   line2:   '#E0E0DD',
-  surface: '#F7F7F4',
-  surface2:'#FBFBF9',
-  white:   '#FFFFFF',
+  surface: '#F7F7F4',   // page background
+  surface2:'#FBFBF9',   // subtle fills
+  white:   '#FFFFFF',   // card background
   positive:'#0F7A47',
   warn:    '#B7791F',
+  panel:   '#0A0A0A',   // dark accent surface (white text on top)
 };
+
+const WDARK = {
+  red:     '#E5484D',
+  redDeep: '#C13B40',
+  redSoft: 'rgba(229,72,77,0.16)',
+  ink:     '#F3F3F1',
+  ink2:    '#DDDDDB',
+  muted:   '#9A9AA2',
+  muted2:  '#6E6F77',
+  line:    '#2A2B30',
+  line2:   '#34353B',
+  surface: '#0E0F12',
+  surface2:'#191A1E',
+  white:   '#17181C',
+  positive:'#3DD68C',
+  warn:    '#E0A042',
+  panel:   '#24252C',
+};
+
+export const WBRAND = { ...WLIGHT };
+
+let _theme = 'light';               // stored preference: 'light' | 'dark' | 'system'
+const _themeSubs = new Set();
+const _resolve = (t) => t === 'system'
+  ? (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+  : t;
+
+export const getTheme = () => _theme;
+export const applyTheme = (t) => {
+  if (t !== 'light' && t !== 'dark' && t !== 'system') return;
+  _theme = t;
+  Object.assign(WBRAND, _resolve(t) === 'dark' ? WDARK : WLIGHT);
+  if (typeof document !== 'undefined') document.body.style.background = WBRAND.surface;
+  try { localStorage.setItem('kz-theme', t); } catch { /* noop */ }
+  _themeSubs.forEach(fn => { try { fn(); } catch { /* noop */ } });
+};
+export const subscribeTheme = (fn) => { _themeSubs.add(fn); return () => _themeSubs.delete(fn); };
+
+// Restore saved preference on load
+if (typeof window !== 'undefined') {
+  let saved = 'light';
+  try { saved = localStorage.getItem('kz-theme') || 'light'; } catch { /* noop */ }
+  applyTheme(saved);
+}
 
 export const WFONT = `'Manrope', 'Avenir Next', -apple-system, system-ui, sans-serif`;
 export const WMONO = `'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace`;

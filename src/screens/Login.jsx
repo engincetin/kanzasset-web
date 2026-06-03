@@ -16,7 +16,7 @@ function WAuthLayout({ children }) {
     }}>
       {/* Left brand panel */}
       <div style={{
-        width: 520, flexShrink: 0, background: WBRAND.ink, color: '#fff',
+        width: 520, flexShrink: 0, background: WBRAND.panel, color: '#fff',
         position: 'relative', overflow: 'hidden',
         display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
         padding: '48px 48px 44px',

@@ -156,7 +156,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
 
         {/* AHLG holdings */}
         <WCard padding={0} style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '24px 28px 24px', flex: 1, background: WBRAND.ink, color: '#fff', borderTopLeftRadius: 16, borderTopRightRadius: 16, position: 'relative', overflow: 'hidden' }}>
+          <div style={{ padding: '24px 28px 24px', flex: 1, background: WBRAND.panel, color: '#fff', borderTopLeftRadius: 16, borderTopRightRadius: 16, position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: 120, background: WBRAND.red, opacity: 0.18, filter: 'blur(50px)' }}/>
             <div style={{ position: 'relative' }}>
               <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>{t('AHL Gold holdings')}</div>

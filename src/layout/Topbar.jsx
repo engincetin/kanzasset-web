@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { WBRAND, WFONT, WMONO } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, getTheme, applyTheme } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WPill } from '../components/primitives.jsx';
 
 export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [theme, setTheme] = useState('Light');
 
   return (
     <header style={{
@@ -112,9 +111,9 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout }) {
                 <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '10px 0 8px' }}>{t('Appearance', 'Görünüm')}</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4, padding: 3, background: WBRAND.surface, borderRadius: 8 }}>
                   {['Light', 'Dark', 'System'].map(m => {
-                    const on = theme === m;
+                    const on = getTheme() === m.toLowerCase();
                     return (
-                      <button key={m} onClick={() => setTheme(m)} style={{
+                      <button key={m} onClick={() => applyTheme(m.toLowerCase())} style={{
                         padding: '6px 0', border: 'none', cursor: 'pointer',
                         background: on ? WBRAND.white : 'transparent',
                         color: on ? WBRAND.ink : WBRAND.muted,

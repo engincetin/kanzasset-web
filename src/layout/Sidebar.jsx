@@ -166,7 +166,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
                       padding: collapsed ? '10px 0' : '9px 12px',
                       justifyContent: collapsed ? 'center' : 'flex-start',
                       borderRadius: 8,
-                      background: on ? WBRAND.ink : 'transparent',
+                      background: on ? WBRAND.panel : 'transparent',
                       color: on ? '#fff' : WBRAND.ink,
                       border: 'none', cursor: 'pointer', textAlign: 'left',
                       fontFamily: WFONT, fontWeight: on ? 700 : 500, fontSize: 13,
@@ -222,7 +222,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
                         padding: collapsed ? '10px 0' : '9px 12px',
                         justifyContent: collapsed ? 'center' : 'flex-start',
                         borderRadius: 8,
-                        background: on ? WBRAND.ink : 'transparent',
+                        background: on ? WBRAND.panel : 'transparent',
                         color: on ? '#fff' : WBRAND.ink,
                         border: 'none', cursor: 'pointer', textAlign: 'left',
                         fontFamily: WFONT, fontWeight: on ? 700 : 500, fontSize: 13,
@@ -246,7 +246,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
         {!collapsed ? (
           <>
             <div style={{
-              background: WBRAND.ink, color: '#fff', borderRadius: 12,
+              background: WBRAND.panel, color: '#fff', borderRadius: 12,
               padding: 14, position: 'relative', overflow: 'hidden',
             }}>
               <div style={{
@@ -283,7 +283,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
         ) : (
           <>
             <div title="AHLG · $151.56 (+0.24%)" style={{
-              background: WBRAND.ink, color: '#fff', borderRadius: 10,
+              background: WBRAND.panel, color: '#fff', borderRadius: 10,
               padding: '10px 6px', display: 'flex', flexDirection: 'column',
               alignItems: 'center', gap: 2,
             }}>

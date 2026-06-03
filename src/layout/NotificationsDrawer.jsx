@@ -53,7 +53,7 @@ function WNotifRow({ n, last }) {
     <div style={{
       display: 'flex', alignItems: 'flex-start', gap: 12,
       padding: '14px 22px',
-      background: n.unread ? '#FCFCFA' : WBRAND.white,
+      background: n.unread ? WBRAND.surface2 : WBRAND.white,
       borderBottom: last ? 'none' : `1px solid ${WBRAND.line}`,
       position: 'relative',
     }}>

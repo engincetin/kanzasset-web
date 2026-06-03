@@ -66,7 +66,7 @@ export function WPriceChart({ data, height = 260, color = WBRAND.red, showGrid =
           left: Math.min(hover.svgX, width - 140),
           top: Math.max(4, hover.svgY - 48),
           transform: hover.svgX > width - 140 ? 'translateX(-100%)' : 'none',
-          background: WBRAND.ink, color: '#fff',
+          background: WBRAND.panel, color: '#fff',
           borderRadius: 8, padding: '6px 10px',
           pointerEvents: 'none', zIndex: 10,
           boxShadow: '0 4px 12px rgba(0,0,0,0.18)',

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { WBRAND, subscribeNumberStyle } from './lib/index.js';
+import { WBRAND, subscribeNumberStyle, subscribeTheme } from './lib/index.js';
 import { t, subscribeLang } from './lib/i18n.js';
 import { WSidebar } from './layout/Sidebar.jsx';
 import { WTopbar } from './layout/Topbar.jsx';
@@ -129,6 +129,7 @@ export default function App() {
   // Re-render the whole app when the number-format or language preference changes
   useEffect(() => subscribeNumberStyle(() => force(n => n + 1)), []);
   useEffect(() => subscribeLang(() => force(n => n + 1)), []);
+  useEffect(() => subscribeTheme(() => force(n => n + 1)), []);
 
   return (
     <>
