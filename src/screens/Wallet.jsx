@@ -95,7 +95,6 @@ export function WebWallet({ navigate }) {
         {assets.length === 0 ? (
           <div style={{ padding: '40px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>No assets match this filter.</div>
         ) : assets.map((a, i) => {
-          const isAhlg = a.symbol === 'AHLG';
           const zero = a.balance === 0;
           const priceStr = a.symbol === 'AHLG' ? '$151.56' : a.symbol === 'AED' ? '$0.272' : a.symbol === 'EUR' ? '$1.080' : a.symbol === 'GBP' ? '$1.270' : '$1.000';
           return (
@@ -121,17 +120,8 @@ export function WebWallet({ navigate }) {
                 <WMonoNum size={11} color={WBRAND.muted}>{wfmt(a.alloc, 1)}%</WMonoNum>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
-                {isAhlg ? (
-                  <>
-                    <AssetActionBtn label="Mint"   onClick={() => navigate('mint')} accent/>
-                    <AssetActionBtn label="Redeem" onClick={() => navigate('redeem')} disabled={zero}/>
-                  </>
-                ) : (
-                  <>
-                    <AssetActionBtn label="Deposit"  onClick={() => navigate('deposit')}/>
-                    <AssetActionBtn label="Withdraw" onClick={() => navigate('withdraw')} disabled={zero}/>
-                  </>
-                )}
+                <AssetActionBtn label="Deposit"  onClick={() => navigate('deposit')}/>
+                <AssetActionBtn label="Withdraw" onClick={() => navigate('withdraw')} disabled={zero}/>
               </div>
             </div>
           );

@@ -292,7 +292,6 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           </div>
 
           {assets.map((a, i, arr) => {
-            const isAhlg = a.symbol === 'AHLG';
             const zero = a.balance === 0;
             return (
               <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 188px', gap: 20, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
@@ -312,17 +311,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                   <WMonoNum size={11} color={WBRAND.muted} style={{ minWidth: 38, textAlign: 'right' }}>{wfmt(a.alloc, 1)}%</WMonoNum>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
-                  {isAhlg ? (
-                    <>
-                      <AssetActionBtn label="Mint" onClick={() => navigate('mint')} accent/>
-                      <AssetActionBtn label="Redeem" onClick={() => navigate('redeem')} disabled={zero}/>
-                    </>
-                  ) : (
-                    <>
-                      <AssetActionBtn label="Deposit" onClick={() => navigate('deposit')}/>
-                      <AssetActionBtn label="Withdraw" onClick={() => navigate('withdraw')} disabled={zero}/>
-                    </>
-                  )}
+                  <AssetActionBtn label="Deposit" onClick={() => navigate('deposit')}/>
+                  <AssetActionBtn label="Withdraw" onClick={() => navigate('withdraw')} disabled={zero}/>
                 </div>
               </div>
             );
