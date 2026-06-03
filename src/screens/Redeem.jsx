@@ -374,6 +374,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
   const [stamps, setStamps] = useState({});
   const orderRef = 'PD-' + Math.floor(100000 + Math.random() * 899999);
   const tracking = 'BRX' + Math.floor(100000000 + Math.random() * 899999999) + 'AE';
+  const trackUrl = 'brinks.com/track/' + tracking;
 
   useEffect(() => {
     const now = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -439,6 +440,10 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
                     <WMonoNum size={15} weight={500} style={{ flex: 1 }}>{tracking}</WMonoNum>
                     <WSecondary size="sm" icon={WIcon.copy(WBRAND.ink)}>Copy</WSecondary>
                   </div>
+                  <a href={`https://${trackUrl}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12, height: 42, borderRadius: 10, background: WBRAND.white, border: `1px solid ${WBRAND.line2}`, textDecoration: 'none', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink }}>
+                    Track shipment on Brinks
+                    {WIcon.external(WBRAND.muted)}
+                  </a>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14, paddingTop: 12, borderTop: `1px dashed ${WBRAND.line}` }}>
                     <div>
                       <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Ships to</div>
