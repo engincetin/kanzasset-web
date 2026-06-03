@@ -5,6 +5,7 @@ import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { SelectField } from '../components/shared.jsx';
 import { txMeta } from '../components/TxDetailModal.jsx';
+import { toast } from '../components/Toast.jsx';
 
 // ─── Seed tickets ─────────────────────────────────────────────
 const WTICKETS = [
@@ -139,10 +140,11 @@ export function WebSupport({ navigate, prefillTx }) {
 
         {/* Right: thread OR composer OR empty */}
         {composing
-          ? <TicketComposer key={activePrefill ? activePrefill.id : 'blank'} prefillTx={activePrefill} onCancel={() => setComposing(false)} onSubmit={(t) => { setTickets([t, ...tickets]); setComposing(false); setActivePrefill(null); setOpenId(t.id); }}/>
+          ? <TicketComposer key={activePrefill ? activePrefill.id : 'blank'} prefillTx={activePrefill} onCancel={() => setComposing(false)} onSubmit={(t) => { setTickets([t, ...tickets]); setComposing(false); setActivePrefill(null); setOpenId(t.id); toast(`${t.id} created — we'll reply within 2 hours`, { title: 'Ticket submitted' }); }}/>
           : open
             ? <TicketThread ticket={open} onReply={(body) => {
                 setTickets(tickets.map(t => t.id === open.id ? { ...t, status: 'pending', messages: [...t.messages, { from: 'user', name: 'You', ts: 'Just now', body }] } : t));
+                toast('Reply sent', { tone: 'info' });
               }}/>
             : <WCard padding={0}>
                 <div style={{ padding: '60px 32px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

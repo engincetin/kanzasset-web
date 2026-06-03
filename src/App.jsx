@@ -3,6 +3,7 @@ import { WBRAND, subscribeNumberStyle } from './lib/index.js';
 import { WSidebar } from './layout/Sidebar.jsx';
 import { WTopbar } from './layout/Topbar.jsx';
 import { WNotificationsDrawer } from './layout/NotificationsDrawer.jsx';
+import { ToastHost } from './components/Toast.jsx';
 import { WebAuth } from './screens/Login.jsx';
 import { WebPortfolio } from './screens/Dashboard.jsx';
 import { WebWallet } from './screens/Wallet.jsx';
@@ -126,7 +127,12 @@ export default function App() {
   // Re-render the whole app when the number-format preference changes
   useEffect(() => subscribeNumberStyle(() => force(n => n + 1)), []);
 
-  if (!authed) return <WebAuth onAuthed={() => setAuthed(true)} />;
-
-  return <AppShell onLogout={() => setAuthed(false)} />;
+  return (
+    <>
+      {authed
+        ? <AppShell onLogout={() => setAuthed(false)} />
+        : <WebAuth onAuthed={() => setAuthed(true)} />}
+      <ToastHost />
+    </>
+  );
 }

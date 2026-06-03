@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, getNumberStyle, setNumberStyle } from '../lib/index.js';
 import { getAuthChannel, setAuthChannel } from '../lib/authChannel.js';
+import { toast } from '../components/Toast.jsx';
 
 const NUMFMT_US = '1,234.56  ·  US / UK';
 const NUMFMT_EU = '1.234,56  ·  Europe';
@@ -148,6 +149,7 @@ function ProfAccount({ navigate }) {
 function ProfSecurity() {
   const [twoFA, setTwoFA] = useState(getAuthChannel());
   useEffect(() => { setAuthChannel(twoFA); }, [twoFA]);
+  const pickTwoFA = (id) => { if (id === twoFA) return; setTwoFA(id); toast(`Codes will be sent by ${id === 'email' ? 'email' : 'SMS'}`, { title: 'Two-factor updated' }); };
 
   return (
     <>
@@ -162,7 +164,7 @@ function ProfSecurity() {
             ].map(m => {
               const on = twoFA === m.id;
               return (
-                <button key={m.id} onClick={() => setTwoFA(m.id)} style={{
+                <button key={m.id} onClick={() => pickTwoFA(m.id)} style={{
                   textAlign: 'left', cursor: 'pointer', padding: '14px 16px', borderRadius: 12,
                   border: `1.5px solid ${on ? WBRAND.red : WBRAND.line2}`,
                   background: on ? WBRAND.surface2 : WBRAND.white,
@@ -388,7 +390,7 @@ function ProfDestinations() {
               </div>
               <WMonoNum size={11} color={WBRAND.muted} style={{ marginTop: 3, display: 'block' }}>{b.iban}</WMonoNum>
             </div>
-            {bankDef !== i && <WSecondary size="sm" onClick={() => setBankDef(i)}>Make default</WSecondary>}
+            {bankDef !== i && <WSecondary size="sm" onClick={() => { setBankDef(i); toast(`${b.bank} set as default ${b.ccy} account`, { title: 'Default updated' }); }}>Make default</WSecondary>}
             <WSecondary size="sm">Edit</WSecondary>
             <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>Remove</button>
           </div>
@@ -407,7 +409,7 @@ function ProfDestinations() {
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{a.line}, {a.country}</div>
             </div>
-            {shipDef !== i && <WSecondary size="sm" onClick={() => setShipDef(i)}>Make default</WSecondary>}
+            {shipDef !== i && <WSecondary size="sm" onClick={() => { setShipDef(i); toast(`${a.label} · ${a.city} set as default shipping address`, { title: 'Default updated' }); }}>Make default</WSecondary>}
             <WSecondary size="sm">Edit</WSecondary>
             <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>Remove</button>
           </div>
@@ -521,7 +523,7 @@ export function AddDestinationModal({ tab, onClose }) {
 
             <div style={{ padding: '18px 24px 22px', display: 'flex', gap: 8 }}>
               <WSecondary size="lg" onClick={onClose} style={{ flex: 1, justifyContent: 'center', height: 52 }}>Cancel</WSecondary>
-              <WPrimary size="lg" onClick={() => setSubmitted(true)} style={{ flex: 1, justifyContent: 'center' }}>
+              <WPrimary size="lg" onClick={() => { setSubmitted(true); toast(tab === 'shipping' ? 'Shipping address added' : `${tab === 'crypto' ? 'Address' : 'Bank account'} submitted for review`, { title: tab === 'shipping' ? 'Address added' : 'Submitted' }); }} style={{ flex: 1, justifyContent: 'center' }}>
                 {tab === 'shipping' ? 'Add address' : 'Add & verify'}
               </WPrimary>
             </div>
@@ -539,7 +541,7 @@ function ProfPrefs() {
   const [numFmt, setNumFmt] = useState(getNumberStyle() === 'eu' ? NUMFMT_EU : NUMFMT_US);
 
   return (
-    <SectionCard title="Preferences" sub="Language, currency, and notification settings." footer={<WPrimary>Save preferences</WPrimary>}>
+    <SectionCard title="Preferences" sub="Language, currency, and notification settings." footer={<WPrimary onClick={() => toast('Preferences saved', { title: 'Saved' })}>Save preferences</WPrimary>}>
       <FormRow label="Display language" hint="Used across the web and mobile apps.">
         <SelectField value={lang} onChange={setLang} options={['English · United Kingdom', 'English · United States', 'Türkçe · Türkiye', 'العربية · الإمارات', 'Français · France', 'Deutsch · Deutschland', '中文 · 简体']}/>
       </FormRow>
@@ -550,7 +552,7 @@ function ProfPrefs() {
         ]}/>
       </FormRow>
       <FormRow label="Number format" hint="How amounts are grouped across the app — thousands and decimal marks.">
-        <SelectField value={numFmt} onChange={(v) => { setNumFmt(v); setNumberStyle(v === NUMFMT_EU ? 'eu' : 'us'); }} options={[NUMFMT_US, NUMFMT_EU]}/>
+        <SelectField value={numFmt} onChange={(v) => { setNumFmt(v); setNumberStyle(v === NUMFMT_EU ? 'eu' : 'us'); toast(`Number format set to ${v === NUMFMT_EU ? '1.234,56 (Europe)' : '1,234.56 (US / UK)'}`, { title: 'Number format updated' }); }} options={[NUMFMT_US, NUMFMT_EU]}/>
       </FormRow>
       <FormRow label="Time zone" hint="Used for timestamps and limit reset windows.">
         <SelectField value={tz} onChange={setTz} options={['Europe/Istanbul (UTC+03:00)', 'Asia/Dubai (UTC+04:00)', 'Europe/London (UTC+00:00)', 'Europe/Paris (UTC+01:00)', 'America/New_York (UTC-05:00)', 'Asia/Singapore (UTC+08:00)']}/>
