@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, getNumberStyle, setNumberStyle } from '../lib/index.js';
 import { getAuthChannel, setAuthChannel } from '../lib/authChannel.js';
+
+const NUMFMT_US = '1,234.56  ·  US / UK';
+const NUMFMT_EU = '1.234,56  ·  Europe';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 
@@ -533,6 +536,7 @@ function ProfPrefs() {
   const [lang, setLang] = useState('English · United Kingdom');
   const [ccy, setCcy]   = useState('USDT — US dollar tether');
   const [tz, setTz]     = useState('Europe/Istanbul (UTC+03:00)');
+  const [numFmt, setNumFmt] = useState(getNumberStyle() === 'eu' ? NUMFMT_EU : NUMFMT_US);
 
   return (
     <SectionCard title="Preferences" sub="Language, currency, and notification settings." footer={<WPrimary>Save preferences</WPrimary>}>
@@ -544,6 +548,9 @@ function ProfPrefs() {
           { label: 'Crypto', options: ['USDT — US dollar tether', 'USDC — USD Coin', 'AHLG — AHL Gold'] },
           { label: 'Fiat',   options: ['USD — US Dollar', 'AED — UAE Dirham', 'EUR — Euro', 'GBP — Pound Sterling'] },
         ]}/>
+      </FormRow>
+      <FormRow label="Number format" hint="How amounts are grouped across the app — thousands and decimal marks.">
+        <SelectField value={numFmt} onChange={(v) => { setNumFmt(v); setNumberStyle(v === NUMFMT_EU ? 'eu' : 'us'); }} options={[NUMFMT_US, NUMFMT_EU]}/>
       </FormRow>
       <FormRow label="Time zone" hint="Used for timestamps and limit reset windows.">
         <SelectField value={tz} onChange={setTz} options={['Europe/Istanbul (UTC+03:00)', 'Asia/Dubai (UTC+04:00)', 'Europe/London (UTC+00:00)', 'Europe/Paris (UTC+01:00)', 'America/New_York (UTC-05:00)', 'Asia/Singapore (UTC+08:00)']}/>

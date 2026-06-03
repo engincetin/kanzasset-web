@@ -20,9 +20,22 @@ export const WFONT = `'Manrope', 'Avenir Next', -apple-system, system-ui, sans-s
 export const WMONO = `'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace`;
 
 // ─── Number formatting ─────────────────────────────────────────
+// App-wide number style: 'us' → 1,234.56  ·  'eu' → 1.234,56
+let _numStyle = 'us';
+const _numSubs = new Set();
+export const getNumberStyle = () => _numStyle;
+export const setNumberStyle = (s) => {
+  if ((s !== 'us' && s !== 'eu') || s === _numStyle) return;
+  _numStyle = s;
+  _numSubs.forEach(fn => { try { fn(); } catch { /* noop */ } });
+};
+export const subscribeNumberStyle = (fn) => { _numSubs.add(fn); return () => _numSubs.delete(fn); };
+const _seps = () => _numStyle === 'eu' ? { th: '.', dec: ',' } : { th: ',', dec: '.' };
+
 export function wfmt(n, decimals = 2) {
-  if (n === null || n === undefined || isNaN(n)) return '0.00';
-  return Number(n).toLocaleString('en-US', {
+  const locale = _numStyle === 'eu' ? 'de-DE' : 'en-US';
+  const v = (n === null || n === undefined || isNaN(n)) ? 0 : Number(n);
+  return v.toLocaleString(locale, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
@@ -30,7 +43,42 @@ export function wfmt(n, decimals = 2) {
 
 export function wparse(s) {
   if (typeof s === 'number') return s;
-  return parseFloat(String(s ?? '').replace(/,/g, '')) || 0;
+  let str = String(s ?? '').trim();
+  const { th, dec } = _seps();
+  str = str.split(th).join('');           // drop thousand separators
+  if (dec !== '.') str = str.split(dec).join('.'); // normalise decimal mark
+  return parseFloat(str) || 0;
+}
+
+// Group a plain numeric value (JS '.'-decimal) into the current display style.
+export function wgroup(value) {
+  const { th, dec } = _seps();
+  let s = String(value ?? '');
+  if (s === '') return '';
+  const neg = s.startsWith('-');
+  if (neg) s = s.slice(1);
+  let [int, frac] = s.split('.');
+  int = (int || '0').replace(/\B(?=(\d{3})+(?!\d))/g, th);
+  return (neg ? '-' : '') + int + (frac !== undefined ? dec + frac : '');
+}
+
+// Re-group a string the user is typing (already in the current display style).
+export function wregroup(typed) {
+  const { th, dec } = _seps();
+  let s = String(typed ?? '');
+  if (s === '') return '';
+  s = s.split(th).join('');
+  let out = '', seenDec = false;
+  for (const ch of s) {
+    if (ch >= '0' && ch <= '9') out += ch;
+    else if (ch === dec && !seenDec) { out += dec; seenDec = true; }
+  }
+  if (out === '') return '';
+  let [int, frac] = out.split(dec);
+  int = (int || '').replace(/^0+(?=\d)/, '');
+  if (int === '') int = '0';
+  int = int.replace(/\B(?=(\d{3})+(?!\d))/g, th);
+  return seenDec ? `${int}${dec}${frac}` : int;
 }
 
 // ─── Account model ────────────────────────────────────────────

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { WBRAND } from './lib/index.js';
+import { useState, useEffect } from 'react';
+import { WBRAND, subscribeNumberStyle } from './lib/index.js';
 import { WSidebar } from './layout/Sidebar.jsx';
 import { WTopbar } from './layout/Topbar.jsx';
 import { WNotificationsDrawer } from './layout/NotificationsDrawer.jsx';
@@ -121,6 +121,10 @@ function AppShell({ onLogout }) {
 
 export default function App() {
   const [authed, setAuthed] = useState(false);
+  const [, force] = useState(0);
+
+  // Re-render the whole app when the number-format preference changes
+  useEffect(() => subscribeNumberStyle(() => force(n => n + 1)), []);
 
   if (!authed) return <WebAuth onAuthed={() => setAuthed(true)} />;
 

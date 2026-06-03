@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, WBALANCES, WMETA } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WBALANCES, WMETA } from '../lib/index.js';
 import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/primitives.jsx';
@@ -202,7 +202,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
             <div style={{ padding: '20px 22px' }}>
               <WEyebrow>From</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-                <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="0.00" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 30, color: WBRAND.ink, letterSpacing: '-0.03em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
+                <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0.00" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 30, color: WBRAND.ink, letterSpacing: '-0.03em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 <WAssetSelector
                   value={asset.symbol}
                   options={kind === 'crypto' ? cryptoAssets : fiatAssets}
@@ -218,9 +218,9 @@ export function WebWithdraw({ navigate, initialAsset }) {
                 </span>
                 <span style={{ display: 'flex', gap: 6 }}>
                   {[25, 50, 75].map(p => (
-                    <button key={p} onClick={() => setAmount(String(asset.balance * p / 100))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
+                    <button key={p} onClick={() => setAmount(wgroup(String(asset.balance * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
                   ))}
-                  <button onClick={() => setAmount(String(asset.balance))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>MAX</button>
+                  <button onClick={() => setAmount(wgroup(String(asset.balance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>MAX</button>
                 </span>
               </div>
             </div>
