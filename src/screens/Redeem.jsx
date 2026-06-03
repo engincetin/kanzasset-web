@@ -8,7 +8,7 @@ import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx
 import { AddDestinationModal } from './Profile.jsx';
 import { t } from '../lib/i18n.js';
 
-function RedeemDigital({ targets, to, setTo }) {
+function RedeemDigital({ targets, to, setTo, navigate }) {
   const [amount, setAmount] = useState('');
   const [redeeming, setRedeeming] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
@@ -97,7 +97,7 @@ function RedeemDigital({ targets, to, setTo }) {
           out={out}
           to={to}
           onClose={() => setRedeeming(false)}
-          onTrack={() => setRedeeming(false)}
+          onTrack={() => { setRedeeming(false); navigate && navigate('activity'); }}
         />
       )}
       {infoOpen && (
@@ -205,7 +205,7 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
   );
 }
 
-function RedeemPhysicalWeb() {
+function RedeemPhysicalWeb({ navigate }) {
   const addresses = [
     { id: 'h', label: 'Home',     city: 'Dubai',    line: 'Marina Plaza, Tower 1, Apt 2208',   country: 'UAE' },
     { id: 'o', label: 'Office',   city: 'Dubai',    line: 'DMCC Almas Tower, Floor 38',        country: 'UAE' },
@@ -372,7 +372,7 @@ function RedeemPhysicalWeb() {
           kg={kgPicked}
           addr={addr}
           onClose={() => setShipping(false)}
-          onTrack={() => setShipping(false)}
+          onTrack={() => { setShipping(false); navigate && navigate('activity'); }}
         />
       )}
 
@@ -586,8 +586,8 @@ export function WebRedeem({ navigate, onOpenTx }) {
           </div>
 
           {mode === 'digital'
-            ? <RedeemDigital targets={targets} to={to} setTo={setTo}/>
-            : <RedeemPhysicalWeb/>
+            ? <RedeemDigital targets={targets} to={to} setTo={setTo} navigate={navigate}/>
+            : <RedeemPhysicalWeb navigate={navigate}/>
           }
         </div>
 
