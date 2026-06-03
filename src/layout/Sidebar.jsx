@@ -249,6 +249,15 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
               background: WBRAND.panel, color: '#fff', borderRadius: 12,
               padding: 14, position: 'relative', overflow: 'hidden',
             }}>
+              <style>{`@keyframes kzDotDrift{from{background-position:0 0}to{background-position:40px 40px}}`}</style>
+              <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.11) 1px, transparent 1.5px)',
+                backgroundSize: '16px 16px',
+                animation: 'kzDotDrift 16s linear infinite',
+                WebkitMaskImage: 'radial-gradient(130% 120% at 100% 0%, #000 22%, transparent 75%)',
+                maskImage: 'radial-gradient(130% 120% at 100% 0%, #000 22%, transparent 75%)',
+              }}/>
               <div style={{
                 position: 'absolute', top: -30, right: -30,
                 width: 100, height: 100, borderRadius: 50,
