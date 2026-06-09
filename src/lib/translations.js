@@ -492,6 +492,7 @@ export const tr = {
   "We ship insured to UAE, Türkiye, Saudi Arabia and Kuwait.": "BAE, Türkiye, Suudi Arabistan ve Kuveyt'e sigortalı gönderim yapıyoruz.",
   "We'll notify you once it clears.": "Onaylandığında sizi bilgilendireceğiz.",
   "We'll send your 6-digit code by": "6 haneli kodunuzu şu yolla göndereceğiz:",
+  "Welcome back": "Tekrar hoş geldiniz",
   "Welcome back, Ahmet": "Tekrar hoş geldiniz, Ahmet",
   "Welcome back. Enter your credentials to continue.": "Tekrar hoş geldiniz. Devam etmek için kimlik bilgilerinizi girin.",
   "Whitelisted addresses": "Onaylı adresler",
