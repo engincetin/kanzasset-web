@@ -522,4 +522,6 @@ export const tr = {
   "Your verification tier unlocks higher daily limits and physical delivery.": "Doğrulama kademeniz daha yüksek günlük limitler ve fiziki teslimat sağlar.",
   "Help": "Yardım",
   "Documentation": "Dokümantasyon",
+  "crypto": "Kripto",
+  "fiat": "İtibari Para",
 };

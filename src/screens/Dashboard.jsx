@@ -320,7 +320,10 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                   <WCoinDot symbol={a.symbol} size={32}/>
                   <div>
                     <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{a.name}</div>
-                    <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 500, marginTop: 1 }}>{a.symbol} · {a.kind}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                      <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>{a.symbol}</span>
+                      <span style={{ fontFamily: WFONT, fontSize: 9, fontWeight: 700, color: WBRAND.muted, background: WBRAND.surface, padding: '1px 6px', borderRadius: 4, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t(a.kind)}</span>
+                    </div>
                   </div>
                 </div>
                 <WMonoNum size={13} color={zero ? WBRAND.muted2 : WBRAND.ink} style={{ textAlign: 'right' }}>{wfmt(a.balance, wdecimals(a.symbol))}</WMonoNum>
