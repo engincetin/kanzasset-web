@@ -69,7 +69,7 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
           <div style={{ marginTop: 14 }}>
             <WPill tone={tx.status === 'completed' ? 'positive' : tx.status === 'pending' ? 'warn' : 'negative'}>
               {tx.status === 'completed' && WIcon.check(WBRAND.positive)}
-              {tx.status[0].toUpperCase() + tx.status.slice(1)}
+              {t(tx.status[0].toUpperCase() + tx.status.slice(1))}
             </WPill>
           </div>
         </div>

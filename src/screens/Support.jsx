@@ -113,10 +113,10 @@ export function WebSupport({ navigate, prefillTx }) {
             </div>
           </div>
           <div style={{ maxHeight: 520, overflowY: 'auto' }}>
-            {filtered.map((t, i, arr) => {
-              const on = openId === t.id;
+            {filtered.map((tk, i, arr) => {
+              const on = openId === tk.id;
               return (
-                <button key={t.id} onClick={() => { setOpenId(t.id); setComposing(false); }} style={{
+                <button key={tk.id} onClick={() => { setOpenId(tk.id); setComposing(false); }} style={{
                   width: '100%', textAlign: 'left', cursor: 'pointer', border: 'none',
                   background: on ? WBRAND.surface2 : 'transparent',
                   borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`,
@@ -124,14 +124,14 @@ export function WebSupport({ navigate, prefillTx }) {
                   padding: '14px 18px',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                    <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t.subject}</span>
-                    <WPill tone={ticketTone(t.status)}>{t.status[0].toUpperCase() + t.status.slice(1)}</WPill>
+                    <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{tk.subject}</span>
+                    <WPill tone={ticketTone(tk.status)}>{t(tk.status[0].toUpperCase() + tk.status.slice(1))}</WPill>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 5 }}>
-                    <WMonoNum size={10} color={WBRAND.muted}>{t.id}</WMonoNum>
+                    <WMonoNum size={10} color={WBRAND.muted}>{tk.id}</WMonoNum>
                     <span style={{ width: 1, height: 9, background: WBRAND.line }}/>
-                    <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{t.category}</span>
-                    {t.tx && <><span style={{ width: 1, height: 9, background: WBRAND.line }}/><WMonoNum size={10} color={WBRAND.muted}>{t.tx}</WMonoNum></>}
+                    <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{tk.category}</span>
+                    {tk.tx && <><span style={{ width: 1, height: 9, background: WBRAND.line }}/><WMonoNum size={10} color={WBRAND.muted}>{tk.tx}</WMonoNum></>}
                   </div>
                 </button>
               );
@@ -175,7 +175,7 @@ function TicketThread({ ticket, onReply }) {
       <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
           <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{ticket.subject}</div>
-          <WPill tone={ticketTone(ticket.status)}>{ticket.status[0].toUpperCase() + ticket.status.slice(1)}</WPill>
+          <WPill tone={ticketTone(ticket.status)}>{t(ticket.status[0].toUpperCase() + ticket.status.slice(1))}</WPill>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
           <WMonoNum size={11} color={WBRAND.muted}>{ticket.id}</WMonoNum>
