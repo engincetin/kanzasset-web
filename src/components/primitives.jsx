@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { t } from '../lib/i18n.js';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WIcon } from './icons.jsx';
 
@@ -84,7 +85,7 @@ export function WCopyButton({ text, label = 'Copy', copiedLabel = 'Copied', size
       icon={copied ? WIcon.check(WBRAND.positive) : WIcon.copy(WBRAND.ink)}
       style={copied ? { color: WBRAND.positive, borderColor: WBRAND.positive, ...style } : style}
     >
-      {copied ? copiedLabel : label}
+      {copied ? t(copiedLabel) : t(label)}
     </WSecondary>
   );
 }
