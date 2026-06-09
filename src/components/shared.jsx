@@ -228,7 +228,7 @@ export function WAssetSelector({ value, options, onChange }) {
                 <WCoinDot symbol={o.symbol} size={26}/>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink }}>{o.symbol}</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{o.name}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{t(o.name)}</div>
                 </div>
                 <WMonoNum size={12} color={WBRAND.muted}>{wfmt(o.balance ?? 0, wdecimals(o.symbol))}</WMonoNum>
               </button>

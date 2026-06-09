@@ -532,4 +532,7 @@ export const tr = {
   "Transaction hash": "İşlem hash’i",
   "View on Etherscan": "Etherscan’de görüntüle",
   "Close": "Kapat",
+  "Pound Sterling": "İngiliz Sterlini",
+  "US Dollar": "ABD Doları",
+  "UAE Dirham": "BAE Dirhemi",
 };

@@ -61,7 +61,7 @@ export function WebDeposit({ navigate, initialAsset }) {
                   <button key={a.symbol} onClick={() => kind === 'crypto' ? setCryptoAsset(a) : setFiatAsset(a)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderRadius: 8, border: 'none', background: on ? WBRAND.surface : 'transparent', cursor: 'pointer', textAlign: 'left' }}>
                     <WCoinDot symbol={a.symbol} size={32}/>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{a.name}</div>
+                      <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t(a.name)}</div>
                       <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{a.symbol} · {t('balance')} <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WBALANCES[a.symbol] ?? 0, wdecimals(a.symbol))}</WMonoNum></div>
                     </div>
                     <div style={{ width: 18, height: 18, borderRadius: 9, border: `1.5px solid ${on ? WBRAND.red : WBRAND.line2}`, background: on ? WBRAND.red : 'transparent', display: 'grid', placeItems: 'center' }}>
