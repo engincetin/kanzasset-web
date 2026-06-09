@@ -69,7 +69,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1.4fr 1fr', gap: mobile ? 14 : 20, marginBottom: mobile ? 14 : 20 }}>
 
         {/* Total portfolio */}
-        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column' }}>
+        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           <div style={{ padding: mobile ? '18px 16px' : '24px 28px 24px', flex: 1 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
               <WEyebrow>{t('Total portfolio value')}</WEyebrow>
@@ -158,7 +158,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         </WCard>
 
         {/* AHLG holdings */}
-        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column' }}>
+        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           {(() => {
             const dark = isDark();
             const heroBg    = dark ? WBRAND.heroBg : WBRAND.white;
@@ -301,7 +301,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
 
         {/* Balances table */}
-        <WCard padding={0}>
+        <WCard padding={0} style={{ minWidth: 0 }}>
           <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <WSectionTitle title={t('Balances')} sub={`${assets.length} ${t('assets · sorted by value')}`} style={{ marginBottom: 0 }}/>
             <button onClick={() => navigate('wallet')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -351,7 +351,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         </WCard>
 
         {/* Right column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
 
           {/* Vault attestation */}
           <WCard padding={20}>
