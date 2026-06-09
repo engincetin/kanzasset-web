@@ -655,3 +655,92 @@ export function WebRedeem({ navigate, onOpenTx }) {
     </div>
   );
 }
+
+// ─── Physical-only redeem screen (no digital/physical toggle) ──
+// Reuses the existing physical flow; digital redeem now lives in Buy/Sell.
+export function WebPhysicalRedeem({ navigate, onOpenTx }) {
+  const mobile = useIsMobile();
+  const [range, setRange] = useState('3M');
+  const priceData = wMakePriceData(90);
+  const quote = 'USDT';
+  const quoteRate = WRATES[quote] || 1;
+  const quotedData = priceData.map(d => ({ t: d.t, v: d.v / quoteRate }));
+  const spot = WRATES.AHLG / quoteRate;
+  const first = quotedData[0].v;
+  const diff = spot - first;
+  const pct = (diff / first) * 100;
+  const px = (v, d = 2) => `$${wfmt(v, d)}`;
+
+  return (
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
+      <div style={{ marginBottom: 20 }}>
+        <WEyebrow>{t('Physical delivery')}</WEyebrow>
+        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Claim physical gold bars')}</h1>
+        <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
+          {t('Burn AHLG and have investment-grade gold bars delivered to your address.')}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
+          <RedeemPhysicalWeb navigate={navigate}/>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
+          <WCard padding={0}>
+            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
+              <div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AHLG / {quote}</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
+                  <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>{px(spot)}</WNum>
+                  <span style={{ fontFamily: WFONT, fontSize: 13, color: pct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
+                    {pct >= 0 ? '+' : ''}{wfmt(diff, 2)} ({pct >= 0 ? '+' : ''}{wfmt(pct, 2)}%)
+                  </span>
+                </div>
+              </div>
+              <WRangeTabs value={range} onChange={setRange}/>
+            </div>
+            <div style={{ padding: '12px 16px 18px' }}>
+              <WPriceChart data={quotedData} height={280}/>
+            </div>
+          </WCard>
+
+          <WCard padding={0}>
+            <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent redeems')}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
+              </div>
+              <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
+            </div>
+            <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: mobile ? 520 : 'auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+              {['Date', 'Burned', 'Received', 'Rate', 'Status'].map((h, i) => (
+                <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
+              ))}
+            </div>
+            {WTXS.filter(tx => tx.type === 'Redeem').slice(0, 4).map((tx, i, arr) => (
+              <div key={tx.id}
+                onClick={() => onOpenTx && onOpenTx(tx)}
+                onMouseEnter={onOpenTx ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
+                onMouseLeave={onOpenTx ? (e => e.currentTarget.style.background = 'transparent') : undefined}
+                style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
+                <div>
+                  <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
+                  <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
+                </div>
+                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 4)} AHLG</WMonoNum>
+                <WMonoNum size={12} color={WBRAND.ink}>{tx.paid}</WMonoNum>
+                <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AHLG)} USDT</WMonoNum>
+                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
+              </div>
+            ))}
+            </div>
+            </div>
+          </WCard>
+        </div>
+      </div>
+    </div>
+  );
+}

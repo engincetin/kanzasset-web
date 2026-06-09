@@ -203,13 +203,13 @@ export function WebPortfolio({ navigate, onOpenTx }) {
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              <WPrimary size="md" onClick={() => navigate('mint')} style={{ width: '100%', justifyContent: 'center' }}
+              <WPrimary size="md" onClick={() => navigate('trade', 'buy')} style={{ width: '100%', justifyContent: 'center' }}
                 icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M12 9v6M9 12h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>}>
-                {t('Mint')}
+                {t('Buy')}
               </WPrimary>
-              <WSecondary size="md" onClick={() => navigate('redeem')} style={{ width: '100%', justifyContent: 'center', height: 44 }}
+              <WSecondary size="md" onClick={() => navigate('trade', 'sell')} style={{ width: '100%', justifyContent: 'center', height: 44 }}
                 icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="4" rx="1" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M5 12v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/><path d="M12 8v13" stroke="currentColor" strokeWidth="1.8"/></svg>}>
-                {t('Redeem')}
+                {t('Sell')}
               </WSecondary>
             </div>
           </div>
