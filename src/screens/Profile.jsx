@@ -370,58 +370,70 @@ function ProfDestinations() {
 
       <div style={{ padding: '4px 22px 18px' }}>
         {tab === 'crypto' && cryptoAddrs.map((r, i, arr) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, flexWrap: mobile ? 'wrap' : 'nowrap', rowGap: mobile ? 10 : 0 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>{WIcon.shield(WBRAND.ink)}</div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{r.l}</span>
-                {!r.verified && <WPill tone="warn">{t('24h review · 8h left')}</WPill>}
-                {r.verified && <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3 }}>
-                <WMonoNum size={11} color={WBRAND.muted}>{r.a}</WMonoNum>
-                <span style={{ width: 1, height: 10, background: WBRAND.line }}/>
-                <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{r.ch} · {t('added')} {r.added}</span>
+          <div key={i} style={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', alignItems: mobile ? 'stretch' : 'center', gap: mobile ? 10 : 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1, minWidth: 0 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center', flexShrink: 0 }}>{WIcon.shield(WBRAND.ink)}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', rowGap: 4 }}>
+                  <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{r.l}</span>
+                  {!r.verified && <WPill tone="warn">{t('24h review · 8h left')}</WPill>}
+                  {r.verified && <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, flexWrap: 'wrap', rowGap: 2 }}>
+                  <WMonoNum size={11} color={WBRAND.muted}>{r.a}</WMonoNum>
+                  <span style={{ width: 1, height: 10, background: WBRAND.line }}/>
+                  <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{r.ch} · {t('added')} {r.added}</span>
+                </div>
               </div>
             </div>
-            <WCopyButton text={r.a}/>
-            <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>{t('Remove')}</button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, justifyContent: mobile ? 'flex-end' : 'flex-start' }}>
+              <WCopyButton text={r.a}/>
+              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red, padding: '6px 4px' }}>{t('Remove')}</button>
+            </div>
           </div>
         ))}
 
         {tab === 'bank' && banks.map((b, i, arr) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, flexWrap: mobile ? 'wrap' : 'nowrap', rowGap: mobile ? 10 : 0 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 11, color: WBRAND.ink, letterSpacing: '0.02em' }}>{b.ccy}</div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{b.bank}</span>
-                {bankDef === i && <WPill tone="accent">{t('Default')} {b.ccy}</WPill>}
-                <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
+          <div key={i} style={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', alignItems: mobile ? 'stretch' : 'center', gap: mobile ? 10 : 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1, minWidth: 0 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 11, color: WBRAND.ink, letterSpacing: '0.02em', flexShrink: 0 }}>{b.ccy}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', rowGap: 4 }}>
+                  <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{b.bank}</span>
+                  {bankDef === i && <WPill tone="accent">{t('Default')} {b.ccy}</WPill>}
+                  <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
+                </div>
+                <WMonoNum size={11} color={WBRAND.muted} style={{ marginTop: 3, display: 'block', wordBreak: 'break-all' }}>{b.iban}</WMonoNum>
               </div>
-              <WMonoNum size={11} color={WBRAND.muted} style={{ marginTop: 3, display: 'block' }}>{b.iban}</WMonoNum>
             </div>
-            {bankDef !== i && <WSecondary size="sm" onClick={() => { setBankDef(i); toast(`${b.bank} ${t('set as default')} ${b.ccy} ${t('account')}`, { title: t('Default updated') }); }}>{t('Make default')}</WSecondary>}
-            <WSecondary size="sm">{t('Edit')}</WSecondary>
-            <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>{t('Remove')}</button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, justifyContent: mobile ? 'flex-end' : 'flex-start' }}>
+              {bankDef !== i && <WSecondary size="sm" onClick={() => { setBankDef(i); toast(`${b.bank} ${t('set as default')} ${b.ccy} ${t('account')}`, { title: t('Default updated') }); }}>{t('Make default')}</WSecondary>}
+              <WSecondary size="sm">{t('Edit')}</WSecondary>
+              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red, padding: '6px 4px' }}>{t('Remove')}</button>
+            </div>
           </div>
         ))}
 
         {tab === 'shipping' && shipAddrs.map((a, i, arr) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, flexWrap: mobile ? 'wrap' : 'nowrap', rowGap: mobile ? 10 : 0 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-6-5.5-6-11a6 6 0 1 1 12 0c0 5.5-6 11-6 11z" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/><circle cx="12" cy="10" r="2.2" stroke={WBRAND.ink} strokeWidth="1.7"/></svg>
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{a.label} · {a.city}</span>
-                {shipDef === i && <WPill tone="accent">{t('Default shipping')}</WPill>}
-                <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
+          <div key={i} style={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', alignItems: mobile ? 'stretch' : 'center', gap: mobile ? 10 : 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1, minWidth: 0 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-6-5.5-6-11a6 6 0 1 1 12 0c0 5.5-6 11-6 11z" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/><circle cx="12" cy="10" r="2.2" stroke={WBRAND.ink} strokeWidth="1.7"/></svg>
               </div>
-              <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{a.line}, {a.country}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', rowGap: 4 }}>
+                  <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{a.label} · {a.city}</span>
+                  {shipDef === i && <WPill tone="accent">{t('Default shipping')}</WPill>}
+                  <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
+                </div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{a.line}, {a.country}</div>
+              </div>
             </div>
-            {shipDef !== i && <WSecondary size="sm" onClick={() => { setShipDef(i); toast(`${a.label} · ${a.city} ${t('set as default shipping address')}`, { title: t('Default updated') }); }}>{t('Make default')}</WSecondary>}
-            <WSecondary size="sm">{t('Edit')}</WSecondary>
-            <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>{t('Remove')}</button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, justifyContent: mobile ? 'flex-end' : 'flex-start' }}>
+              {shipDef !== i && <WSecondary size="sm" onClick={() => { setShipDef(i); toast(`${a.label} · ${a.city} ${t('set as default shipping address')}`, { title: t('Default updated') }); }}>{t('Make default')}</WSecondary>}
+              <WSecondary size="sm">{t('Edit')}</WSecondary>
+              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red, padding: '6px 4px' }}>{t('Remove')}</button>
+            </div>
           </div>
         ))}
       </div>
