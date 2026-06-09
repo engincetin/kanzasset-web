@@ -10,10 +10,15 @@ try {
 
 const _subs = new Set();
 
+// Set <html lang> so CSS text-transform uses the correct (Turkish) casing.
+const _applyLangAttr = () => { try { if (typeof document !== 'undefined') document.documentElement.lang = _lang; } catch { /* noop */ } };
+_applyLangAttr();
+
 export const getLang = () => _lang;
 export const setLang = (l) => {
   if ((l !== 'en' && l !== 'tr') || l === _lang) return;
   _lang = l;
+  _applyLangAttr();
   try { localStorage.setItem('kz-lang', l); } catch { /* noop */ }
   _subs.forEach(fn => { try { fn(); } catch { /* noop */ } });
 };
