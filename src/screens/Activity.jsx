@@ -116,7 +116,7 @@ export function WebActivity({ navigate, onOpenTx }) {
               {WIcon.search()}
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('Search by ID, asset, counterparty…')} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink }}/>
             </div>
-            <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw', 'Transfer', 'Delivery']}  onChange={setTypeFilter}/>
+            <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw', 'Delivery']}  onChange={setTypeFilter}/>
             <FilterDropdown label="Asset"  value={assetFilter}  options={['All', 'AHLG', 'USDT', 'USDC', 'AED', 'USD', 'EUR', 'GBP']}   onChange={setAssetFilter}/>
             <FilterDropdown label="Status" value={statusFilter} options={['All', 'Completed', 'Pending', 'Failed']}                      onChange={setStatusFilter}/>
             <div style={{ flex: 1 }}/>
