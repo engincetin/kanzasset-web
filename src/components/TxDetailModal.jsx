@@ -1,5 +1,6 @@
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
+import { useIsMobile } from '../lib/useResponsive.js';
 import { WIcon } from './icons.jsx';
 import { WCoinDot } from './coinicons.jsx';
 import { WPill, WMonoNum, WPrimary, WSecondary, WCopyButton } from './primitives.jsx';
@@ -20,6 +21,7 @@ export function txMeta(tx) {
 }
 
 export function WTxDetailModal({ tx, onClose, onSupport }) {
+  const mobile = useIsMobile();
   if (!tx) return null;
   const m = txMeta(tx);
   const hash = '0x' + (tx.id.replace(/\D/g, '') + '8f3b9c2de04a8fbe9ec1a2ee9c2a1d3b7e5c09').slice(0, 40);
@@ -37,15 +39,15 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
   return (
     <div onClick={onClose} style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24,
+      background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: 460, maxWidth: '100%', background: WBRAND.white,
+        width: mobile ? '100%' : 460, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white,
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)',
         maxHeight: '88vh', display: 'flex', flexDirection: 'column',
       }}>
         {/* Header */}
-        <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
+        <div style={{ padding: mobile ? '18px 16px 14px' : '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <WCoinDot symbol={tx.asset} size={40}/>
@@ -76,7 +78,7 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
 
         {/* Body */}
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
-          <div style={{ padding: '4px 24px 8px' }}>
+          <div style={{ padding: mobile ? '4px 16px 8px' : '4px 24px 8px' }}>
             {rows.map((r, i, arr) => (
               <div key={i} style={{
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
@@ -89,7 +91,7 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
           </div>
 
           {onChain && (
-            <div style={{ padding: '4px 24px 16px' }}>
+            <div style={{ padding: mobile ? '4px 16px 14px' : '4px 24px 16px' }}>
               <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{t('Transaction hash')}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', background: WBRAND.surface, borderRadius: 10 }}>
                 <WMonoNum size={12} style={{ flex: 1, wordBreak: 'break-all' }}>{hash.slice(0, 26)}…</WMonoNum>
@@ -108,7 +110,7 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '16px 24px 20px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0, display: 'flex', gap: 8 }}>
+        <div style={{ padding: mobile ? '14px 16px 16px' : '16px 24px 20px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0, display: 'flex', gap: 8 }}>
           <WSecondary size="lg" onClick={onClose} style={{ flex: 1, justifyContent: 'center', height: 50 }}>{t('Close')}</WSecondary>
           <WPrimary size="lg" onClick={() => onSupport(tx)} style={{ flex: 1, justifyContent: 'center' }}
             icon={<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round"/></svg>}>

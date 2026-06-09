@@ -103,7 +103,7 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
         />
       )}
       {infoOpen && (
-        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24 }}>
+        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24 }}>
           <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -168,7 +168,7 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
   return (
     <div onClick={done ? onClose : undefined} style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24,
+      background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} style={{
         width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white,
@@ -316,7 +316,7 @@ function RedeemPhysicalWeb({ navigate }) {
       </div>
 
       {confirmOpen && (
-        <div onClick={() => setConfirmOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24 }}>
+        <div onClick={() => setConfirmOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24 }}>
           <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -383,7 +383,7 @@ function RedeemPhysicalWeb({ navigate }) {
       {shipAddOpen && <AddDestinationModal tab="shipping" onClose={() => setShipAddOpen(false)}/>}
 
       {infoOpen && (
-        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24 }}>
+        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24 }}>
           <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -454,7 +454,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
   return (
     <div onClick={done ? onClose : undefined} style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24,
+      background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} style={{
         width: mobile ? '100%' : 460, maxWidth: '100%', background: WBRAND.white,

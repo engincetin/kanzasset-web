@@ -57,7 +57,7 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
       <div style={{ position: 'relative' }}>
         <button onClick={() => setMenuOpen(!menuOpen)} style={{
           display: 'flex', alignItems: 'center', gap: 10,
-          padding: '4px 10px 4px 4px', height: 38, borderRadius: 8,
+          padding: mobile ? 3 : '4px 10px 4px 4px', height: 38, borderRadius: 8,
           background: menuOpen ? WBRAND.surface : WBRAND.white,
           border: `1px solid ${WBRAND.line}`,
           cursor: 'pointer',

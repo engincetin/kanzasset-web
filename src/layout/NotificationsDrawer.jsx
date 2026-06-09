@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WPill } from '../components/primitives.jsx';
 import { t } from '../lib/i18n.js';
+import { useIsMobile } from '../lib/useResponsive.js';
 
 const NOTIF_GROUPS = [
   {
@@ -88,6 +89,7 @@ function WNotifRow({ n, last }) {
 }
 
 export function WNotificationsDrawer({ open, onClose }) {
+  const mobile = useIsMobile();
   const [tab, setTab] = useState('all');
 
   const allItems = NOTIF_GROUPS.flatMap(g => g.items);
@@ -108,7 +110,7 @@ export function WNotificationsDrawer({ open, onClose }) {
       }}/>
 
       <aside style={{
-        position: 'absolute', top: 0, right: 0, bottom: 0, width: 440,
+        position: 'absolute', top: 0, right: 0, bottom: 0, width: mobile ? '100%' : 440, maxWidth: '100%',
         background: WBRAND.white, borderLeft: `1px solid ${WBRAND.line}`,
         boxShadow: '0 0 32px rgba(0,0,0,0.10)',
         zIndex: 90,
