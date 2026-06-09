@@ -82,15 +82,15 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
                 padding: '13px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`,
               }}>
-                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500, flexShrink: 0 }}>{r.l}</span>
-                <span style={{ fontFamily: r.mono ? WMONO : WFONT, fontSize: r.mono ? 12 : 13, fontWeight: 600, color: WBRAND.ink, textAlign: 'right', wordBreak: 'break-all' }}>{r.v}</span>
+                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500, flexShrink: 0 }}>{t(r.l)}</span>
+                <span style={{ fontFamily: r.mono ? WMONO : WFONT, fontSize: r.mono ? 12 : 13, fontWeight: 600, color: WBRAND.ink, textAlign: 'right', wordBreak: 'break-all' }}>{t(r.v)}</span>
               </div>
             ))}
           </div>
 
           {onChain && (
             <div style={{ padding: '4px 24px 16px' }}>
-              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Transaction hash</div>
+              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{t('Transaction hash')}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', background: WBRAND.surface, borderRadius: 10 }}>
                 <WMonoNum size={12} style={{ flex: 1, wordBreak: 'break-all' }}>{hash.slice(0, 26)}…</WMonoNum>
                 <WCopyButton text={hash}/>
@@ -101,7 +101,7 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
                 background: WBRAND.white, border: `1px solid ${WBRAND.line2}`, textDecoration: 'none',
                 fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink,
               }}>
-                View on Etherscan {WIcon.external(WBRAND.muted)}
+                {t('View on Etherscan')} {WIcon.external(WBRAND.muted)}
               </a>
             </div>
           )}
@@ -109,10 +109,10 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
 
         {/* Footer */}
         <div style={{ padding: '16px 24px 20px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0, display: 'flex', gap: 8 }}>
-          <WSecondary size="lg" onClick={onClose} style={{ flex: 1, justifyContent: 'center', height: 50 }}>Close</WSecondary>
+          <WSecondary size="lg" onClick={onClose} style={{ flex: 1, justifyContent: 'center', height: 50 }}>{t('Close')}</WSecondary>
           <WPrimary size="lg" onClick={() => onSupport(tx)} style={{ flex: 1, justifyContent: 'center' }}
             icon={<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round"/></svg>}>
-            Get help
+            {t('Get help')}
           </WPrimary>
         </div>
       </div>

@@ -524,4 +524,12 @@ export const tr = {
   "Documentation": "Dokümantasyon",
   "crypto": "Kripto",
   "fiat": "İtibari Para",
+  "Transaction ID": "İşlem Kimliği",
+  "Source": "Kaynak",
+  "Detail": "Detay",
+  "Date & time": "Tarih ve saat",
+  "Free": "Ücretsiz",
+  "Transaction hash": "İşlem hash’i",
+  "View on Etherscan": "Etherscan’de görüntüle",
+  "Close": "Kapat",
 };
