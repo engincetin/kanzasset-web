@@ -5,6 +5,7 @@ import { WCard, WSecondary, WGhost, WEyebrow, WNum } from '../components/primiti
 import { WRangeTabs } from '../components/charts.jsx';
 import { WTxRow } from '../components/shared.jsx';
 import { t } from '../lib/i18n.js';
+import { useIsMobile } from '../lib/useResponsive.js';
 
 function FilterDropdown({ label, value, options, onChange }) {
   const [open, setOpen] = useState(false);
@@ -50,6 +51,7 @@ function FilterChip({ label, onClear }) {
 }
 
 export function WebActivity({ navigate, onOpenTx }) {
+  const mobile = useIsMobile();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('All');
   const [assetFilter, setAssetFilter] = useState('All');
@@ -77,8 +79,8 @@ export function WebActivity({ navigate, onOpenTx }) {
   const hasFilters = typeFilter !== 'All' || assetFilter !== 'All' || statusFilter !== 'All' || search;
 
   return (
-    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
-      <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
+      <div style={{ marginBottom: 20, display: 'flex', flexDirection: mobile ? 'column' : 'row', alignItems: mobile ? 'stretch' : 'center', justifyContent: 'space-between', gap: mobile ? 14 : 24 }}>
         <div style={{ flex: 1 }}>
           <WEyebrow>{t('Activity')}</WEyebrow>
           <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('All transactions')}</h1>
@@ -92,14 +94,14 @@ export function WebActivity({ navigate, onOpenTx }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 16, marginBottom: 20 }}>
         {[
           { l: 'Total minted',   v: `${wfmt(totalMints, 4)} AHLG`,   sub: `≈ $${wfmt(totalMints * WRATES.AHLG)}` },
           { l: 'Total redeemed', v: `${wfmt(totalRedeems, 4)} AHLG`, sub: `≈ $${wfmt(totalRedeems * WRATES.AHLG)}` },
           { l: 'Deposits',       v: String(totalDeposits),            sub: t('past 30 days') },
           { l: 'Withdrawals',    v: String(totalWithdrws),            sub: t('past 30 days') },
         ].map((k, i) => (
-          <WCard key={i} padding={20}>
+          <WCard key={i} padding={20} style={{ minWidth: 0 }}>
             <WEyebrow>{t(k.l)}</WEyebrow>
             <WNum size={26} weight={800} style={{ marginTop: 6, display: 'block', letterSpacing: '-0.025em' }}>{k.v}</WNum>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, fontWeight: 500 }}>{k.sub}</div>
@@ -133,7 +135,7 @@ export function WebActivity({ navigate, onOpenTx }) {
           )}
         </div>
 
-        <div style={{ padding: '12px 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: WBRAND.surface2 }}>
+        <div style={{ padding: '12px 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: WBRAND.surface2, flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 8 : 0 }}>
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>
             {t('Showing')} <span style={{ color: WBRAND.ink, fontWeight: 700 }}>{filtered.length}</span> {t('of')} {WTXS.length} {t('transactions')}
           </span>
@@ -144,6 +146,8 @@ export function WebActivity({ navigate, onOpenTx }) {
           </div>
         </div>
 
+        <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+        <div style={{ minWidth: mobile ? 720 : 'auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1.2fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
           {['', 'Type', 'Asset', 'Amount', 'Counterparty', 'Date', 'Status'].map((h, i) => (
             <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h ? t(h) : h}</div>
@@ -153,8 +157,10 @@ export function WebActivity({ navigate, onOpenTx }) {
         {filtered.length === 0 ? (
           <div style={{ padding: '60px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 14, color: WBRAND.muted }}>{t('No transactions match the current filters.')}</div>
         ) : filtered.map((tx, i) => <WTxRow key={tx.id} tx={tx} last={i === filtered.length - 1} onOpen={onOpenTx}/>)}
+        </div>
+        </div>
 
-        <div style={{ padding: '14px 22px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '14px 22px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 12 : 0 }}>
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>{t('Page')} 1 {t('of')} 8 · 120 {t('total')}</span>
           <div style={{ display: 'flex', gap: 6 }}>
             <WSecondary size="sm">← {t('Previous')}</WSecondary>

@@ -5,8 +5,10 @@ import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WAssetSelector, WCountdown } from '../components/shared.jsx';
+import { useIsMobile } from '../lib/useResponsive.js';
 
 function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, amount, asset, kind, destination, onClose, onTrack }) {
+  const mobile = useIsMobile();
   const refs = useRef([]);
   const masked = channel === 'email' ? 'a••••t@kanzasset.com' : '+90 532 ••• 7890';
 
@@ -25,10 +27,10 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
     <div onClick={step === 'submitted' ? onClose : undefined} style={{
       position: 'fixed', inset: 0, zIndex: 100,
       background: 'rgba(10,10,10,0.42)',
-      display: 'grid', placeItems: 'center', padding: 24,
+      display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: 440, maxWidth: '100%', background: WBRAND.white,
+        width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white,
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)',
         overflow: 'hidden',
       }}>
@@ -137,6 +139,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
 }
 
 export function WebWithdraw({ navigate, initialAsset }) {
+  const mobile = useIsMobile();
   const cryptoAssets = ['AHLG', 'USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s] }));
   const fiatAssets   = ['AED', 'USD', 'EUR', 'GBP'].map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s] }));
   const initialKind  = initialAsset && WMETA[initialAsset]?.kind === 'fiat' ? 'fiat' : 'crypto';
@@ -171,7 +174,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
   const destination = whitelist.find(w => w.id === destId);
 
   return (
-    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
       <div style={{ marginBottom: 20 }}>
         <WEyebrow>{t('Withdraw')}</WEyebrow>
         <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Send funds to a whitelisted destination')}</h1>
@@ -180,8 +183,8 @@ export function WebWithdraw({ navigate, initialAsset }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '560px 1fr', gap: 20 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '560px 1fr', gap: mobile ? 14 : 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           {/* Kind toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
@@ -259,7 +262,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
           </WCard>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           <WCard padding={0}>
             <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}` }}>
               <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('Review withdrawal')}</div>

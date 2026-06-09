@@ -7,6 +7,7 @@ import { SelectField } from '../components/shared.jsx';
 import { txMeta } from '../components/TxDetailModal.jsx';
 import { toast } from '../components/Toast.jsx';
 import { t } from '../lib/i18n.js';
+import { useIsMobile } from '../lib/useResponsive.js';
 
 // ─── Seed tickets ─────────────────────────────────────────────
 const WTICKETS = [
@@ -44,6 +45,7 @@ function ticketTone(status) {
 }
 
 export function WebSupport({ navigate, prefillTx }) {
+  const mobile = useIsMobile();
   const [tickets, setTickets] = useState(WTICKETS);
   const [openId, setOpenId] = useState(null);
   const [composing, setComposing] = useState(!!prefillTx);
@@ -63,9 +65,9 @@ export function WebSupport({ navigate, prefillTx }) {
   };
 
   return (
-    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
       {/* Header */}
-      <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24 }}>
+      <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, flexWrap: mobile ? 'wrap' : 'nowrap' }}>
         <div style={{ flex: 1 }}>
           <WEyebrow>{t('Support')}</WEyebrow>
           <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Support center')}</h1>
@@ -93,9 +95,9 @@ export function WebSupport({ navigate, prefillTx }) {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: 20, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1.3fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
         {/* Ticket list */}
-        <WCard padding={0}>
+        <WCard padding={0} style={{ minWidth: 0 }}>
           <div style={{ padding: '16px 20px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('Your tickets')}</div>
             <div style={{ display: 'flex', gap: 2, padding: 3, background: WBRAND.surface, borderRadius: 8 }}>
@@ -165,14 +167,15 @@ export function WebSupport({ navigate, prefillTx }) {
 
 // ─── Ticket thread ────────────────────────────────────────────
 function TicketThread({ ticket, onReply }) {
+  const mobile = useIsMobile();
   const [draft, setDraft] = useState('');
   const scrollRef = useRef(null);
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [ticket.messages.length, ticket.id]);
   return (
-    <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', maxHeight: 600 }}>
-      <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
+    <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', maxHeight: 600, minWidth: 0 }}>
+      <div style={{ padding: mobile ? '14px 16px 12px' : '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
           <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{ticket.subject}</div>
           <WPill tone={ticketTone(ticket.status)}>{t(ticket.status[0].toUpperCase() + ticket.status.slice(1))}</WPill>
@@ -185,7 +188,7 @@ function TicketThread({ ticket, onReply }) {
         </div>
       </div>
 
-      <div ref={scrollRef} style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '18px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div ref={scrollRef} style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: mobile ? '14px 16px' : '18px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
         {ticket.messages.map((msg, i) => {
           const mine = msg.from === 'user';
           return (
@@ -207,19 +210,19 @@ function TicketThread({ ticket, onReply }) {
       </div>
 
       {ticket.status !== 'resolved' ? (
-        <div style={{ padding: '14px 22px 18px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
+        <div style={{ padding: mobile ? '12px 16px 16px' : '14px 22px 18px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
             <textarea value={draft} onChange={e => setDraft(e.target.value)} placeholder={t('Type your reply…')} rows={2} style={{
               flex: 1, resize: 'none', border: `1px solid ${WBRAND.line2}`, borderRadius: 10,
               padding: '10px 12px', outline: 'none', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink,
-              background: WBRAND.white,
+              background: WBRAND.white, minWidth: 0, boxSizing: 'border-box',
             }}/>
             <WPrimary onClick={() => { if (draft.trim()) { onReply(draft.trim()); setDraft(''); } }}
               style={{ opacity: draft.trim() ? 1 : 0.5, pointerEvents: draft.trim() ? 'auto' : 'none' }}>{t('Send')}</WPrimary>
           </div>
         </div>
       ) : (
-        <div style={{ padding: '14px 22px 18px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ padding: mobile ? '12px 16px 16px' : '14px 22px 18px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
           {WIcon.check(WBRAND.positive)}
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{t('This ticket is resolved. Reopen by starting a new ticket.')}</span>
         </div>
@@ -230,6 +233,7 @@ function TicketThread({ ticket, onReply }) {
 
 // ─── New ticket composer ──────────────────────────────────────
 function TicketComposer({ prefillTx, onCancel, onSubmit }) {
+  const mobile = useIsMobile();
   const cats = ['Minting', 'Redemptions', 'Withdrawals', 'Deposits', 'Account', 'Other'];
   const prefCat = prefillTx ? (() => {
     const title = txMeta(prefillTx).title;
@@ -255,12 +259,12 @@ function TicketComposer({ prefillTx, onCancel, onSubmit }) {
   };
 
   return (
-    <WCard padding={0}>
-      <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}` }}>
+    <WCard padding={0} style={{ minWidth: 0 }}>
+      <div style={{ padding: mobile ? '14px 16px 12px' : '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}` }}>
         <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('New support ticket')}</div>
         <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3 }}>{t('Our desk typically replies within 2 hours.')}</div>
       </div>
-      <div style={{ padding: '18px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ padding: mobile ? '16px 16px' : '18px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
         {prefillTx && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', background: WBRAND.surface2, border: `1px solid ${WBRAND.line}`, borderRadius: 10 }}>
             <WCoinDot symbol={prefillTx.asset} size={32}/>
@@ -288,11 +292,11 @@ function TicketComposer({ prefillTx, onCancel, onSubmit }) {
           <textarea value={body} onChange={e => setBody(e.target.value)} placeholder={t("Describe what happened and what you'd like us to do…")} rows={5} style={{
             width: '100%', resize: 'vertical', border: `1px solid ${WBRAND.line2}`, borderRadius: 10,
             padding: '12px 14px', outline: 'none', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, lineHeight: 1.5,
-            background: WBRAND.white,
+            background: WBRAND.white, boxSizing: 'border-box',
           }}/>
         </div>
       </div>
-      <div style={{ padding: '0 22px 20px', display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+      <div style={{ padding: mobile ? '0 16px 18px' : '0 22px 20px', display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
         <WSecondary size="lg" onClick={onCancel} style={{ height: 50 }}>{t('Cancel')}</WSecondary>
         <WPrimary size="lg" onClick={submit} style={{ opacity: ok ? 1 : 0.5, pointerEvents: ok ? 'auto' : 'none' }}>{t('Submit ticket')}</WPrimary>
       </div>

@@ -5,9 +5,11 @@ import { AHLGMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector } from '../components/shared.jsx';
+import { useIsMobile } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
 export function WebMint({ navigate, onOpenTx }) {
+  const mobile = useIsMobile();
   const sources = Object.keys(WBALANCES)
     .filter(s => s !== 'AHLG' && WBALANCES[s] > 0)
     .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AHLG }));
@@ -35,7 +37,7 @@ export function WebMint({ navigate, onOpenTx }) {
   const px = (v, d = 2) => `${isFiat ? '$' : ''}${wfmt(v, d)}${isFiat ? '' : ' ' + quote}`;
 
   return (
-    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
       <div style={{ marginBottom: 20 }}>
         <WEyebrow>{t('Mint AHLG')}</WEyebrow>
         <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Convert cash to vaulted gold')}</h1>
@@ -44,12 +46,12 @@ export function WebMint({ navigate, onOpenTx }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '480px 1fr', gap: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '480px 1fr', gap: mobile ? 16 : 20 }}>
 
         {/* Left: form */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           <WCard padding={0}>
-            <div style={{ padding: '22px 24px 20px' }}>
+            <div style={{ padding: mobile ? '18px 16px 16px' : '22px 24px 20px' }}>
               <WEyebrow>{t('You pay')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
@@ -72,7 +74,7 @@ export function WebMint({ navigate, onOpenTx }) {
               </div>
             </div>
 
-            <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2 }}>
+            <div style={{ padding: mobile ? '18px 16px 18px' : '22px 24px 22px', background: WBRAND.surface2 }}>
               <WEyebrow>{t('You receive')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums' }}>{wfmt(out, 4)}</div>
@@ -125,7 +127,7 @@ export function WebMint({ navigate, onOpenTx }) {
         </div>
 
         {/* Right: chart + recent */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
           <WCard padding={0}>
             <div style={{ padding: '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
@@ -142,14 +144,14 @@ export function WebMint({ navigate, onOpenTx }) {
             <div style={{ padding: '12px 16px 18px' }}>
               <WPriceChart data={quotedData} height={280}/>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
+            <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
               {[
                 { l: t('Open'),       v: px(openV) },
                 { l: t('High'),       v: px(high) },
                 { l: t('Low'),        v: px(low) },
                 { l: t('Volume 24h'), v: '$8.41M' },
               ].map((k, i) => (
-                <div key={i} style={{ padding: '12px 20px', borderRight: i < 3 ? `1px solid ${WBRAND.line}` : 'none' }}>
+                <div key={i} style={{ padding: '12px 20px', borderRight: (mobile ? i % 2 === 0 : i < 3) ? `1px solid ${WBRAND.line}` : 'none', borderTop: mobile && i >= 2 ? `1px solid ${WBRAND.line}` : 'none' }}>
                   <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{k.l}</div>
                   <WMonoNum size={14} style={{ marginTop: 4, display: 'block' }}>{k.v}</WMonoNum>
                 </div>
@@ -167,6 +169,8 @@ export function WebMint({ navigate, onOpenTx }) {
                 {t('View all')} {WIcon.arrowRight(WBRAND.red)}
               </button>
             </div>
+            <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: mobile ? 520 : 'auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Paid', 'Received', 'Rate', 'Status'].map(h => t(h)).map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h}</div>
@@ -188,6 +192,8 @@ export function WebMint({ navigate, onOpenTx }) {
                 <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
+            </div>
+            </div>
           </WCard>
         </div>
       </div>
@@ -218,6 +224,7 @@ function WSpinner() {
 }
 
 function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
+  const mobile = useIsMobile();
   const STEPS = [
     { id: 'submitted', title: t('Mint request received'), sub: t('Order accepted and queued') },
     { id: 'locked',    title: t('Payment locked'),         sub: () => `${wfmt(paid, wdecimals(from.symbol))} ${from.symbol} ${t('reserved from balance')}` },
@@ -244,14 +251,14 @@ function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
     <div onClick={done ? onClose : undefined} style={{
       position: 'fixed', inset: 0, zIndex: 100,
       background: 'rgba(10,10,10,0.42)',
-      display: 'grid', placeItems: 'center', padding: 24,
+      display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: 440, maxWidth: '100%', background: WBRAND.white,
+        width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white,
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
       }}>
         {/* Header */}
-        <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
+        <div style={{ padding: mobile ? '16px 16px 14px' : '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <AHLGMark size={44}/>
@@ -265,7 +272,7 @@ function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
         </div>
 
         {/* Timeline */}
-        <div style={{ padding: '20px 24px 8px' }}>
+        <div style={{ padding: mobile ? '16px 16px 8px' : '20px 24px 8px' }}>
           {STEPS.map((s, i) => {
             const isDone = i < active || (i === STEPS.length - 1 && done);
             const isCurrent = i === active && !isDone;
@@ -305,7 +312,7 @@ function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '8px 24px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ padding: mobile ? '8px 16px 16px' : '8px 24px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
           {done ? (
             <>
               <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>

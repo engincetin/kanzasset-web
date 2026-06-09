@@ -10,10 +10,12 @@ const NUMFMT_US = '1,234.56  ·  US / UK';
 const NUMFMT_EU = '1.234,56  ·  Europe';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
+import { useIsMobile } from '../lib/useResponsive.js';
 
 function FormRow({ label, hint, children }) {
+  const mobile = useIsMobile();
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 24, padding: '18px 22px', borderBottom: `1px solid ${WBRAND.line}`, alignItems: 'flex-start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '220px 1fr', gap: mobile ? 8 : 24, padding: mobile ? '14px 16px' : '18px 22px', borderBottom: `1px solid ${WBRAND.line}`, alignItems: 'flex-start' }}>
       <div>
         <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{label}</div>
         {hint && <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, lineHeight: 1.5 }}>{hint}</div>}
@@ -40,15 +42,16 @@ function TextField({ value, placeholder, disabled = false, locked = false, suffi
 }
 
 function SectionCard({ title, sub, children, footer }) {
+  const mobile = useIsMobile();
   return (
-    <WCard padding={0}>
-      <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}` }}>
+    <WCard padding={0} style={{ minWidth: 0 }}>
+      <div style={{ padding: mobile ? '14px 16px 12px' : '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}` }}>
         <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{title}</div>
         {sub && <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 4 }}>{sub}</div>}
       </div>
       {children}
       {footer && (
-        <div style={{ padding: '14px 22px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'flex-end', gap: 8, background: WBRAND.surface2, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
+        <div style={{ padding: mobile ? '12px 16px' : '14px 22px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'flex-end', gap: 8, background: WBRAND.surface2, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
           {footer}
         </div>
       )}
@@ -99,6 +102,7 @@ function Toggle({ on }) {
 }
 
 function ProfAccount({ navigate }) {
+  const profMobile = useIsMobile();
   return (
     <SectionCard
       title={t('Personal details')}
@@ -119,7 +123,7 @@ function ProfAccount({ navigate }) {
       }
     >
       <FormRow label={t('Full legal name')} hint={t('Must match your government-issued ID exactly.')}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: profMobile ? '1fr' : '1fr 1fr', gap: 10 }}>
           <TextField value="Ahmet" locked/>
           <TextField value="Yılmaz" locked/>
         </div>
@@ -150,6 +154,7 @@ function ProfAccount({ navigate }) {
 }
 
 function ProfSecurity() {
+  const mobile = useIsMobile();
   const [twoFA, setTwoFA] = useState(getAuthChannel());
   useEffect(() => { setAuthChannel(twoFA); }, [twoFA]);
   const pickTwoFA = (id) => { if (id === twoFA) return; setTwoFA(id); toast(id === 'email' ? t('Codes will be sent by email') : t('Codes will be sent by SMS'), { title: t('Two-factor updated') }); };
@@ -157,8 +162,8 @@ function ProfSecurity() {
   return (
     <>
       <SectionCard title={t('Two-factor authentication')} sub={t('Choose how we send your verification code at sign-in and for withdrawals.')}>
-        <div style={{ padding: '18px 22px 20px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div style={{ padding: mobile ? '14px 16px 16px' : '18px 22px 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: 12 }}>
             {[
               { id: 'email', label: t('Email'), dest: 'a••••t@kanzasset.com',
                 icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.7"/><path d="M4 7l8 6 8-6" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/></svg> },
@@ -235,11 +240,12 @@ function ProfSecurity() {
 }
 
 function ProfKYC() {
+  const mobile = useIsMobile();
   return (
     <>
       <SectionCard title={t('Verification status')} sub={t('Your verification tier unlocks higher daily limits and physical delivery.')}>
         <div style={{ padding: '20px 22px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: mobile ? 'flex-start' : 'center', gap: 20, marginBottom: 20, flexWrap: mobile ? 'wrap' : 'nowrap' }}>
             <div style={{ width: 64, height: 64, borderRadius: 12, background: WBRAND.redSoft, display: 'grid', placeItems: 'center', color: WBRAND.red, fontFamily: WFONT, fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>T3</div>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('Tier 3 · Institutional')}</div>
@@ -286,7 +292,7 @@ function ProfKYC() {
 
       <SectionCard title={t('Account limits')}>
         <div style={{ padding: '4px 22px 22px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)', gap: 12 }}>
             {[
               { l: 'Daily mint limit',          used: '24.5k', total: '500k USDT', pct: 4.9 },
               { l: 'Daily redeem limit',         used: '11.2k', total: '500k USDT', pct: 2.2 },
@@ -635,6 +641,7 @@ function ProfHelp({ navigate }) {
 }
 
 export function WebProfile({ navigate, onLogout, initialSection = 'account' }) {
+  const mobile = useIsMobile();
   const [section, setSection] = useState(initialSection);
   useEffect(() => { setSection(initialSection); }, [initialSection]);
 
@@ -649,7 +656,7 @@ export function WebProfile({ navigate, onLogout, initialSection = 'account' }) {
   ];
 
   return (
-    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
       <div style={{ marginBottom: 20 }}>
         <WEyebrow>{t('Profile')}</WEyebrow>
         <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Account settings')}</h1>
@@ -658,7 +665,7 @@ export function WebProfile({ navigate, onLogout, initialSection = 'account' }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '280px 1fr', gap: mobile ? 16 : 20 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <WCard padding={20}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>

@@ -5,8 +5,10 @@ import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WSecondary, WGhost, WEyebrow, WNum, WMonoNum, WSectionTitle } from '../components/primitives.jsx';
 import { AssetActionBtn } from '../components/shared.jsx';
+import { useIsMobile } from '../lib/useResponsive.js';
 
 export function WebWallet({ navigate }) {
+  const mobile = useIsMobile();
   const [currency, setCurrency] = useState('USDT');
   const [kindFilter, setKindFilter] = useState('all');
 
@@ -36,7 +38,7 @@ export function WebWallet({ navigate }) {
   const fiat   = allAssets.filter(a => a.kind === 'fiat').reduce((s, a) => s + a.valUSDT, 0);
 
   return (
-    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
       <div style={{ marginBottom: 20 }}>
         <WEyebrow>{t('Wallet')}</WEyebrow>
@@ -46,8 +48,8 @@ export function WebWallet({ navigate }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 16, marginBottom: 20 }}>
-        <WCard padding={22}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '2fr 1fr 1fr', gap: mobile ? 12 : 16, marginBottom: 20 }}>
+        <WCard padding={22} style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <WEyebrow>{t('Total balance')}</WEyebrow>
@@ -87,6 +89,8 @@ export function WebWallet({ navigate }) {
           </div>
         </div>
 
+        <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+        <div style={{ minWidth: mobile ? 860 : 'auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 0.9fr 1.2fr 0.7fr 1fr 200px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
           {['Asset', 'Balance', 'Price', 'Value (USDT)', '24h', 'Allocation', 'Actions'].map((h, i) => (
             <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i >= 1 && i <= 4 ? 'right' : i === 6 ? 'right' : 'left' }}>{t(h)}</div>
@@ -127,6 +131,8 @@ export function WebWallet({ navigate }) {
             </div>
           );
         })}
+        </div>
+        </div>
       </WCard>
     </div>
   );

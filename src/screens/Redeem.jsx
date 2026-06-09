@@ -7,8 +7,10 @@ import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.j
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
 import { AddDestinationModal } from './Profile.jsx';
 import { t } from '../lib/i18n.js';
+import { useIsMobile } from '../lib/useResponsive.js';
 
 function RedeemDigital({ targets, to, setTo, navigate }) {
+  const mobile = useIsMobile();
   const [amount, setAmount] = useState('');
   const [redeeming, setRedeeming] = useState(false);
   const [infoOpen, setInfoOpen] = useState(false);
@@ -101,8 +103,8 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
         />
       )}
       {infoOpen && (
-        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
-          <div onClick={e => e.stopPropagation()} style={{ width: 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
@@ -140,6 +142,7 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
 }
 
 function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
+  const mobile = useIsMobile();
   const STEPS = [
     { id: 'submitted', title: t('Redeem request received'), sub: t('Order accepted and queued') },
     { id: 'settling',  title: t('Settling to balance'),     sub: () => `${t('Converting at')} 1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
@@ -165,10 +168,10 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
   return (
     <div onClick={done ? onClose : undefined} style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24,
+      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: 440, maxWidth: '100%', background: WBRAND.white,
+        width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white,
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
       }}>
         <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
@@ -206,6 +209,7 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
 }
 
 function RedeemPhysicalWeb({ navigate }) {
+  const mobile = useIsMobile();
   const addresses = [
     { id: 'h', label: 'Home',     city: 'Dubai',    line: 'Marina Plaza, Tower 1, Apt 2208',   country: 'UAE' },
     { id: 'o', label: 'Office',   city: 'Dubai',    line: 'DMCC Almas Tower, Floor 38',        country: 'UAE' },
@@ -312,8 +316,8 @@ function RedeemPhysicalWeb({ navigate }) {
       </div>
 
       {confirmOpen && (
-        <div onClick={() => setConfirmOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
-          <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden' }}>
+        <div onClick={() => setConfirmOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
@@ -379,8 +383,8 @@ function RedeemPhysicalWeb({ navigate }) {
       {shipAddOpen && <AddDestinationModal tab="shipping" onClose={() => setShipAddOpen(false)}/>}
 
       {infoOpen && (
-        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
-          <div onClick={e => e.stopPropagation()} style={{ width: 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+        <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
@@ -422,6 +426,7 @@ function RedeemPhysicalWeb({ navigate }) {
 }
 
 function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
+  const mobile = useIsMobile();
   const STEPS = [
     { id: 'submitted', title: t('Delivery request received'), sub: () => `${kg} × 1 kg ${t('bar')}${kg > 1 ? t('s') : ''} · ${t('ship to')} ${addr ? addr.label + ', ' + addr.city : t('your address')}` },
     { id: 'handover',  title: t('Handed to carrier'),         sub: `Brinks Secure Logistics · ${t('insured in transit')}` },
@@ -449,10 +454,10 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
   return (
     <div onClick={done ? onClose : undefined} style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24,
+      background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} style={{
-        width: 460, maxWidth: '100%', background: WBRAND.white,
+        width: mobile ? '100%' : 460, maxWidth: '100%', background: WBRAND.white,
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
         maxHeight: '88vh', display: 'flex', flexDirection: 'column',
       }}>
@@ -536,6 +541,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
 }
 
 export function WebRedeem({ navigate, onOpenTx }) {
+  const mobile = useIsMobile();
   const [mode, setMode] = useState('digital');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
@@ -556,7 +562,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
   const px = (v, d = 2) => `${isFiat ? '$' : ''}${wfmt(v, d)}${isFiat ? '' : ' ' + quote}`;
 
   return (
-    <div style={{ padding: '28px 32px 48px', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
       <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24 }}>
         <div style={{ flex: 1 }}>
           <WEyebrow>{t('Redeem AHLG')}</WEyebrow>
@@ -567,8 +573,8 @@ export function WebRedeem({ navigate, onOpenTx }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '480px 1fr', gap: 20, alignItems: 'start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           {/* Mode toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
@@ -591,7 +597,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
           }
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
           <WCard padding={0}>
             <div style={{ padding: '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
@@ -618,6 +624,8 @@ export function WebRedeem({ navigate, onOpenTx }) {
               </div>
               <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
             </div>
+            <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: mobile ? 520 : 'auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Burned', 'Received', 'Rate', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
@@ -639,6 +647,8 @@ export function WebRedeem({ navigate, onOpenTx }) {
                 <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
+            </div>
+            </div>
           </WCard>
         </div>
       </div>
