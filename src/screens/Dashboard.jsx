@@ -63,15 +63,15 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   const quotedPct = (quotedDiff / quotedFirst) * 100;
 
   return (
-    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', minHeight: '100%', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', minHeight: '100%', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
       {/* Hero row */}
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1.4fr 1fr', gap: mobile ? 14 : 20, marginBottom: mobile ? 14 : 20 }}>
 
         {/* Total portfolio */}
         <WCard padding={0} style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '24px 28px 24px', flex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div style={{ padding: mobile ? '18px 16px' : '24px 28px 24px', flex: 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
               <WEyebrow>{t('Total portfolio value')}</WEyebrow>
               <div style={{ position: 'relative' }}>
                 <button onClick={() => setCurrencyOpen(!currencyOpen)} style={{
@@ -121,11 +121,11 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginTop: 14 }}>
-              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 52, color: WBRAND.ink, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(total, wdecimals(currency))}</span>
-              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 18, color: WBRAND.muted, letterSpacing: '-0.01em' }}>{currency}</span>
+              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: WBRAND.ink, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(total, wdecimals(currency))}</span>
+              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: mobile ? 14 : 18, color: WBRAND.muted, letterSpacing: '-0.01em' }}>{currency}</span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, flexWrap: mobile ? 'wrap' : 'nowrap' }}>
               <WPill tone="positive" style={{ fontSize: 12, padding: '5px 10px' }}>
                 <span style={{ fontVariantNumeric: 'tabular-nums' }}>▲ +2.81%</span>
               </WPill>
@@ -168,7 +168,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             const heroPillText = dark ? '#fff' : WBRAND.ink;
             const dotColor  = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.05)';
             return (
-              <div style={{ padding: '24px 28px 24px', flex: 1, background: heroBg, color: heroText, borderTopLeftRadius: 16, borderTopRightRadius: 16, borderBottom: `1px solid ${WBRAND.line}`, position: 'relative', overflow: 'hidden' }}>
+              <div style={{ padding: mobile ? '18px 16px' : '24px 28px 24px', flex: 1, background: heroBg, color: heroText, borderTopLeftRadius: 16, borderTopRightRadius: 16, borderBottom: `1px solid ${WBRAND.line}`, position: 'relative', overflow: 'hidden' }}>
                 <style>{`@keyframes kzDotDrift{from{background-position:0 0}to{background-position:40px 40px}}`}</style>
                 <div style={{
                   position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -183,10 +183,10 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                   <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: heroLabel }}>{t('AHL Gold holdings')}</div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative' }}>
-                  <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 52, color: heroText, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(WBALANCES.AHLG, 0)}</span>
-                  <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 18, color: heroLabel, letterSpacing: '-0.01em' }}>AHLG</span>
+                  <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: heroText, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(WBALANCES.AHLG, 0)}</span>
+                  <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: mobile ? 14 : 18, color: heroLabel, letterSpacing: '-0.01em' }}>AHLG</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative', flexWrap: mobile ? 'wrap' : 'nowrap' }}>
                   <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, padding: '5px 10px', borderRadius: 6, background: heroPillBg, color: heroPillText, fontVariantNumeric: 'tabular-nums' }}>{(WBALANCES.AHLG / 1000).toFixed(1)} {t('kg in vault')}</span>
                   <span style={{ fontFamily: WFONT, fontSize: 12, color: heroLabel, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AHLG * WRATES.AHLG)}</span>
                 </div>
@@ -194,7 +194,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             );
           })()}
 
-          <div style={{ height: 80, flexShrink: 0, padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ height: 80, flexShrink: 0, padding: mobile ? '0 16px' : '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
             <div>
               <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{t('AHLG price')}</div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 4 }}>
@@ -218,7 +218,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
 
       {/* Price chart */}
       <WCard padding={0} style={{ marginBottom: 20 }}>
-        <div style={{ padding: '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
           <div>
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <button onClick={() => setQuoteOpen(!quoteOpen)} style={{
