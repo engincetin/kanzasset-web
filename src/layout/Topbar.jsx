@@ -4,23 +4,36 @@ import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WPill } from '../components/primitives.jsx';
 
-export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout }) {
+export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = false, onMenu }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header style={{
       height: 72, flexShrink: 0,
       background: WBRAND.white, borderBottom: `1px solid ${WBRAND.line}`,
-      padding: '0 32px',
-      display: 'flex', alignItems: 'center', gap: 24,
+      padding: mobile ? '0 14px' : '0 32px',
+      display: 'flex', alignItems: 'center', gap: mobile ? 12 : 24,
     }}>
+      {onMenu && (
+        <button onClick={onMenu} title="Menu" style={{
+          width: 38, height: 38, borderRadius: 8, flexShrink: 0,
+          background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
+          display: 'grid', placeItems: 'center', cursor: 'pointer', padding: 0,
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6h18M3 12h18M3 18h18" stroke={WBRAND.ink} strokeWidth="1.8" strokeLinecap="round"/>
+          </svg>
+        </button>
+      )}
+
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
           <h1 style={{
-            margin: 0, fontFamily: WFONT, fontSize: 22, fontWeight: 800,
+            margin: 0, fontFamily: WFONT, fontSize: mobile ? 17 : 22, fontWeight: 800,
             color: WBRAND.ink, letterSpacing: '-0.02em',
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
           }}>{title}</h1>
-          {sub && <span style={{
+          {sub && !mobile && <span style={{
             fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, fontWeight: 500,
             letterSpacing: '-0.005em',
           }}>{sub}</span>}
@@ -55,11 +68,11 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout }) {
             color: '#fff', display: 'grid', placeItems: 'center',
             fontFamily: WFONT, fontWeight: 700, fontSize: 12,
           }}>AY</div>
-          <div style={{ textAlign: 'left', minWidth: 0 }}>
+          {!mobile && <div style={{ textAlign: 'left', minWidth: 0 }}>
             <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>Ahmet Yılmaz</div>
             <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, marginTop: 1 }}>{t('Verified · Tier 3', 'Doğrulanmış · Kademe 3')}</div>
-          </div>
-          <span style={{ transform: menuOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform .15s ease', display: 'inline-grid', placeItems: 'center' }}>{WIcon.arrowDown(WBRAND.muted)}</span>
+          </div>}
+          {!mobile && <span style={{ transform: menuOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform .15s ease', display: 'inline-grid', placeItems: 'center' }}>{WIcon.arrowDown(WBRAND.muted)}</span>}
         </button>
 
         {menuOpen && (

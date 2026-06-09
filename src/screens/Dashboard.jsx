@@ -5,6 +5,7 @@ import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WSectionTitle } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs } from '../components/charts.jsx';
 import { WTxRow, AssetActionBtn } from '../components/shared.jsx';
+import { useIsMobile, useIsTablet } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
 function AllocBar({ label, value, total, color }) {
@@ -29,6 +30,8 @@ function AllocBar({ label, value, total, color }) {
 }
 
 export function WebPortfolio({ navigate, onOpenTx }) {
+  const mobile = useIsMobile();
+  const tablet = useIsTablet();
   const [currency, setCurrency] = useState('USDT');
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [range, setRange] = useState('3M');
@@ -60,10 +63,10 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   const quotedPct = (quotedDiff / quotedFirst) * 100;
 
   return (
-    <div style={{ padding: '28px 32px 48px', minHeight: '100%', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
+    <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', minHeight: '100%', overflowY: 'auto', height: '100%', boxSizing: 'border-box' }}>
 
       {/* Hero row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 20, marginBottom: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1.4fr 1fr', gap: mobile ? 14 : 20, marginBottom: mobile ? 14 : 20 }}>
 
         {/* Total portfolio */}
         <WCard padding={0} style={{ display: 'flex', flexDirection: 'column' }}>
@@ -138,14 +141,14 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}`, height: 80, flexShrink: 0 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}`, height: mobile ? 'auto' : 80, flexShrink: 0 }}>
             {[
               { l: t('24 hours'), v: '+0.24%', abs: '+1,130 USDT' },
               { l: t('7 days'),   v: '+1.92%', abs: '+8,856 USDT' },
               { l: t('30 days'),  v: '+4.41%', abs: '+19,892 USDT' },
               { l: t('All-time'), v: '+18.32%', abs: '+72,948 USDT' },
             ].map((k, i) => (
-              <div key={i} style={{ padding: '12px 18px', borderRight: i < 3 ? `1px solid ${WBRAND.line}` : 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div key={i} style={{ padding: '12px 18px', borderRight: (mobile ? i % 2 === 0 : i < 3) ? `1px solid ${WBRAND.line}` : 'none', borderTop: mobile && i >= 2 ? `1px solid ${WBRAND.line}` : 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{k.l}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.positive, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.015em', marginTop: 4 }}>{k.v}</div>
                 <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, fontWeight: 500, marginTop: 2 }}>{k.abs}</div>
@@ -271,7 +274,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         <div style={{ padding: '12px 16px 18px' }}>
           <WPriceChart data={quotedPriceData} height={280} color={WBRAND.red}/>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
+        <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
           {(() => {
             const vals = quotedPriceData.map(d => d.v);
             const open = vals[0];
@@ -286,7 +289,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
               { l: t('Market cap'), v: '$21.6M' },
             ];
           })().map((k, i) => (
-            <div key={i} style={{ padding: '14px 20px', borderRight: i < 4 ? `1px solid ${WBRAND.line}` : 'none' }}>
+            <div key={i} style={{ padding: '14px 20px', borderRight: (mobile ? i % 2 === 0 : i < 4) ? `1px solid ${WBRAND.line}` : 'none', borderTop: mobile && i >= 2 ? `1px solid ${WBRAND.line}` : 'none' }}>
               <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{k.l}</div>
               <WMonoNum size={14} style={{ marginTop: 4, display: 'block' }}>{k.v}</WMonoNum>
             </div>
@@ -295,7 +298,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
       </WCard>
 
       {/* Bottom row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
 
         {/* Balances table */}
         <WCard padding={0}>
@@ -306,6 +309,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </button>
           </div>
 
+          <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ minWidth: mobile ? 640 : 'auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 188px', gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
             {['Asset', 'Balance', 'Value', 'Allocation', 'Actions'].map((h, i) => (
               <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i === 0 ? 'left' : 'right' }}>{t(h)}</div>
@@ -341,6 +346,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
               </div>
             );
           })}
+          </div>
+          </div>
         </WCard>
 
         {/* Right column */}
@@ -415,6 +422,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </button>
           </div>
 
+          <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ minWidth: mobile ? 720 : 'auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
             {['', 'Type', 'Asset', 'Amount', 'Counterparty', 'Date', 'Status'].map((h, i) => (
               <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h ? t(h) : h}</div>
@@ -422,6 +431,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           </div>
 
           {WTXS.slice(0, 6).map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1} onOpen={onOpenTx}/>)}
+          </div>
+          </div>
         </WCard>
       </div>
     </div>

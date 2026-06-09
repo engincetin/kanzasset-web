@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { WBRAND, subscribeNumberStyle, subscribeTheme } from './lib/index.js';
+import { useIsMobile } from './lib/useResponsive.js';
 import { t, subscribeLang } from './lib/i18n.js';
 import { WSidebar } from './layout/Sidebar.jsx';
 import { WTopbar } from './layout/Topbar.jsx';
@@ -45,8 +46,10 @@ function Screen({ active, navigate, onLogout, onOpenTx, profileSection, profileK
 }
 
 function AppShell({ onLogout }) {
+  const isMobile = useIsMobile();
   const [active, setActive] = useState('dashboard');
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [notifsOpen, setNotifsOpen] = useState(false);
   const [profileSection, setProfileSection] = useState('account');
   const [profileKey, setProfileKey] = useState(0);
@@ -59,6 +62,7 @@ function AppShell({ onLogout }) {
 
   const navigate = (screen, section) => {
     setActive(screen);
+    setMobileNavOpen(false);
     if (screen === 'profile') {
       setProfileSection(section || 'account');
       setProfileKey(k => k + 1);
@@ -85,12 +89,17 @@ function AppShell({ onLogout }) {
         onNavigate={navigate}
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed(c => !c)}
+        mobile={isMobile}
+        mobileOpen={mobileNavOpen}
+        onClose={() => setMobileNavOpen(false)}
       />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', minWidth: 0 }}>
         <WTopbar
           title={title}
           sub={sub}
+          mobile={isMobile}
+          onMenu={isMobile ? () => setMobileNavOpen(true) : undefined}
           onNotifs={() => setNotifsOpen(o => !o)}
           onNavigate={navigate}
           onLogout={onLogout}

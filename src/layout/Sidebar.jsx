@@ -104,20 +104,31 @@ export const NAV_GROUPS = [
 
 export const NAV_ITEMS = NAV_GROUPS.flatMap(g => g.items);
 
-export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollapse }) {
+export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false, onToggleCollapse, mobile = false, mobileOpen = false, onClose }) {
+  // On mobile the sidebar is a full-width drawer — never the collapsed rail.
+  const collapsed = mobile ? false : collapsedProp;
   const width = collapsed ? 64 : 240;
 
-  return (
+  // Navigating from the drawer should also close it.
+  const go = (id) => { onNavigate(id); if (mobile && onClose) onClose(); };
+
+  const aside = (
     <aside style={{
       width, background: WBRAND.white,
       borderRight: `1px solid ${WBRAND.line}`,
       display: 'flex', flexDirection: 'column',
       padding: collapsed ? '0 10px 16px' : '0 16px 20px',
       flexShrink: 0,
-      transition: 'width .22s ease, padding .22s ease',
-      position: 'relative',
+      transition: mobile ? 'transform .24s ease' : 'width .22s ease, padding .22s ease',
+      ...(mobile
+        ? {
+            position: 'fixed', top: 0, left: 0, height: '100%', zIndex: 60,
+            transform: mobileOpen ? 'translateX(0)' : 'translateX(-100%)',
+            boxShadow: mobileOpen ? '0 0 40px rgba(0,0,0,0.18)' : 'none',
+          }
+        : { position: 'relative' }),
     }}>
-      <button onClick={onToggleCollapse} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} style={{
+      {!mobile && <button onClick={onToggleCollapse} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} style={{
         position: 'absolute', top: 36, right: -12,
         width: 22, height: 22, borderRadius: 11,
         background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
@@ -131,7 +142,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
         }}>
           <path d="M7.5 3L4.5 6L7.5 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-      </button>
+      </button>}
 
       <div style={{
         height: 72, flexShrink: 0, marginBottom: collapsed ? 18 : 16,
@@ -159,7 +170,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
               {g.items.map(it => {
                 const on = it.id === active;
                 return (
-                  <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : onNavigate(it.id)}
+                  <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : go(it.id)}
                     title={collapsed ? it.label : undefined}
                     style={{
                       display: 'flex', alignItems: 'center',
@@ -215,7 +226,7 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
                 {g.items.map(it => {
                   const on = it.id === active;
                   return (
-                    <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : onNavigate(it.id)}
+                    <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : go(it.id)}
                       title={collapsed ? it.label : undefined}
                       style={{
                         display: 'flex', alignItems: 'center',
@@ -259,5 +270,24 @@ export function WSidebar({ active, onNavigate, collapsed = false, onToggleCollap
         )}
       </div>
     </aside>
+  );
+
+  if (!mobile) return aside;
+
+  // Mobile: drawer + dimmed backdrop
+  return (
+    <>
+      <div
+        onClick={onClose}
+        style={{
+          position: 'fixed', inset: 0, zIndex: 55,
+          background: 'rgba(0,0,0,0.45)',
+          opacity: mobileOpen ? 1 : 0,
+          pointerEvents: mobileOpen ? 'auto' : 'none',
+          transition: 'opacity .24s ease',
+        }}
+      />
+      {aside}
+    </>
   );
 }
