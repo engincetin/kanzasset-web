@@ -16,7 +16,7 @@ export const tr = {
   "Instantly swap between cash and gold at the live rate.": "Canlı kurdan nakit ile altın arasında anında geçiş yapın.",
   "Pay cash · receive AHLG": "Kripto veya İtibari Para öde · AHLG al",
   "Pay AHLG · receive cash": "AHLG öde · kripto veya İtibari Para al",
-  "AHL Token": "AHLG Token",
+  "AHLG Token": "AHLG Token",
   "Switch direction": "Yönü değiştir",
   "Your recent trades": "Son işlemleriniz",
   "AHLG is backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.": "AHLG, Ahlatcı Metal Refinery FZCO kasasında saklanan ve Bureau Veritas tarafından aylık denetlenen fiziki altınla 1:1 teminatlandırılmıştır.",

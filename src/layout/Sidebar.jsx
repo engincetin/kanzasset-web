@@ -61,7 +61,7 @@ export const NAV_GROUPS = [
   },
   {
     id: 'ahlg',
-    label: 'AHL Token',
+    label: 'AHLG Token',
     items: [
       {
         id: 'trade', label: 'Buy / Sell',
