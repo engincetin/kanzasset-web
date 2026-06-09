@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import qrcode from 'qrcode-generator';
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
 
@@ -240,7 +241,7 @@ export function WAssetSelector({ value, options, onChange }) {
   );
 }
 
-// ─── Decorative QR ────────────────────────────────────────────
+// ─── Decorative QR (legacy placeholder) ───────────────────────
 export function FauxWebQR() {
   const cells = [];
   const r = 21;
@@ -252,4 +253,26 @@ export function FauxWebQR() {
     }
   }
   return <svg viewBox={`0 0 ${r * 4} ${r * 4}`} width="100%" height="100%">{cells}</svg>;
+}
+
+// ─── Real, scannable QR for a wallet address (or any string) ───
+export function WebQR({ value, color = WBRAND.ink }) {
+  const qr = qrcode(0, 'M');           // type 0 = auto-size, error-correction 'M'
+  qr.addData(value || '');
+  qr.make();
+  const count = qr.getModuleCount();
+  const cells = [];
+  for (let row = 0; row < count; row++) {
+    for (let col = 0; col < count; col++) {
+      if (qr.isDark(row, col)) {
+        // 1.04 overlap removes hairline seams between modules when scaled
+        cells.push(<rect key={row + '-' + col} x={col} y={row} width={1.04} height={1.04} fill={color}/>);
+      }
+    }
+  }
+  return (
+    <svg viewBox={`0 0 ${count} ${count}`} width="100%" height="100%" shapeRendering="crispEdges" style={{ display: 'block' }}>
+      {cells}
+    </svg>
+  );
 }

@@ -50,7 +50,7 @@ export function WebWallet({ navigate }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '2fr 1fr 1fr', gap: mobile ? 12 : 16, marginBottom: 20 }}>
         <WCard padding={22} style={{ minWidth: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: mobile ? 'stretch' : 'flex-start', gap: mobile ? 16 : 0 }}>
             <div>
               <WEyebrow>{t('Total balance')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
@@ -61,9 +61,9 @@ export function WebWallet({ navigate }) {
                 ≈ AED {wfmt(totalAed)} · <span style={{ color: WBRAND.positive, fontWeight: 700 }}>+2.81% {t('past month')}</span>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 6 }}>
-              <WSecondary size="sm" onClick={() => navigate('deposit')} icon={WIcon.download(WBRAND.ink)}>{t('Deposit')}</WSecondary>
-              <WSecondary size="sm" onClick={() => navigate('withdraw')} icon={WIcon.upload(WBRAND.ink)}>{t('Withdraw')}</WSecondary>
+            <div style={{ display: 'flex', gap: 8, width: mobile ? '100%' : 'auto' }}>
+              <WSecondary size="sm" onClick={() => navigate('deposit')} icon={WIcon.download(WBRAND.ink)} style={{ flex: mobile ? 1 : undefined, justifyContent: 'center' }}>{t('Deposit')}</WSecondary>
+              <WSecondary size="sm" onClick={() => navigate('withdraw')} icon={WIcon.upload(WBRAND.ink)} style={{ flex: mobile ? 1 : undefined, justifyContent: 'center' }}>{t('Withdraw')}</WSecondary>
             </div>
           </div>
         </WCard>
@@ -80,7 +80,7 @@ export function WebWallet({ navigate }) {
       </div>
 
       <WCard padding={0}>
-        <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', flexDirection: mobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: mobile ? 'stretch' : 'center', gap: mobile ? 12 : 0 }}>
           <WSectionTitle title={t('All assets')} sub={`${assets.length} ${t('of')} ${allAssets.length} ${t('shown · sorted by value')}`} style={{ marginBottom: 0 }}/>
           <div style={{ display: 'flex', gap: 4 }}>
             <WGhost active={kindFilter === 'all'}    onClick={() => setKindFilter('all')}>{t('All')}</WGhost>

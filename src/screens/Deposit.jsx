@@ -3,7 +3,7 @@ import { WBRAND, WFONT, WMONO, wfmt, wdecimals, WBALANCES, WMETA } from '../lib/
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WSecondary, WEyebrow, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
-import { FauxWebQR } from '../components/shared.jsx';
+import { WebQR } from '../components/shared.jsx';
 import { t } from '../lib/i18n.js';
 import { useIsMobile } from '../lib/useResponsive.js';
 
@@ -24,6 +24,7 @@ export function WebDeposit({ navigate, initialAsset }) {
     GBP: { bank: 'Lloyds Bank',     iban: 'GB29 LOYD 3092 1031 9876 54',   swift: 'LOYDGB2L', ref: 'AHLG-7421-GBP' },
   };
   const bank = bankFor[fiatAsset.symbol];
+  const depositAddress = '0x7A4f3B9c2De04A8FbE9eC1A2eE9c2A1d3b7E5C09';
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
@@ -89,14 +90,14 @@ export function WebDeposit({ navigate, initialAsset }) {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '180px 1fr', gap: mobile ? 16 : 24, padding: mobile ? '16px' : 24 }}>
                   <div style={{ background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: 12, aspectRatio: '1', maxWidth: '100%' }}>
-                    <FauxWebQR/>
+                    <WebQR value={depositAddress}/>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
                       <WEyebrow>{t('Address')}</WEyebrow>
-                      <div style={{ marginTop: 8, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10, fontFamily: WMONO, fontSize: 13, color: WBRAND.ink, wordBreak: 'break-all', lineHeight: 1.5 }}>0x7A4f3B9c2De04A8FbE9eC1A2eE9c2A1d3b7E5C09</div>
+                      <div style={{ marginTop: 8, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10, fontFamily: WMONO, fontSize: 13, color: WBRAND.ink, wordBreak: 'break-all', lineHeight: 1.5 }}>{depositAddress}</div>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
-                        <WCopyButton size="md" label={t('Copy address')} text="0x7A4f3B9c2De04A8FbE9eC1A2eE9c2A1d3b7E5C09" style={{ width: '100%', justifyContent: 'center' }}/>
+                        <WCopyButton size="md" label={t('Copy address')} text={depositAddress} style={{ width: '100%', justifyContent: 'center' }}/>
                         <WSecondary size="md" icon={WIcon.share(WBRAND.ink)} style={{ width: '100%', justifyContent: 'center' }}>{t('Share')}</WSecondary>
                       </div>
                     </div>
@@ -128,12 +129,12 @@ export function WebDeposit({ navigate, initialAsset }) {
           ) : (
             <>
               <WCard padding={0}>
-                <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
+                <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{fiatAsset.name} · {t('bank transfer details')}</div>
                     <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 2 }}>{t('Send from any account registered under')} <strong>Ahmet Yılmaz</strong></div>
                   </div>
-                  <WSecondary size="sm" icon={WIcon.download(WBRAND.ink)}>{t('Download PDF')}</WSecondary>
+                  <WSecondary size="sm" icon={WIcon.download(WBRAND.ink)} style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>{t('Download PDF')}</WSecondary>
                 </div>
                 <div style={{ padding: '4px 22px 8px' }}>
                   {[
