@@ -166,6 +166,7 @@ export function wTotalIn(sym) { return wTotalUSDT() / (WRATES[sym] ?? 1); }
 
 // ─── Transaction history ──────────────────────────────────────
 export const WTXS = [
+  { id: 'tx-9312', ts: '2026-05-13 10:15:00', type: 'Delivery', asset: 'AHLG', amount: -1000.0000, paid: "Brink's · Dubai",    status: 'pending'   },
   { id: 'tx-9301', ts: '2026-05-12 09:42:11', type: 'Mint',     asset: 'AHLG', amount:   1.2000, paid: '181.87 USDT',  status: 'completed' },
   { id: 'tx-9298', ts: '2026-05-11 14:08:03', type: 'Deposit',  asset: 'USDT', amount:   5000.00, paid: '—',            status: 'completed' },
   { id: 'tx-9277', ts: '2026-05-10 18:51:44', type: 'Redeem',   asset: 'AHLG', amount:  -0.8000, paid: '121.25 USDT',  status: 'completed' },
@@ -174,6 +175,7 @@ export const WTXS = [
   { id: 'tx-9218', ts: '2026-05-07 10:05:18', type: 'Mint',     asset: 'AHLG', amount:   3.5000, paid: '530.46 USDT',  status: 'completed' },
   { id: 'tx-9201', ts: '2026-05-06 19:47:32', type: 'Deposit',  asset: 'AED',  amount:  80000.00, paid: '—',            status: 'completed' },
   { id: 'tx-9189', ts: '2026-05-05 13:14:01', type: 'Redeem',   asset: 'AHLG', amount:  -0.5000, paid: '75.78 USDT',   status: 'pending'   },
+  { id: 'tx-9165', ts: '2026-05-04 15:20:00', type: 'Delivery', asset: 'AHLG', amount: -2000.0000, paid: "Brink's · Istanbul", status: 'completed' },
   { id: 'tx-9163', ts: '2026-05-04 09:11:25', type: 'Mint',     asset: 'AHLG', amount:   2.0000, paid: '303.12 USDT',  status: 'completed' },
   { id: 'tx-9142', ts: '2026-05-03 17:38:12', type: 'Deposit',  asset: 'USDC', amount:   5000.00, paid: '—',            status: 'completed' },
   { id: 'tx-9120', ts: '2026-05-02 12:00:58', type: 'Redeem',   asset: 'AHLG', amount:  -1.0000, paid: '151.56 USDT',  status: 'completed' },

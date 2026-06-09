@@ -120,6 +120,7 @@ export function WTxRow({ tx, last, onOpen }) {
     Deposit:  WIcon.download(WBRAND.ink),
     Withdraw: WIcon.upload(WBRAND.ink),
     Transfer: WIcon.swap(WBRAND.ink),
+    Delivery: <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinejoin="round"/><path d="M3 7l9 4 9-4M12 11v10" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinejoin="round"/></svg>,
   };
   const pos = tx.amount > 0;
   const date = tx.ts.slice(0, 10).split('-').reverse().join('/');

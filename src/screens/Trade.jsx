@@ -62,8 +62,8 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const insufficient = amt > payBalance + 1e-9;
   const canSubmit = out > 0 && !insufficient;
 
-  const recentType = side === 'buy' ? 'Mint' : 'Redeem';
-  const recent = WTXS.filter(x => x.type === recentType).slice(0, 4);
+  // Recent trades = both buys (Mint) and sells (Redeem), regardless of the current side.
+  const recent = WTXS.filter(x => x.type === 'Mint' || x.type === 'Redeem').slice(0, 5);
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
@@ -152,19 +152,11 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
               </div>
             </div>
             <div style={{ padding: '4px 22px 8px' }}>
-              {(side === 'buy'
-                ? [
-                    { l: t('Spot rate'),  v: `1 AHLG = ${wfmt(WRATES.AHLG)} USDT` },
-                    { l: t('Network'),    v: 'Ethereum · ERC-20' },
-                    { l: t('Mint fee'),   v: `0.00% — ${t('promotional')}` },
-                    { l: t('Settlement'), v: t('Instant on-chain') },
-                  ]
-                : [
-                    { l: t('Spot rate'),  v: `1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
-                    { l: t('Redeem fee'), v: t('0.00% — promotional') },
-                    { l: t('Settlement'), v: t('Instant to balance') },
-                  ]
-              ).map((r, i, arr) => (
+              {[
+                { l: t('Spot rate'),  v: side === 'buy' ? `1 AHLG = ${wfmt(WRATES.AHLG)} USDT` : `1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
+                { l: t('Trade fee'),  v: `0.00% — ${t('promotional')}` },
+                { l: t('Settlement'), v: side === 'buy' ? t('Instant on-chain') : t('Instant to balance') },
+              ].map((r, i, arr) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
                   <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.l}</span>
                   <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, fontVariantNumeric: 'tabular-nums' }}>{r.v}</span>
@@ -232,31 +224,30 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
             </div>
             <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
             <div style={{ minWidth: mobile ? 520 : 'auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-              {['Date', 'Type', side === 'buy' ? 'Paid' : 'Burned', 'Received', 'Status'].map((h, i) => (
+            <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.8fr 1.1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+              {['Date', 'Type', 'AHLG', 'Value', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
               ))}
             </div>
-            {recent.map((tx, i, arr) => (
+            {recent.map((tx, i, arr) => {
+              const isBuy = tx.type === 'Mint';
+              return (
               <div key={tx.id}
                 onClick={() => onOpenTx && onOpenTx(tx)}
                 onMouseEnter={onOpenTx ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
                 onMouseLeave={onOpenTx ? (e => e.currentTarget.style.background = 'transparent') : undefined}
-                style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr 1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
+                style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.8fr 1.1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
                 <div>
                   <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
                 </div>
-                <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink }}>{side === 'buy' ? t('Buy') : t('Sell')}</span>
-                {side === 'buy'
-                  ? <WMonoNum size={12}>{tx.paid}</WMonoNum>
-                  : <WMonoNum size={12}>{wfmt(Math.abs(tx.amount), 4)} AHLG</WMonoNum>}
-                {side === 'buy'
-                  ? <WMonoNum size={12} color={WBRAND.positive} weight={500}>+{wfmt(tx.amount, 4)} AHLG</WMonoNum>
-                  : <WMonoNum size={12} color={WBRAND.ink}>{tx.paid}</WMonoNum>}
+                <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: isBuy ? WBRAND.positive : WBRAND.ink }}>{isBuy ? t('Buy') : t('Sell')}</span>
+                <WMonoNum size={12} color={isBuy ? WBRAND.positive : WBRAND.ink} weight={500}>{isBuy ? '+' : '−'}{wfmt(Math.abs(tx.amount), 4)} AHLG</WMonoNum>
+                <WMonoNum size={12} color={WBRAND.muted}>{tx.paid}</WMonoNum>
                 <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
-            ))}
+              );
+            })}
             </div>
             </div>
           </WCard>
@@ -281,16 +272,16 @@ function TradeProgressModal({ side, amt, out, asset, onClose, onTrack }) {
   const mobile = useIsMobile();
   const STEPS = side === 'buy'
     ? [
-        { id: 'submitted', title: t('Mint request received'), sub: t('Order accepted and queued') },
-        { id: 'locked',    title: t('Payment locked'),         sub: () => `${wfmt(amt, wdecimals(asset.symbol))} ${asset.symbol} ${t('reserved from balance')}` },
-        { id: 'minting',   title: t('Minting on-chain'),       sub: t('Issuing tokens against vaulted gold') },
-        { id: 'done',      title: t('AHLG minted'),            sub: () => `${wfmt(out, 4)} AHLG ${t('credited to your wallet')}` },
+        { id: 'submitted',  title: t('Order received'),       sub: t('Order accepted and queued') },
+        { id: 'locked',     title: t('Payment locked'),       sub: () => `${wfmt(amt, wdecimals(asset.symbol))} ${asset.symbol} ${t('reserved from balance')}` },
+        { id: 'processing', title: t('Processing on-chain'),  sub: t('Issuing your gold tokens') },
+        { id: 'done',       title: t('AHLG credited'),        sub: () => `${wfmt(out, 4)} AHLG ${t('credited to your wallet')}` },
       ]
     : [
-        { id: 'submitted', title: t('Redeem request received'), sub: t('Order accepted and queued') },
-        { id: 'settling',  title: t('Settling to balance'),     sub: () => `${t('Converting at')} 1 AHLG = ${wfmt(asset.rate, wdecimals(asset.symbol))} ${asset.symbol}` },
-        { id: 'credited',  title: t('Funds credited'),          sub: () => `${wfmt(out, wdecimals(asset.symbol))} ${asset.symbol} ${t('added to your wallet')}` },
-        { id: 'burning',   title: t('Burning AHLG'),            sub: () => `${wfmt(amt, 4)} ${t('AHLG removed from circulation')}` },
+        { id: 'submitted', title: t('Order received'),     sub: t('Order accepted and queued') },
+        { id: 'settling',  title: t('Settling to balance'), sub: () => `${t('Converting at')} 1 AHLG = ${wfmt(asset.rate, wdecimals(asset.symbol))} ${asset.symbol}` },
+        { id: 'credited',  title: t('Funds credited'),      sub: () => `${wfmt(out, wdecimals(asset.symbol))} ${asset.symbol} ${t('added to your wallet')}` },
+        { id: 'done',      title: t('Finalising sale'),     sub: () => `${wfmt(amt, 4)} ${t('AHLG removed from circulation')}` },
       ];
   const [active, setActive] = useState(0);
   const [stamps, setStamps] = useState({});

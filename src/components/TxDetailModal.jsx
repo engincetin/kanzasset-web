@@ -16,6 +16,7 @@ export function txMeta(tx) {
     Deposit:  { title: 'Deposit',     network: ['AED', 'USD', 'EUR', 'GBP'].includes(tx.asset) ? 'Bank wire · SWIFT' : 'Ethereum · ERC-20', counterLabel: 'Source' },
     Withdraw: { title: 'Withdraw',    network: 'Bank wire · SWIFT', counterLabel: 'Destination' },
     Transfer: { title: 'Transfer',    network: 'Kanzasset internal', counterLabel: 'Counterparty' },
+    Delivery: { title: 'Physical delivery', network: "Brink's secure logistics", counterLabel: 'Destination' },
   }[tx.type] || { title: tx.type, network: '—', counterLabel: 'Detail' };
   return { ...base, pos, date, time };
 }
