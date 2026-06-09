@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt } from '../lib/index.js';
+import { getLang } from '../lib/i18n.js';
 
 // ─── Price chart — responsive + interactive crosshair ─────────
 export function WPriceChart({ data, height = 260, color = WBRAND.red, showGrid = true, showAxis = true, padding = { top: 16, right: 12, bottom: 28, left: 56 } }) {
@@ -166,6 +167,9 @@ export function WSparkline({ data, width = 140, height = 36, color = WBRAND.red 
 }
 
 // ─── Range tabs ───────────────────────────────────────────────
+// Display labels are localised (1D→1G, 1W→1H …) while the underlying
+// value stays the canonical English code.
+const RANGE_TR = { '1D': '1G', '1W': '1H', '1M': '1A', '3M': '3A', '1Y': '1Y', ALL: 'TÜM' };
 export function WRangeTabs({ value, onChange, options = ['1D', '1W', '1M', '3M', '1Y', 'ALL'] }) {
   return (
     <div style={{ display: 'inline-flex', gap: 2, padding: 3, background: WBRAND.surface, borderRadius: 8 }}>
@@ -179,7 +183,7 @@ export function WRangeTabs({ value, onChange, options = ['1D', '1W', '1M', '3M',
             fontFamily: WFONT, fontWeight: 600, fontSize: 11,
             letterSpacing: '0.02em', borderRadius: 6,
             boxShadow: on ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
-          }}>{o}</button>
+          }}>{getLang() === 'tr' ? (RANGE_TR[o] ?? o) : o}</button>
         );
       })}
     </div>

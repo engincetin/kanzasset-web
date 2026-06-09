@@ -1,6 +1,8 @@
 // ─── Brand tokens + theming ───────────────────────────────────
 // Light / dark palettes. WBRAND is a live object; applyTheme() copies the
 // chosen palette into it and notifies subscribers so the whole app re-renders.
+import { getLang } from './i18n.js';
+
 const WLIGHT = {
   red:     '#D4202B',
   redDeep: '#A8161F',
@@ -182,6 +184,11 @@ export const WTXS = [
 ];
 
 // ─── Price chart data ─────────────────────────────────────────
+const WMONTHS_TR = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+const wMonthLabel = (d) => getLang() === 'tr'
+  ? WMONTHS_TR[d.getMonth()]
+  : d.toLocaleString('en-US', { month: 'short' });
+
 export function wMakePriceData(points = 90, base = 148, drift = 0.05, vol = 0.012) {
   const data = [];
   let v = base;
@@ -191,7 +198,7 @@ export function wMakePriceData(points = 90, base = 148, drift = 0.05, vol = 0.01
     const noise = (seed - Math.floor(seed)) - 0.5;
     v = v * (1 + (drift / points) + noise * vol);
     const d = new Date(start.getTime() + i * 86400000);
-    const t = `${d.toLocaleString('en-US', { month: 'short' })} ${d.getDate()}`;
+    const t = `${wMonthLabel(d)} ${d.getDate()}`;
     data.push({ t, v });
   }
   data[data.length - 1].v = 151.56;
