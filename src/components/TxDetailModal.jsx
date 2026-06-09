@@ -1,4 +1,5 @@
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
+import { t } from '../lib/i18n.js';
 import { WIcon } from './icons.jsx';
 import { WCoinDot } from './coinicons.jsx';
 import { WPill, WMonoNum, WPrimary, WSecondary, WCopyButton } from './primitives.jsx';
@@ -49,7 +50,7 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <WCoinDot symbol={tx.asset} size={40}/>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{m.title}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(m.title)}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 3 }}>
                   <span style={{ fontFamily: WFONT, fontSize: 22, fontWeight: 800, color: m.pos ? WBRAND.positive : WBRAND.ink, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>
                     {m.pos ? '+' : ''}{wfmt(tx.amount, wdecimals(tx.asset))}

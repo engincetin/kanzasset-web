@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
+import { t } from '../lib/i18n.js';
 
 export function WSpinner({ size = 14, color }) {
   const arc = color || WBRAND.red;
@@ -141,7 +142,7 @@ export function WTxRow({ tx, last, onOpen }) {
         display: 'grid', placeItems: 'center',
       }}>{typeIcon[tx.type]}</div>
       <div>
-        <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{tx.type}</div>
+        <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t(tx.type)}</div>
         <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.id}</div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
