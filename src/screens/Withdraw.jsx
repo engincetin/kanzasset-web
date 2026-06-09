@@ -36,7 +36,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
       }}>
         {step === 'code' ? (
           <>
-            <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
+            <div style={{ padding: mobile ? '18px 16px 14px' : '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.redSoft, display: 'grid', placeItems: 'center' }}>{WIcon.shield(WBRAND.red)}</div>
                 <button onClick={onClose} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', background: WBRAND.surface, cursor: 'pointer', color: WBRAND.ink, display: 'grid', placeItems: 'center' }}>
@@ -50,7 +50,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
             </div>
 
             {/* Selected channel (fixed from Security settings) */}
-            <div style={{ padding: '16px 24px 0' }}>
+            <div style={{ padding: mobile ? '16px 16px 0' : '16px 24px 0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 8, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, display: 'grid', placeItems: 'center', color: WBRAND.ink, flexShrink: 0 }}>
                   {channel === 'email'
@@ -65,7 +65,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
               </div>
             </div>
 
-            <div style={{ padding: '18px 24px 6px', display: 'flex', gap: 8, justifyContent: 'space-between' }}>
+            <div style={{ padding: mobile ? '18px 16px 6px' : '18px 24px 6px', display: 'flex', gap: mobile ? 7 : 8, justifyContent: 'space-between' }}>
               {code.map((d, i) => (
                 <input
                   key={i}
@@ -76,18 +76,18 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
                   onChange={e => setDigit(i, e.target.value)}
                   onKeyDown={e => onKey(i, e)}
                   autoFocus={i === 0}
-                  style={{ width: 56, height: 60, borderRadius: 10, textAlign: 'center', border: `1.5px solid ${d ? WBRAND.ink : WBRAND.line2}`, background: WBRAND.white, outline: 'none', fontFamily: WMONO, fontSize: 24, fontWeight: 600, color: WBRAND.ink }}
+                  style={{ ...(mobile ? { flex: 1, minWidth: 0, width: 'auto' } : { width: 56 }), height: 60, borderRadius: 10, textAlign: 'center', border: `1.5px solid ${d ? WBRAND.ink : WBRAND.line2}`, background: WBRAND.white, outline: 'none', fontFamily: WMONO, fontSize: mobile ? 20 : 24, fontWeight: 600, color: WBRAND.ink, boxSizing: 'border-box' }}
                 />
               ))}
             </div>
 
-            <div style={{ padding: '6px 24px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ padding: mobile ? '8px 16px 0' : '6px 24px 0', display: 'flex', alignItems: 'center', gap: 6, flexWrap: mobile ? 'wrap' : 'nowrap' }}>
               <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>{t("Didn't get it?")}</span>
               <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>{t('Resend code')}</button>
               <span style={{ marginLeft: 'auto', fontSize: 11, color: WBRAND.muted2 }}><WCountdown seconds={299} prefix={t('expires in ')}/></span>
             </div>
 
-            <div style={{ padding: '18px 24px 22px' }}>
+            <div style={{ padding: mobile ? '16px 16px 18px' : '18px 24px 22px' }}>
               <WPrimary
                 size="lg"
                 onClick={() => codeFull && setStep('submitted')}

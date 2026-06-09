@@ -319,6 +319,7 @@ function ProfKYC() {
 }
 
 function ProfDestinations() {
+  const mobile = useIsMobile();
   const [tab, setTab] = useState('crypto');
   const [addOpen, setAddOpen] = useState(false);
 
@@ -354,11 +355,11 @@ function ProfDestinations() {
       sub={t('Pre-approved crypto addresses, bank accounts and shipping addresses. Withdrawals and physical delivery can only be sent to verified destinations.')}
       footer={<WPrimary onClick={() => setAddOpen(true)}>{WIcon.plus('#fff')} {tab === 'crypto' ? t('Add new address') : tab === 'bank' ? t('Add bank account') : t('Add shipping address')}</WPrimary>}
     >
-      <div style={{ padding: '0 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', gap: 4 }}>
+      <div style={{ padding: '0 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', gap: 4, overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
         {tabs.map(t => {
           const on = t.id === tab;
           return (
-            <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: '12px 14px 14px', border: 'none', background: 'transparent', cursor: 'pointer', position: 'relative', fontFamily: WFONT, fontSize: 13, fontWeight: on ? 700 : 500, color: on ? WBRAND.ink : WBRAND.muted, letterSpacing: '-0.005em', display: 'flex', alignItems: 'center', gap: 8, marginBottom: -1 }}>
+            <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: '12px 14px 14px', border: 'none', background: 'transparent', cursor: 'pointer', position: 'relative', fontFamily: WFONT, fontSize: 13, fontWeight: on ? 700 : 500, color: on ? WBRAND.ink : WBRAND.muted, letterSpacing: '-0.005em', display: 'flex', alignItems: 'center', gap: 8, marginBottom: -1, flexShrink: 0, whiteSpace: 'nowrap' }}>
               <span>{t.label}</span>
               <span style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, background: on ? WBRAND.panel : WBRAND.surface, color: on ? '#fff' : WBRAND.muted, padding: '2px 7px', borderRadius: 10, fontVariantNumeric: 'tabular-nums' }}>{t.count}</span>
               {on && <span style={{ position: 'absolute', left: 0, right: 0, bottom: -1, height: 2, background: WBRAND.red }}/>}
@@ -369,7 +370,7 @@ function ProfDestinations() {
 
       <div style={{ padding: '4px 22px 18px' }}>
         {tab === 'crypto' && cryptoAddrs.map((r, i, arr) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, flexWrap: mobile ? 'wrap' : 'nowrap', rowGap: mobile ? 10 : 0 }}>
             <div style={{ width: 36, height: 36, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>{WIcon.shield(WBRAND.ink)}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -389,7 +390,7 @@ function ProfDestinations() {
         ))}
 
         {tab === 'bank' && banks.map((b, i, arr) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, flexWrap: mobile ? 'wrap' : 'nowrap', rowGap: mobile ? 10 : 0 }}>
             <div style={{ width: 44, height: 44, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 11, color: WBRAND.ink, letterSpacing: '0.02em' }}>{b.ccy}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -406,7 +407,7 @@ function ProfDestinations() {
         ))}
 
         {tab === 'shipping' && shipAddrs.map((a, i, arr) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, flexWrap: mobile ? 'wrap' : 'nowrap', rowGap: mobile ? 10 : 0 }}>
             <div style={{ width: 36, height: 36, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-6-5.5-6-11a6 6 0 1 1 12 0c0 5.5-6 11-6 11z" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/><circle cx="12" cy="10" r="2.2" stroke={WBRAND.ink} strokeWidth="1.7"/></svg>
             </div>
@@ -469,8 +470,8 @@ export function AddDestinationModal({ tab, onClose }) {
   }[tab];
 
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
-      <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
         {submitted ? (
           <>
             <div style={{ padding: '36px 28px 8px', textAlign: 'center' }}>
@@ -666,7 +667,7 @@ export function WebProfile({ navigate, onLogout, initialSection = 'account' }) {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '280px 1fr', gap: mobile ? 16 : 20 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           <WCard padding={20}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
               <div style={{ width: 72, height: 72, borderRadius: 12, background: 'linear-gradient(135deg, #1F1F1F, #4a4a4a)', color: '#fff', display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 26, letterSpacing: '-0.02em' }}>AY</div>
@@ -709,7 +710,7 @@ export function WebProfile({ navigate, onLogout, initialSection = 'account' }) {
           </WCard>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           {section === 'account'      && <ProfAccount navigate={navigate}/>}
           {section === 'security'     && <ProfSecurity/>}
           {section === 'kyc'          && <ProfKYC/>}
@@ -759,8 +760,8 @@ function CloseAccountModal({ onClose, onLogout }) {
   const [text, setText] = useState('');
   const ok = text.trim().toUpperCase() === 'CLOSE';
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'grid', placeItems: 'center', padding: 24 }}>
-      <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
         <div style={{ padding: '28px 28px 0', textAlign: 'center' }}>
           <div style={{ width: 60, height: 60, borderRadius: 30, margin: '0 auto', background: WBRAND.redSoft, display: 'grid', placeItems: 'center' }}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17v.01" stroke={WBRAND.red} strokeWidth="2.2" strokeLinecap="round"/><path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke={WBRAND.red} strokeWidth="1.7" strokeLinejoin="round"/></svg>

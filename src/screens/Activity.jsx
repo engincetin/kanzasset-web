@@ -162,7 +162,7 @@ export function WebActivity({ navigate, onOpenTx }) {
 
         <div style={{ padding: '14px 22px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 12 : 0 }}>
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>{t('Page')} 1 {t('of')} 8 · 120 {t('total')}</span>
-          <div style={{ display: 'flex', gap: 6 }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: mobile ? 'wrap' : 'nowrap', justifyContent: mobile ? 'center' : 'flex-start', width: mobile ? '100%' : 'auto' }}>
             <WSecondary size="sm">← {t('Previous')}</WSecondary>
             {[1, 2, 3, 4].map(p => (
               <button key={p} style={{ width: 32, height: 32, borderRadius: 8, background: p === 1 ? WBRAND.panel : WBRAND.white, color: p === 1 ? '#fff' : WBRAND.ink, border: `1px solid ${p === 1 ? WBRAND.panel : WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>{p}</button>

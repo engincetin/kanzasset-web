@@ -129,7 +129,7 @@ export function WebMint({ navigate, onOpenTx }) {
         {/* Right: chart + recent */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
           <WCard padding={0}>
-            <div style={{ padding: '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
               <div>
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AHLG / {quote}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
