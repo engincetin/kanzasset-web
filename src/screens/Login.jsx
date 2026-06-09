@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { t } from '../lib/i18n.js';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
+import { useIsMobile } from '../lib/useResponsive.js';
 import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
 import { WMark, AHLGMark } from '../components/coinicons.jsx';
@@ -9,6 +10,29 @@ import { WCountdown } from '../components/shared.jsx';
 
 // ─── Shared centered auth shell — brand panel left, form right ──
 function WAuthLayout({ children }) {
+  const mobile = useIsMobile();
+
+  // On mobile: drop the big brand panel, show a compact brand bar above a full-width form.
+  if (mobile) {
+    return (
+      <div style={{
+        width: '100%', height: '100%', display: 'flex', flexDirection: 'column',
+        fontFamily: WFONT, background: WBRAND.surface, overflowY: 'auto',
+      }}>
+        <div style={{
+          flexShrink: 0, background: WBRAND.panel, color: '#fff',
+          padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 10,
+        }}>
+          <WMark size={26}/>
+          <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 19, letterSpacing: '-0.02em' }}>Kanzasset</span>
+        </div>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '28px 18px 40px' }}>
+          <div style={{ width: '100%', maxWidth: 420 }}>{children}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       width: '100%', height: '100%', display: 'flex',
@@ -143,6 +167,7 @@ function WebLogin({ onContinue }) {
 
 // ─── Step 2 — email / SMS verification code ───────────────────
 function WebVerify2FA({ onVerified, onBack }) {
+  const mobile = useIsMobile();
   const channel = getAuthChannel();
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const refs = useRef([]);
@@ -197,9 +222,10 @@ function WebVerify2FA({ onVerified, onBack }) {
             <input key={i} ref={el => refs.current[i] = el} value={d} inputMode="numeric" maxLength={1}
               onChange={e => setDigit(i, e.target.value)} onKeyDown={e => onKey(i, e)} autoFocus={i === 0}
               style={{
-                width: 54, height: 60, borderRadius: 10, textAlign: 'center',
+                ...(mobile ? { flex: 1, minWidth: 0, width: 'auto' } : { width: 54 }),
+                height: 60, borderRadius: 10, textAlign: 'center',
                 border: `1.5px solid ${d ? WBRAND.ink : WBRAND.line2}`, background: WBRAND.white, outline: 'none',
-                fontFamily: WMONO, fontSize: 24, fontWeight: 600, color: WBRAND.ink,
+                fontFamily: WMONO, fontSize: mobile ? 20 : 24, fontWeight: 600, color: WBRAND.ink, boxSizing: 'border-box',
               }}/>
           ))}
         </div>
