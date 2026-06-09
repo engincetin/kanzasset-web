@@ -310,8 +310,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           </div>
 
           <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-          <div style={{ minWidth: mobile ? 640 : 'auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 188px', gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+          <div style={{ minWidth: mobile ? 820 : 'auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 200px', gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
             {['Asset', 'Balance', 'Value', 'Allocation', 'Actions'].map((h, i) => (
               <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i === 0 ? 'left' : 'right' }}>{t(h)}</div>
             ))}
@@ -320,7 +320,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           {assets.map((a, i, arr) => {
             const zero = a.balance === 0;
             return (
-              <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 188px', gap: 20, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+              <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 200px', gap: 20, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: zero ? 0.65 : 1 }}>
                   <WCoinDot symbol={a.symbol} size={32}/>
                   <div>
