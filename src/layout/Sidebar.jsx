@@ -61,16 +61,16 @@ export const NAV_GROUPS = [
   },
   {
     id: 'ahlg',
-    label: 'AHL Gold',
+    label: 'AHL Token',
     items: [
       {
-        id: 'trade', label: 'Buy / Sell', badge: 'NEW',
+        id: 'trade', label: 'Buy / Sell',
         icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path d="M7 4v13m0 0l-3-3m3 3l3-3M17 20V7m0 0l-3 3m3-3l3 3" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>,
       },
       {
-        id: 'physical', label: 'Physical delivery',
+        id: 'physical', label: 'Physical delivery', badge: 'NEW',
         icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path d="M3 7l9-4 9 4v10l-9 4-9-4V7z" stroke={c} strokeWidth="1.7" strokeLinejoin="round"/>
           <path d="M3 7l9 4 9-4M12 11v10" stroke={c} strokeWidth="1.7" strokeLinejoin="round"/>
