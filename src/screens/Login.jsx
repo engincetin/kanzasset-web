@@ -41,7 +41,7 @@ function WAuthLayout({ children }) {
           {[
             { k: t('Reserve ratio'), v: '100%' },
             { k: t('Vaulted gold'), v: '142.7 kg' },
-            { k: t('Audited'), v: 'Monthly' },
+            { k: t('Audited'), v: t('Monthly') },
           ].map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
               {i > 0 && <span style={{ width: 1, height: 28, background: 'rgba(255,255,255,0.14)' }}/>}

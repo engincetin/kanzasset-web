@@ -535,4 +535,5 @@ export const tr = {
   "Pound Sterling": "İngiliz Sterlini",
   "US Dollar": "ABD Doları",
   "UAE Dirham": "BAE Dirhemi",
+  "Monthly": "Aylık",
 };
