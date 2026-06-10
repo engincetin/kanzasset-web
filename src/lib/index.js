@@ -18,7 +18,7 @@ const WLIGHT = {
   white:   '#FFFFFF',   // card background
   positive:'#0F7A47',
   warn:    '#B7791F',
-  panel:   '#0A0A0A',   // dark accent surface (white text on top)
+  panel:   '#26272C',   // dark accent surface (soft charcoal, not pure black)
   heroBg:  '#2C2D33',   // holdings hero (charcoal grey in light)
 };
 
