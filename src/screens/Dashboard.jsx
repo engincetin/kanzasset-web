@@ -205,10 +205,10 @@ export function WebPortfolio({ navigate, onOpenTx }) {
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              <WPrimary size="md" tone="green" onClick={() => navigate('trade', 'buy')} style={{ width: '100%', justifyContent: 'center' }}
+              <WSecondary size="md" onClick={() => navigate('trade', 'buy')} style={{ width: '100%', justifyContent: 'center', height: 44, background: WBRAND.selBg, borderColor: WBRAND.line2 }}
                 icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
                 {t('Buy')}
-              </WPrimary>
+              </WSecondary>
               <WSecondary size="md" onClick={() => navigate('trade', 'sell')} style={{ width: '100%', justifyContent: 'center', height: 44 }}
                 icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14m0 0l-6-6m6 6l6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
                 {t('Sell')}

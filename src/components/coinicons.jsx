@@ -1,4 +1,4 @@
-import { WBRAND, WFONT, isDark } from '../lib/index.js';
+import { WBRAND, WFONT, isDark, getBrand } from '../lib/index.js';
 
 // ─── AHLG token mark — gold circle + white "A" ────────────────
 export function AHLGMark({ size = 32 }) {
@@ -17,8 +17,9 @@ export function AHLGMark({ size = 32 }) {
 export function WMark({ size = 24, color }) {
   const w = Math.round(size * (384 / 304));
   const url = `${import.meta.env.BASE_URL}assets/kanzasset-mark-transparent.png`;
-  // Default: brand colour in light, white in dark (so it stays visible).
-  const fill = color || (isDark() ? '#FFFFFF' : WBRAND.red);
+  // Default: the brand colour. Only the black brand flips to white in
+  // dark mode (where black would be invisible); other colours stay as-is.
+  const fill = color || ((isDark() && getBrand() === 'black') ? '#FFFFFF' : WBRAND.red);
   return (
     <span
       role="img"
