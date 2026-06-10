@@ -11,16 +11,24 @@ export function AHLGMark({ size = 32 }) {
   );
 }
 
-// ─── Kanzasset platform mark (PNG) ────────────────────────────
-export function WMark({ size = 24 }) {
+// ─── Kanzasset platform mark ──────────────────────────────────
+// The PNG is used as a CSS mask so the mark takes the brand colour
+// (or any passed colour) and recolours live when the brand changes.
+export function WMark({ size = 24, color }) {
   const w = Math.round(size * (384 / 304));
+  const url = `${import.meta.env.BASE_URL}assets/kanzasset-mark-transparent.png`;
   return (
-    <img
-      src={`${import.meta.env.BASE_URL}assets/kanzasset-mark-transparent.png`}
-      alt="Kanzasset"
-      width={w}
-      height={size}
-      style={{ display: 'block', objectFit: 'contain' }}
+    <span
+      role="img"
+      aria-label="Kanzasset"
+      style={{
+        display: 'inline-block', width: w, height: size, flexShrink: 0,
+        background: color || WBRAND.red,
+        WebkitMaskImage: `url(${url})`, maskImage: `url(${url})`,
+        WebkitMaskSize: 'contain', maskSize: 'contain',
+        WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',
+        WebkitMaskPosition: 'center', maskPosition: 'center',
+      }}
     />
   );
 }

@@ -56,6 +56,7 @@ export const applyTheme = (t) => {
   if (t !== 'light' && t !== 'dark' && t !== 'system') return;
   _theme = t;
   Object.assign(WBRAND, _resolve(t) === 'dark' ? WDARK : WLIGHT);
+  _applyBrand();   // re-apply the chosen brand colour over the theme palette
   if (typeof document !== 'undefined') {
     document.body.style.background = WBRAND.surface;
     // Briefly let every element transition its colors so the theme
@@ -68,6 +69,41 @@ export const applyTheme = (t) => {
   _themeSubs.forEach(fn => { try { fn(); } catch { /* noop */ } });
 };
 export const subscribeTheme = (fn) => { _themeSubs.add(fn); return () => _themeSubs.delete(fn); };
+
+// ─── Brand colour (board-demo palette) ────────────────────────
+// The whole accent ("red" token family) + logo follow this choice.
+export const BRANDS = [
+  { id: 'black',     name: 'Siyah',    hex: '#000000', deep: '#1A1A1A', soft: 'rgba(0,0,0,0.07)' },
+  { id: 'red',       name: 'Kırmızı',  hex: '#D4202B', deep: '#A8161F', soft: 'rgba(212,32,43,0.08)' },
+  { id: 'orange',    name: 'Turuncu',  hex: '#FF5E25', deep: '#D8430F', soft: 'rgba(255,94,37,0.10)' },
+  { id: 'turquoise', name: 'Turkuaz',  hex: '#00AFCB', deep: '#0089A0', soft: 'rgba(0,175,203,0.12)' },
+  { id: 'purple',    name: 'Mor',      hex: '#5B2EFF', deep: '#4A1FD6', soft: 'rgba(91,46,255,0.10)' },
+  { id: 'blue',      name: 'Mavi',     hex: '#0000D5', deep: '#0000A8', soft: 'rgba(0,0,213,0.10)' },
+];
+
+let _brand = 'red';
+try { const b = localStorage.getItem('kz-brand'); if (b && BRANDS.some(x => x.id === b)) _brand = b; } catch { /* noop */ }
+
+const _applyBrand = () => {
+  const p = BRANDS.find(x => x.id === _brand) || BRANDS[1];
+  WBRAND.red = p.hex;
+  WBRAND.redDeep = p.deep;
+  WBRAND.redSoft = p.soft;
+};
+
+export const getBrand = () => _brand;
+export const setBrand = (id) => {
+  if (!BRANDS.some(x => x.id === id) || id === _brand) return;
+  _brand = id;
+  _applyBrand();
+  try { localStorage.setItem('kz-brand', id); } catch { /* noop */ }
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.add('kz-theme-anim');
+    clearTimeout(_themeAnimTimer);
+    _themeAnimTimer = setTimeout(() => document.documentElement.classList.remove('kz-theme-anim'), 500);
+  }
+  _themeSubs.forEach(fn => { try { fn(); } catch { /* noop */ } });
+};
 
 // Restore saved preference on load
 if (typeof window !== 'undefined') {

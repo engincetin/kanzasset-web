@@ -23,7 +23,7 @@ function WAuthLayout({ children }) {
           flexShrink: 0, background: WBRAND.panel, color: '#fff',
           padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 10,
         }}>
-          <WMark size={26}/>
+          <WMark size={26} color="#fff"/>
           <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 19, letterSpacing: '-0.02em' }}>Kanzasset</span>
         </div>
         <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '28px 18px 40px' }}>
@@ -50,7 +50,7 @@ function WAuthLayout({ children }) {
         <div className="kz-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'linear-gradient(105deg, transparent 42%, rgba(255, 210, 110, 0.10) 50%, transparent 58%)' }}/>
 
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <WMark size={30}/>
+          <WMark size={30} color="#fff"/>
           <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 21, letterSpacing: '-0.02em' }}>Kanzasset</span>
         </div>
 
