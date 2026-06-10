@@ -1,4 +1,4 @@
-import { WBRAND, WFONT, isDark, getBrand } from '../lib/index.js';
+import { WBRAND, WFONT, isDark, getBrand, getLogo } from '../lib/index.js';
 
 // ─── AHLG token mark — gold circle + white "A" ────────────────
 export function AHLGMark({ size = 32 }) {
@@ -14,12 +14,32 @@ export function AHLGMark({ size = 32 }) {
 // ─── Kanzasset platform mark ──────────────────────────────────
 // The PNG is used as a CSS mask so the mark takes the brand colour
 // (or any passed colour) and recolours live when the brand changes.
-export function WMark({ size = 24, color }) {
-  const w = Math.round(size * (384 / 304));
-  const url = `${import.meta.env.BASE_URL}assets/kanzasset-mark-transparent.png`;
+export function WMark({ size = 24, color, variant }) {
+  const v = variant || getLogo();
   // Default: the brand colour. Only the black brand flips to white in
   // dark mode (where black would be invisible); other colours stay as-is.
   const fill = color || ((isDark() && getBrand() === 'black') ? '#FFFFFF' : WBRAND.red);
+
+  if (v === 'monogram') {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} style={{ display: 'block', flexShrink: 0 }} role="img" aria-label="Kanzasset">
+        <rect x="3.4" y="3" width="3.7" height="18" rx="0.6"/>
+        <path d="M7.8 12.2 L16 3 H20.7 L12.4 12.1 L20.7 21 H16 Z"/>
+      </svg>
+    );
+  }
+  if (v === 'diamond') {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} style={{ display: 'block', flexShrink: 0 }} role="img" aria-label="Kanzasset">
+        <path d="M12 2 L22 12 L12 22 L2 12 Z"/>
+        <path d="M12 7.4 L16.6 12 L12 16.6 L7.4 12 Z" fill={WBRAND.white}/>
+      </svg>
+    );
+  }
+
+  // classic — PNG used as a recolourable CSS mask
+  const w = Math.round(size * (384 / 304));
+  const url = `${import.meta.env.BASE_URL}assets/kanzasset-mark-transparent.png`;
   return (
     <span
       role="img"

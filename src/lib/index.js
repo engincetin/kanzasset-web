@@ -107,6 +107,22 @@ export const setBrand = (id) => {
   _themeSubs.forEach(fn => { try { fn(); } catch { /* noop */ } });
 };
 
+// ─── Logo variant (board-demo) ────────────────────────────────
+export const LOGOS = [
+  { id: 'classic',  name: 'Klasik' },
+  { id: 'monogram', name: 'Monogram' },
+  { id: 'diamond',  name: 'Elmas' },
+];
+let _logo = 'classic';
+try { const l = localStorage.getItem('kz-logo'); if (l && LOGOS.some(x => x.id === l)) _logo = l; } catch { /* noop */ }
+export const getLogo = () => _logo;
+export const setLogo = (id) => {
+  if (!LOGOS.some(x => x.id === id) || id === _logo) return;
+  _logo = id;
+  try { localStorage.setItem('kz-logo', id); } catch { /* noop */ }
+  _themeSubs.forEach(fn => { try { fn(); } catch { /* noop */ } });
+};
+
 // Restore saved preference on load
 if (typeof window !== 'undefined') {
   let saved = 'light';
