@@ -6,9 +6,11 @@ import { WIcon } from './icons.jsx';
 // ─── Card ──────────────────────────────────────────────────────
 export function WCard({ children, style = {}, padding = 24, onClick }) {
   return (
-    <div onClick={onClick} style={{
+    <div onClick={onClick} className="kz-card" style={{
       background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
-      borderRadius: 16, padding, ...style,
+      borderRadius: 16, padding,
+      boxShadow: '0 1px 2px rgba(16,17,20,0.04), 0 12px 32px -18px rgba(16,17,20,0.12)',
+      ...style,
     }}>{children}</div>
   );
 }
@@ -18,14 +20,15 @@ export function WPrimary({ children, onClick, style = {}, size = 'md', icon, dis
   const h = size === 'lg' ? 52 : size === 'sm' ? 36 : 44;
   const fs = size === 'lg' ? 15 : size === 'sm' ? 13 : 14;
   return (
-    <button onClick={onClick} disabled={disabled} style={{
+    <button onClick={onClick} disabled={disabled} className="kz-btn-primary" style={{
       height: h, padding: '0 20px', borderRadius: 10,
-      background: WBRAND.red, color: '#fff',
+      background: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})`,
+      color: '#fff',
       border: 'none', cursor: disabled ? 'not-allowed' : 'pointer',
       fontFamily: WFONT, fontWeight: 700, fontSize: fs,
       letterSpacing: '-0.005em',
       display: 'inline-flex', alignItems: 'center', gap: 8,
-      boxShadow: '0 1px 0 rgba(168,22,31,0.6) inset, 0 1px 2px rgba(168,22,31,0.25)',
+      boxShadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(168,22,31,0.45)',
       opacity: disabled ? 0.5 : 1,
       ...style,
     }}>
@@ -39,13 +42,14 @@ export function WSecondary({ children, onClick, style = {}, size = 'md', icon, d
   const h = size === 'lg' ? 52 : size === 'sm' ? 32 : 40;
   const fs = size === 'lg' ? 15 : size === 'sm' ? 12 : 13;
   return (
-    <button onClick={onClick} disabled={disabled} style={{
+    <button onClick={onClick} disabled={disabled} className="kz-btn-secondary" style={{
       height: h, padding: '0 16px', borderRadius: 10,
       background: WBRAND.white, color: WBRAND.ink,
       border: `1px solid ${WBRAND.line2}`, cursor: disabled ? 'not-allowed' : 'pointer',
       fontFamily: WFONT, fontWeight: 600, fontSize: fs,
       letterSpacing: '-0.005em',
       display: 'inline-flex', alignItems: 'center', gap: 8,
+      boxShadow: '0 1px 2px rgba(16,17,20,0.04)',
       opacity: disabled ? 0.5 : 1,
       ...style,
     }}>
@@ -92,7 +96,7 @@ export function WCopyButton({ text, label = 'Copy', copiedLabel = 'Copied', size
 
 export function WGhost({ children, onClick, style = {}, active = false }) {
   return (
-    <button onClick={onClick} style={{
+    <button onClick={onClick} className={active ? undefined : 'kz-ghost'} style={{
       height: 32, padding: '0 12px', borderRadius: 8,
       background: active ? WBRAND.surface : 'transparent',
       color: active ? WBRAND.ink : WBRAND.muted,

@@ -483,7 +483,7 @@ export function AddDestinationModal({ tab, onClose }) {
 
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-      <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+      <div onClick={e => e.stopPropagation()} className="kz-pop" style={{ width: 440, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
         {submitted ? (
           <>
             <div style={{ padding: '36px 28px 8px', textAlign: 'center' }}>
@@ -773,7 +773,7 @@ function CloseAccountModal({ onClose, onLogout }) {
   const ok = text.trim().toUpperCase() === 'CLOSE';
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-      <div onClick={e => e.stopPropagation()} style={{ width: 440, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+      <div onClick={e => e.stopPropagation()} className="kz-pop" style={{ width: 440, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
         <div style={{ padding: '28px 28px 0', textAlign: 'center' }}>
           <div style={{ width: 60, height: 60, borderRadius: 30, margin: '0 auto', background: WBRAND.redSoft, display: 'grid', placeItems: 'center' }}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17v.01" stroke={WBRAND.red} strokeWidth="2.2" strokeLinecap="round"/><path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke={WBRAND.red} strokeWidth="1.7" strokeLinejoin="round"/></svg>

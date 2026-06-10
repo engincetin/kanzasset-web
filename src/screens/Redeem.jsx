@@ -104,7 +104,7 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
       )}
       {infoOpen && (
         <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24 }}>
-          <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+          <div onClick={e => e.stopPropagation()} className="kz-pop" style={{ width: mobile ? '100%' : 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
@@ -170,7 +170,7 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
       position: 'fixed', inset: 0, zIndex: 100,
       background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
     }}>
-      <div onClick={e => e.stopPropagation()} style={{
+      <div onClick={e => e.stopPropagation()} className="kz-pop" style={{
         width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white,
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
       }}>
@@ -317,7 +317,7 @@ function RedeemPhysicalWeb({ navigate }) {
 
       {confirmOpen && (
         <div onClick={() => setConfirmOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24 }}>
-          <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden' }}>
+          <div onClick={e => e.stopPropagation()} className="kz-pop" style={{ width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
@@ -384,7 +384,7 @@ function RedeemPhysicalWeb({ navigate }) {
 
       {infoOpen && (
         <div onClick={() => setInfoOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24 }}>
-          <div onClick={e => e.stopPropagation()} style={{ width: mobile ? '100%' : 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
+          <div onClick={e => e.stopPropagation()} className="kz-pop" style={{ width: mobile ? '100%' : 420, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
@@ -456,7 +456,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
       position: 'fixed', inset: 0, zIndex: 100,
       background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
     }}>
-      <div onClick={e => e.stopPropagation()} style={{
+      <div onClick={e => e.stopPropagation()} className="kz-pop" style={{
         width: mobile ? '100%' : 460, maxWidth: '100%', background: WBRAND.white,
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
         maxHeight: '88vh', display: 'flex', flexDirection: 'column',

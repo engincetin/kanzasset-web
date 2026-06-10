@@ -167,7 +167,7 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
               {g.items.map(it => {
                 const on = it.id === active;
                 return (
-                  <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : go(it.id)}
+                  <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : go(it.id)} className={on ? undefined : 'kz-nav'}
                     title={collapsed ? it.label : undefined}
                     style={{
                       display: 'flex', alignItems: 'center',
@@ -223,7 +223,7 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
                 {g.items.map(it => {
                   const on = it.id === active;
                   return (
-                    <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : go(it.id)}
+                    <button key={it.id} onClick={() => it.external ? window.open(it.external, '_blank', 'noopener') : go(it.id)} className={on ? undefined : 'kz-nav'}
                       title={collapsed ? it.label : undefined}
                       style={{
                         display: 'flex', alignItems: 'center',
