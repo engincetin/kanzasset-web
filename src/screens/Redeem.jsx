@@ -274,12 +274,6 @@ function RedeemPhysicalWeb({ navigate }) {
             <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
             <button onClick={() => setKgPicked(maxKg)} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, flexShrink: 0 }}>{t('MAX')}</button>
           </div>
-
-          {/* Your bars, stacking up as you pick */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 14, flexWrap: 'wrap' }}>
-            {Array.from({ length: Math.min(kgPicked, 6) }, (_, i) => <GoldBar key={`${kgPicked}-${i}`} delay={i * 0.06}/>)}
-            {kgPicked > 6 && <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.muted }}>+{kgPicked - 6} kg</span>}
-          </div>
         </div>
 
         {/* Divider with parcel chevron */}
