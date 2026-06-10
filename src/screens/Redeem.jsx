@@ -276,13 +276,11 @@ function RedeemPhysicalWeb({ navigate }) {
           </div>
         </div>
 
-        {/* Divider with parcel chevron */}
+        {/* Divider with down arrow */}
         <div style={{ borderTop: `1px solid ${WBRAND.line}`, position: 'relative' }}>
           <div style={{ position: 'absolute', top: -16, left: '50%', transform: 'translateX(-50%)', width: 32, height: 32, borderRadius: 16, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, display: 'grid', placeItems: 'center', zIndex: 1, color: WBRAND.ink }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="8" width="18" height="4" rx="1" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/>
-              <path d="M5 12v8a1 1 0 001 1h12a1 1 0 001-1v-8" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/>
-              <path d="M12 8v13" stroke="currentColor" strokeWidth="1.7"/>
+              <path d="M12 5v14m0 0l-5-5m5 5l5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
         </div>

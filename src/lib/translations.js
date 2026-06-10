@@ -201,6 +201,8 @@ export const tr = {
   "Display language": "Görüntüleme dili",
   "Done": "Tamam",
   "Download PDF": "PDF indir",
+  "Download transaction summary": "İşlem özetini indir",
+  "Export your full transaction history (mints, redeems, deposits, withdrawals) for accounting.": "Muhasebe için tüm işlem geçmişinizi (al, sat, para yatırma, para çekme) dışa aktarın.",
   "e.g. Cold wallet · USDT": "örn. Soğuk cüzdan · USDT",
   "e.g. Emirates NBD": "örn. Emirates NBD",
   "e.g. Home, Office": "örn. Ev, Ofis",

@@ -104,6 +104,7 @@ function Toggle({ on }) {
 function ProfAccount({ navigate }) {
   const profMobile = useIsMobile();
   return (
+    <>
     <SectionCard
       title={t('Personal details')}
       sub={t("These details are locked because they're used for identity verification.")}
@@ -150,6 +151,17 @@ function ProfAccount({ navigate }) {
         <TextField value="Türkiye · TR-VKN 9043221854" locked/>
       </FormRow>
     </SectionCard>
+
+    <SectionCard
+      title={t('Download transaction summary')}
+      sub={t('Export your full transaction history (mints, redeems, deposits, withdrawals) for accounting.')}
+    >
+      <div style={{ padding: profMobile ? '16px' : '18px 22px', display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        <WSecondary size="md" icon={WIcon.download(WBRAND.ink)} style={{ flex: profMobile ? '1 1 100%' : '0 1 auto', justifyContent: 'center' }}>{t('Export CSV')}</WSecondary>
+        <WSecondary size="md" icon={WIcon.download(WBRAND.ink)} style={{ flex: profMobile ? '1 1 100%' : '0 1 auto', justifyContent: 'center' }}>{t('Export PDF')}</WSecondary>
+      </div>
+    </SectionCard>
+    </>
   );
 }
 

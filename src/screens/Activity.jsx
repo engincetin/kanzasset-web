@@ -125,15 +125,10 @@ export function WebActivity({ navigate, onOpenTx }) {
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>
             {t('Showing')} <span style={{ color: WBRAND.ink, fontWeight: 700 }}>{filtered.length}</span> {t('of')} {WTXS.length} {t('transactions')}
           </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', gap: 4 }}>
-              <WGhost>{t('Newest')}</WGhost>
-              <WGhost active>{t('Date')} ↓</WGhost>
-              <WGhost>{t('Amount')}</WGhost>
-            </div>
-            <span style={{ width: 1, height: 18, background: WBRAND.line }}/>
-            <WSecondary size="sm" icon={WIcon.download(WBRAND.ink)}>{t('Export CSV')}</WSecondary>
-            <WSecondary size="sm" icon={WIcon.download(WBRAND.ink)}>{t('Export PDF')}</WSecondary>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <WGhost>{t('Newest')}</WGhost>
+            <WGhost active>{t('Date')} ↓</WGhost>
+            <WGhost>{t('Amount')}</WGhost>
           </div>
         </div>
 
