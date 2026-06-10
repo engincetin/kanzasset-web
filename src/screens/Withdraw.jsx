@@ -218,7 +218,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
                 {[25, 50, 75].map(p => (
                   <button key={p} onClick={() => setAmount(wgroup(String(asset.balance * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 7, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
                 ))}
-                <button onClick={() => setAmount(wgroup(String(asset.balance)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 7, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.ink }}>{t('MAX')}</button>
+                <button onClick={() => setAmount(wgroup(String(asset.balance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 7, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
               </div>
             </div>
           </WCard>

@@ -175,14 +175,14 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
                       padding: collapsed ? '10px 0' : '9px 12px',
                       justifyContent: collapsed ? 'center' : 'flex-start',
                       borderRadius: 8,
-                      background: on ? WBRAND.selBg : 'transparent', boxShadow: 'none',
-                      color: WBRAND.ink,
+                      background: on ? WBRAND.panel : 'transparent', boxShadow: on ? '0 6px 16px -8px rgba(0,0,0,0.5)' : 'none',
+                      color: on ? '#fff' : WBRAND.ink,
                       border: 'none', cursor: 'pointer', textAlign: 'left',
                       fontFamily: WFONT, fontWeight: on ? 700 : 500, fontSize: 13,
                       letterSpacing: '-0.005em',
                       position: 'relative',
                     }}>
-                    {it.icon(on ? WBRAND.ink : WBRAND.muted)}
+                    {it.icon(on ? '#fff' : WBRAND.muted)}
                     {!collapsed && <span style={{ flex: 1 }}>{navT(it.label)}</span>}
                     {!collapsed && it.external && !on && (
                       <span style={{ display: 'inline-grid', placeItems: 'center', opacity: 0.7 }}>
@@ -192,14 +192,14 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
                     {!collapsed && it.badge && !on && (
                       <span style={{
                         fontFamily: WFONT, fontSize: 9, fontWeight: 800,
-                        color: '#fff', background: WBRAND.accent,
+                        color: WBRAND.red, background: WBRAND.redSoft,
                         padding: '2px 6px', borderRadius: 4, letterSpacing: '0.04em',
                       }}>{t(it.badge, 'YENİ')}</span>
                     )}
                     {collapsed && it.badge && !on && (
                       <span style={{
                         position: 'absolute', top: 6, right: 6,
-                        width: 6, height: 6, borderRadius: 3, background: WBRAND.accent,
+                        width: 6, height: 6, borderRadius: 3, background: WBRAND.red,
                       }}/>
                     )}
                   </button>
@@ -231,13 +231,13 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
                         padding: collapsed ? '10px 0' : '9px 12px',
                         justifyContent: collapsed ? 'center' : 'flex-start',
                         borderRadius: 8,
-                        background: on ? WBRAND.selBg : 'transparent', boxShadow: 'none',
-                        color: WBRAND.ink,
+                        background: on ? WBRAND.panel : 'transparent', boxShadow: on ? '0 6px 16px -8px rgba(0,0,0,0.5)' : 'none',
+                        color: on ? '#fff' : WBRAND.ink,
                         border: 'none', cursor: 'pointer', textAlign: 'left',
                         fontFamily: WFONT, fontWeight: on ? 700 : 500, fontSize: 13,
                         letterSpacing: '-0.005em', position: 'relative',
                       }}>
-                      {it.icon(on ? WBRAND.ink : WBRAND.muted)}
+                      {it.icon(on ? '#fff' : WBRAND.muted)}
                       {!collapsed && <span style={{ flex: 1 }}>{navT(it.label)}</span>}
                       {!collapsed && it.external && !on && (
                         <span style={{ display: 'inline-grid', placeItems: 'center', opacity: 0.7 }}>

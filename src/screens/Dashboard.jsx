@@ -306,8 +306,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         <WCard padding={0} style={{ minWidth: 0 }}>
           <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <WSectionTitle title={t('Balances')} sub={`${assets.length} ${t('assets · sorted by value')}`} style={{ marginBottom: 0 }}/>
-            <button onClick={() => navigate('wallet')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, display: 'flex', alignItems: 'center', gap: 4 }}>
-              {t('View full wallet')} {WIcon.arrowRight(WBRAND.ink)}
+            <button onClick={() => navigate('wallet')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>
+              {t('View full wallet')} {WIcon.arrowRight(WBRAND.red)}
             </button>
           </div>
 
@@ -419,8 +419,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         <WCard padding={0}>
           <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <WSectionTitle title={t('Recent activity')} sub={t('Last 7 days')} style={{ marginBottom: 0 }}/>
-            <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, display: 'flex', alignItems: 'center', gap: 4 }}>
-              {t('View all activity')} {WIcon.arrowRight(WBRAND.ink)}
+            <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>
+              {t('View all activity')} {WIcon.arrowRight(WBRAND.red)}
             </button>
           </div>
 
