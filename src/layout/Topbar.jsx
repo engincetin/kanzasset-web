@@ -1,8 +1,38 @@
-import { useState } from 'react';
-import { WBRAND, WFONT, WMONO, getTheme, applyTheme } from '../lib/index.js';
+import { useState, useEffect } from 'react';
+import { WBRAND, WFONT, WMONO, wfmt, getTheme, applyTheme } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WPill } from '../components/primitives.jsx';
+import { AHLGMark } from '../components/coinicons.jsx';
+
+// Live AHLG price chip — gently jitters every few seconds to feel alive.
+function LivePriceChip({ onClick }) {
+  const [px, setPx] = useState(151.56);
+  const [delta, setDelta] = useState(0.24);
+  useEffect(() => {
+    const id = setInterval(() => {
+      const d = (Math.random() - 0.47) * 0.16;
+      setPx(p => Math.max(150.9, Math.min(152.3, p + d)));
+      setDelta(prev => Math.max(-0.9, Math.min(0.9, prev + d / 1.5)));
+    }, 4000);
+    return () => clearInterval(id);
+  }, []);
+  const up = delta >= 0;
+  return (
+    <button onClick={onClick} title={t('Buy / Sell')} className="kz-btn-secondary" style={{
+      height: 38, padding: '0 12px 0 6px', borderRadius: 8,
+      background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
+      display: 'inline-flex', alignItems: 'center', gap: 8, cursor: 'pointer',
+    }}>
+      <AHLGMark size={24}/>
+      <span style={{ fontFamily: WMONO, fontSize: 13, fontWeight: 700, color: WBRAND.ink, fontVariantNumeric: 'tabular-nums' }}>${wfmt(px, 2)}</span>
+      <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: up ? WBRAND.positive : WBRAND.red, fontVariantNumeric: 'tabular-nums' }}>
+        {up ? '▲' : '▼'} {wfmt(Math.abs(delta), 2)}%
+      </span>
+      <span className="kz-pulse" style={{ width: 6, height: 6, borderRadius: 3, background: up ? WBRAND.positive : WBRAND.red, flexShrink: 0 }}/>
+    </button>
+  );
+}
 
 export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = false, onMenu }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,6 +69,8 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
           }}>{sub}</span>}
         </div>
       </div>
+
+      {!mobile && <LivePriceChip onClick={() => onNavigate && onNavigate('trade')}/>}
 
       <button onClick={onNotifs} className="kz-btn-secondary" style={{
         width: 38, height: 38, borderRadius: 8,

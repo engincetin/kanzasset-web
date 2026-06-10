@@ -47,6 +47,7 @@ function WAuthLayout({ children }) {
       }}>
         <div style={{ position: 'absolute', top: -120, right: -120, width: 380, height: 380, borderRadius: 190, background: WBRAND.red, opacity: 0.20, filter: 'blur(70px)' }}/>
         <div style={{ position: 'absolute', bottom: -140, left: -80, width: 320, height: 320, borderRadius: 160, background: '#FAC043', opacity: 0.12, filter: 'blur(80px)' }}/>
+        <div className="kz-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'linear-gradient(105deg, transparent 42%, rgba(255, 210, 110, 0.10) 50%, transparent 58%)' }}/>
 
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
           <WMark size={30}/>
@@ -55,7 +56,7 @@ function WAuthLayout({ children }) {
 
         <div style={{ position: 'relative' }}>
           <AHLGMark size={52}/>
-          <h2 style={{ margin: '24px 0 0', fontFamily: WFONT, fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}>{t('Gold you can hold,')}<br/>{t('tokenised.')}</h2>
+          <h2 style={{ margin: '24px 0 0', fontFamily: WFONT, fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}>{t('Gold you can hold,')}<br/><span className="kz-gold-text">{t('tokenised.')}</span></h2>
           <p style={{ margin: '16px 0 0', fontFamily: WFONT, fontSize: 14, lineHeight: 1.6, color: 'rgba(255,255,255,0.6)', maxWidth: 360 }}>
             {t('Mint, redeem and take delivery of investment-grade gold — backed 1:1 by bullion in the Ahlatcı Metal Refinery vault.')}
           </p>
