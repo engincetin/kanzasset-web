@@ -1,4 +1,4 @@
-import { WBRAND, WFONT } from '../lib/index.js';
+import { WBRAND, WFONT, isDark } from '../lib/index.js';
 
 // ─── AHLG token mark — gold circle + white "A" ────────────────
 export function AHLGMark({ size = 32 }) {
@@ -17,13 +17,15 @@ export function AHLGMark({ size = 32 }) {
 export function WMark({ size = 24, color }) {
   const w = Math.round(size * (384 / 304));
   const url = `${import.meta.env.BASE_URL}assets/kanzasset-mark-transparent.png`;
+  // Default: brand colour in light, white in dark (so it stays visible).
+  const fill = color || (isDark() ? '#FFFFFF' : WBRAND.red);
   return (
     <span
       role="img"
       aria-label="Kanzasset"
       style={{
         display: 'inline-block', width: w, height: size, flexShrink: 0,
-        background: color || WBRAND.red,
+        background: fill,
         WebkitMaskImage: `url(${url})`, maskImage: `url(${url})`,
         WebkitMaskSize: 'contain', maskSize: 'contain',
         WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat',

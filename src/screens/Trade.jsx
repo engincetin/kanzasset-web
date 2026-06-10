@@ -76,8 +76,8 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
           {/* Buy / Sell toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
-              { id: 'buy',  label: t('Buy'),  bg: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})` },
-              { id: 'sell', label: t('Sell'), bg: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})` },
+              { id: 'buy',  label: t('Buy'),  bg: 'linear-gradient(180deg, #18A765, #0F7A47)' },
+              { id: 'sell', label: t('Sell'), bg: 'linear-gradient(180deg, #D4202B, #A8161F)' },
             ].map(opt => {
               const on = side === opt.id;
               return (
@@ -161,7 +161,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
             </div>
           </WCard>
 
-          <WPrimary size="lg" onClick={() => canSubmit && setConfirming(true)} disabled={!canSubmit} style={{ width: '100%', justifyContent: 'center' }}>
+          <WPrimary size="lg" tone={side === 'buy' ? 'green' : 'red'} onClick={() => canSubmit && setConfirming(true)} disabled={!canSubmit} style={{ width: '100%', justifyContent: 'center' }}>
             {side === 'buy'
               ? `${t('Buy')} ${wfmt(out, 4)} AHLG`
               : `${t('Sell')} ${wfmt(amt, 4)} AHLG`}

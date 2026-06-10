@@ -49,9 +49,12 @@ main > * > *:nth-child(n+5) { animation-delay: .24s; }
 /* Cards: soft layered depth, gentle lift for clickable ones */
 .kz-card { transition: box-shadow .22s ease, transform .22s ease, border-color .22s ease; }
 
-/* Primary button: glow on hover */
+/* Primary button: neutral lift on hover (brand keeps its own colour) */
 .kz-btn-primary:not(:disabled):hover {
-  filter: brightness(1.07);
+  filter: brightness(1.08);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset, 0 8px 22px -10px rgba(16, 17, 20, 0.5);
+}
+.kz-btn-red:not(:disabled):hover {
   box-shadow: 0 1px 0 rgba(255,255,255,0.14) inset, 0 8px 22px -8px rgba(212, 32, 43, 0.55);
 }
 
