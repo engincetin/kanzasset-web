@@ -53,7 +53,7 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
           </div>
         </div>
 
-        <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2 }}>
+        <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
           <WEyebrow>{t('You receive')}</WEyebrow>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
             <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums' }}>{wfmt(out, wdecimals(to.symbol))}</div>
@@ -294,7 +294,7 @@ function RedeemPhysicalWeb({ navigate }) {
         </div>
 
         {/* Ship to */}
-        <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2 }}>
+        <div style={{ padding: '22px 24px 22px', background: WBRAND.surface2, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
           <WEyebrow>{t('Ship to')}</WEyebrow>
           <div style={{ marginTop: 10 }}>
             <SelectField

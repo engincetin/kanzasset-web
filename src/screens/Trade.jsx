@@ -126,7 +126,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
               </button>
             </div>
 
-            <div style={{ padding: mobile ? '24px 16px 18px' : '28px 24px 22px', background: WBRAND.surface2 }}>
+            <div style={{ padding: mobile ? '24px 16px 18px' : '28px 24px 22px', background: WBRAND.surface2, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
               <WEyebrow>{t('You receive')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums', minWidth: 0, overflow: 'hidden' }}>{wfmt(out, outDecimals)}</div>

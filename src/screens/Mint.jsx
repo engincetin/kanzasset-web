@@ -74,7 +74,7 @@ export function WebMint({ navigate, onOpenTx }) {
               </div>
             </div>
 
-            <div style={{ padding: mobile ? '18px 16px 18px' : '22px 24px 22px', background: WBRAND.surface2 }}>
+            <div style={{ padding: mobile ? '18px 16px 18px' : '22px 24px 22px', background: WBRAND.surface2, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}>
               <WEyebrow>{t('You receive')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums' }}>{wfmt(out, 4)}</div>
