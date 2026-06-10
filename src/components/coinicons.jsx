@@ -20,22 +20,10 @@ export function WMark({ size = 24, color, variant }) {
   // dark mode (where black would be invisible); other colours stay as-is.
   const fill = color || ((isDark() && getBrand() === 'black') ? '#FFFFFF' : WBRAND.red);
 
-  if (v === 'sharp') {
-    // Bold angular "K◆" — vector recreation, sized like the classic mark
-    const w = Math.round(size * (120 / 100));
-    return (
-      <svg width={w} height={size} viewBox="0 0 120 100" fill={fill} style={{ display: 'block', flexShrink: 0 }} role="img" aria-label="Kanzasset">
-        <rect x="8" y="8" width="20" height="84" rx="1.5"/>
-        <path d="M30 50 L70 8 H92 L52 50 Z"/>
-        <path d="M30 50 L70 92 H92 L52 50 Z"/>
-        <path d="M101 18 L113 30 L101 42 L89 30 Z"/>
-      </svg>
-    );
-  }
-
-  // classic — PNG used as a recolourable CSS mask
+  // Both variants are recolourable PNG masks (same 384×304 footprint)
   const w = Math.round(size * (384 / 304));
-  const url = `${import.meta.env.BASE_URL}assets/kanzasset-mark-transparent.png`;
+  const file = v === 'sharp' ? 'kanzasset-mark-transparent-2.png' : 'kanzasset-mark-transparent.png';
+  const url = `${import.meta.env.BASE_URL}assets/${file}`;
   return (
     <span
       role="img"
