@@ -19,6 +19,8 @@ export const tr = {
   "AGOLD Token": "AGOLD Token",
   "Switch direction": "Yönü değiştir",
   "Your recent trades": "Son işlemleriniz",
+  "Your recent physical deliveries": "Son fiziksel teslimat işlemleriniz",
+  "Sold": "Satılan",
   "AGOLD is backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.": "AGOLD, Ahlatcı Metal Refinery FZCO kasasında saklanan ve Bureau Veritas tarafından aylık denetlenen fiziki altınla 1:1 teminatlandırılmıştır.",
   "Claim physical gold bars": "Fiziksel altın külçesi talep et",
   "Burn AGOLD and have investment-grade gold bars delivered to your address.": "AGOLD yakıp yatırım kalitesinde altın külçelerini adresinize teslim ettirin.",

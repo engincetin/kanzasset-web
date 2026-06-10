@@ -308,7 +308,7 @@ function RedeemPhysicalWeb({ navigate }) {
         <div style={{ padding: '4px 22px 8px' }}>
           {[
             { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 ${t('fine')} · Ahlatci Gold Refinery` },
-            { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AGOLD · ≈ $${wfmt(kgPicked * 1000 * WRATES.AGOLD, 0)}` },
+            { l: 'Amount',            v: `${wfmt(kgPicked * 1000, 0)} AGOLD · ≈ $${wfmt(kgPicked * 1000 * WRATES.AGOLD, 0)}` },
             { l: 'Shipping',          v: `Brinks · AED 120 · ${t('fully insured')}` },
             { l: 'Estimated arrival', v: t('3–5 business days') },
           ].map((r, i, arr) => (
@@ -356,7 +356,7 @@ function RedeemPhysicalWeb({ navigate }) {
             <div style={{ padding: '6px 24px 4px' }}>
               {[
                 { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 ${t('fine')} · Ahlatci Gold Refinery` },
-                { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AGOLD · ≈ $${wfmt(kgPicked * 1000 * WRATES.AGOLD, 0)}` },
+                { l: 'Amount',            v: `${wfmt(kgPicked * 1000, 0)} AGOLD · ≈ $${wfmt(kgPicked * 1000 * WRATES.AGOLD, 0)}` },
                 { l: 'Ship to',           v: addr ? `${addr.label} · ${addr.city} — ${addr.line}, ${addr.country}` : '—' },
                 { l: 'Shipping',          v: `Brinks · AED 120 · ${t('fully insured')}` },
                 { l: 'Estimated arrival', v: t('3–5 business days') },
@@ -717,31 +717,31 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
           <WCard padding={0}>
             <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent redeems')}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent physical deliveries')}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
               </div>
               <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
             </div>
             <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 520 : 'auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-              {['Date', 'Burned', 'Received', 'Rate', 'Status'].map((h, i) => (
+            <div style={{ minWidth: mobile ? 560 : 'auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.1fr 0.7fr 1.2fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+              {['Date', 'Sold', 'Delivery', 'Shipping', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
               ))}
             </div>
-            {WTXS.filter(tx => tx.type === 'Redeem').slice(0, 4).map((tx, i, arr) => (
+            {WTXS.filter(tx => tx.type === 'Delivery').slice(0, 4).map((tx, i, arr) => (
               <div key={tx.id}
                 onClick={() => onOpenTx && onOpenTx(tx)}
                 onMouseEnter={onOpenTx ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
                 onMouseLeave={onOpenTx ? (e => e.currentTarget.style.background = 'transparent') : undefined}
-                style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
+                style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.1fr 0.7fr 1.2fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
                 <div>
                   <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
                 </div>
-                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 4)} AGOLD</WMonoNum>
-                <WMonoNum size={12} color={WBRAND.ink}>{tx.paid}</WMonoNum>
-                <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AGOLD)} USDT</WMonoNum>
+                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 0)} AGOLD</WMonoNum>
+                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount) / 1000, 0)} kg</WMonoNum>
+                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{tx.paid}</span>
                 <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
