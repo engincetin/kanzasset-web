@@ -67,13 +67,6 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
-      <div style={{ marginBottom: 20 }}>
-        <WEyebrow>{t('Buy / Sell')}</WEyebrow>
-        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Buy or sell vaulted gold')}</h1>
-        <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-          {t('Instantly swap between cash and gold at the live rate.')}
-        </div>
-      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '480px 1fr', gap: mobile ? 16 : 20, alignItems: 'start' }}>
 

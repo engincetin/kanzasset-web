@@ -80,20 +80,6 @@ export function WebActivity({ navigate, onOpenTx }) {
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
-      <div style={{ marginBottom: 20, display: 'flex', flexDirection: mobile ? 'column' : 'row', alignItems: mobile ? 'stretch' : 'center', justifyContent: 'space-between', gap: mobile ? 14 : 24 }}>
-        <div style={{ flex: 1 }}>
-          <WEyebrow>{t('Activity')}</WEyebrow>
-          <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('All transactions')}</h1>
-          <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-            {t('Full record of mints, redeems, deposits, withdrawals and transfers. Export to CSV or PDF for accounting.')}
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <WSecondary size="md" icon={WIcon.download(WBRAND.ink)}>{t('Export CSV')}</WSecondary>
-          <WSecondary size="md" icon={WIcon.download(WBRAND.ink)}>{t('Export PDF')}</WSecondary>
-        </div>
-      </div>
-
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 16, marginBottom: 20 }}>
         {[
           { l: 'Total minted',   v: `${wfmt(totalMints, 4)} AHLG`,   sub: `≈ $${wfmt(totalMints * WRATES.AHLG)}` },
@@ -139,10 +125,15 @@ export function WebActivity({ navigate, onOpenTx }) {
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>
             {t('Showing')} <span style={{ color: WBRAND.ink, fontWeight: 700 }}>{filtered.length}</span> {t('of')} {WTXS.length} {t('transactions')}
           </span>
-          <div style={{ display: 'flex', gap: 4 }}>
-            <WGhost>{t('Newest')}</WGhost>
-            <WGhost active>{t('Date')} ↓</WGhost>
-            <WGhost>{t('Amount')}</WGhost>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 4 }}>
+              <WGhost>{t('Newest')}</WGhost>
+              <WGhost active>{t('Date')} ↓</WGhost>
+              <WGhost>{t('Amount')}</WGhost>
+            </div>
+            <span style={{ width: 1, height: 18, background: WBRAND.line }}/>
+            <WSecondary size="sm" icon={WIcon.download(WBRAND.ink)}>{t('Export CSV')}</WSecondary>
+            <WSecondary size="sm" icon={WIcon.download(WBRAND.ink)}>{t('Export PDF')}</WSecondary>
           </div>
         </div>
 

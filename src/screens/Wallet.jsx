@@ -41,14 +41,6 @@ export function WebWallet({ navigate }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
-      <div style={{ marginBottom: 20 }}>
-        <WEyebrow>{t('Wallet')}</WEyebrow>
-        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Balances & holdings')}</h1>
-        <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-          {t('All assets across crypto and fiat. Deposit, withdraw, or move between currencies directly from each row.')}
-        </div>
-      </div>
-
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '2fr 1fr 1fr', gap: mobile ? 12 : 16, marginBottom: 20 }}>
         <WCard padding={22} style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: mobile ? 'stretch' : 'flex-start', gap: mobile ? 16 : 0 }}>

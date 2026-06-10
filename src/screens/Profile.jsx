@@ -670,13 +670,6 @@ export function WebProfile({ navigate, onLogout, initialSection = 'account' }) {
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
-      <div style={{ marginBottom: 20 }}>
-        <WEyebrow>{t('Profile')}</WEyebrow>
-        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Account settings')}</h1>
-        <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-          {t('Manage your personal details, security, verification status, and payment methods.')}
-        </div>
-      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '280px 1fr', gap: mobile ? 16 : 20 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>

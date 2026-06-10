@@ -28,13 +28,6 @@ export function WebDeposit({ navigate, initialAsset }) {
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
-      <div style={{ marginBottom: 20 }}>
-        <WEyebrow>{t('Deposit')}</WEyebrow>
-        <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Add funds to your wallet')}</h1>
-        <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-          {t('Deposit crypto by sending to your unique address, or wire fiat from your registered bank account.')}
-        </div>
-      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '560px 1fr', gap: mobile ? 14 : 20 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

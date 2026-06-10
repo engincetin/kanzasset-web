@@ -66,15 +66,8 @@ export function WebSupport({ navigate, prefillTx }) {
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
-      {/* Header */}
-      <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24, flexWrap: mobile ? 'wrap' : 'nowrap' }}>
-        <div style={{ flex: 1 }}>
-          <WEyebrow>{t('Support')}</WEyebrow>
-          <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Support center')}</h1>
-          <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-            {t('Open a ticket about a transaction or account issue. Our desk replies within 2 hours, 24/7.')}
-          </div>
-        </div>
+      {/* New-ticket action (page title lives in the topbar) */}
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
         <WPrimary size="md" onClick={() => { setActivePrefill(null); setComposing(true); setOpenId(null); }} icon={WIcon.plus('#fff')}>{t('New ticket')}</WPrimary>
       </div>
 
