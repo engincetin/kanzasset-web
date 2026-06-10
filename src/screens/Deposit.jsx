@@ -39,9 +39,9 @@ export function WebDeposit({ navigate, initialAsset }) {
             ].map(tab => {
               const on = kind === tab.id;
               return (
-                <button key={tab.id} onClick={() => setKind(tab.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.panel : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
+                <button key={tab.id} onClick={() => setKind(tab.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.selBg : 'transparent', color: WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
                   <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{tab.label}</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{tab.sub}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{tab.sub}</div>
                 </button>
               );
             })}

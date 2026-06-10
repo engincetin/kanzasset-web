@@ -601,9 +601,9 @@ export function WebRedeem({ navigate, onOpenTx }) {
             ].map(opt => {
               const on = mode === opt.id;
               return (
-                <button key={opt.id} onClick={() => setMode(opt.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.panel : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
+                <button key={opt.id} onClick={() => setMode(opt.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.selBg : 'transparent', color: WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
                   <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{opt.label}</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{opt.sub}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{opt.sub}</div>
                 </button>
               );
             })}

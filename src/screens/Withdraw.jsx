@@ -186,9 +186,9 @@ export function WebWithdraw({ navigate, initialAsset }) {
             ].map(tk => {
               const on = kind === tk.id;
               return (
-                <button key={tk.id} onClick={() => setKind(tk.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.panel : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
+                <button key={tk.id} onClick={() => setKind(tk.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.selBg : 'transparent', color: WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
                   <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{t(tk.label)}</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{t(tk.sub)}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{t(tk.sub)}</div>
                 </button>
               );
             })}

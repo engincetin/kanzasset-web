@@ -19,6 +19,7 @@ const WLIGHT = {
   positive:'#0F7A47',
   warn:    '#B7791F',
   panel:   '#26272C',   // dark accent surface (soft charcoal, not pure black)
+  selBg:   '#ECECEA',   // selected / active state (light grey)
   heroBg:  '#2C2D33',   // holdings hero (charcoal grey in light)
 };
 
@@ -38,6 +39,7 @@ const WDARK = {
   positive:'#3DD68C',
   warn:    '#E0A042',
   panel:   '#24252C',
+  selBg:   '#2A2B31',
   heroBg:  '#121317',   // holdings hero (deep, distinct from page in dark)
 };
 
@@ -89,7 +91,6 @@ const _applyBrand = () => {
   WBRAND.red = p.hex;
   WBRAND.redDeep = p.deep;
   WBRAND.redSoft = p.soft;
-  WBRAND.panel = p.hex;   // active nav / toggles / brand panel all take the brand colour
 };
 
 export const getBrand = () => _brand;
