@@ -114,7 +114,7 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
         <div style={{ padding: mobile ? '14px 16px 16px' : '16px 24px 20px', borderTop: `1px solid ${WBRAND.line}`, flexShrink: 0, display: 'flex', gap: 8 }}>
           <WSecondary size="lg" onClick={onClose} style={{ flex: 1, justifyContent: 'center', height: 50 }}>{t('Close')}</WSecondary>
           <WPrimary size="lg" onClick={() => onSupport(tx)} style={{ flex: 1, justifyContent: 'center' }}
-            icon={<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round"/></svg>}>
+            icon={<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke={WBRAND.onBrand} strokeWidth="1.7" strokeLinejoin="round"/></svg>}>
             {t('Get help')}
           </WPrimary>
         </div>

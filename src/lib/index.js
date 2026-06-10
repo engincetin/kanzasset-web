@@ -20,6 +20,7 @@ const WLIGHT = {
   warn:    '#B7791F',
   panel:   '#26272C',   // dark accent surface (soft charcoal, not pure black)
   selBg:   '#ECECEA',   // selected / active state (light grey)
+  onBrand: '#FFFFFF',   // text/icon colour on top of the brand colour
   heroBg:  '#2C2D33',   // holdings hero (charcoal grey in light)
 };
 
@@ -40,6 +41,7 @@ const WDARK = {
   warn:    '#E0A042',
   panel:   '#24252C',
   selBg:   '#2A2B31',
+  onBrand: '#FFFFFF',
   heroBg:  '#121317',   // holdings hero (deep, distinct from page in dark)
 };
 
@@ -86,6 +88,12 @@ export const BRANDS = [
 let _brand = 'red';
 try { const b = localStorage.getItem('kz-brand'); if (b && BRANDS.some(x => x.id === b)) _brand = b; } catch { /* noop */ }
 
+const _isLightHex = (hex) => {
+  if (typeof hex !== 'string' || hex[0] !== '#' || hex.length < 7) return false;
+  const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 175;
+};
+
 const _applyBrand = () => {
   const p = BRANDS.find(x => x.id === _brand) || BRANDS[1];
   // The black brand is invisible on dark surfaces — flip the accent to
@@ -99,6 +107,8 @@ const _applyBrand = () => {
     WBRAND.redDeep = p.deep;
     WBRAND.redSoft = p.soft;
   }
+  // Text/icon colour that sits on top of the brand colour.
+  WBRAND.onBrand = _isLightHex(WBRAND.red) ? '#0A0A0A' : '#FFFFFF';
 };
 
 export const getBrand = () => _brand;

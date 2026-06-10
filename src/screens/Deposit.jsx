@@ -61,7 +61,7 @@ export function WebDeposit({ navigate, initialAsset }) {
                       <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{a.symbol} · {t('balance')} <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WBALANCES[a.symbol] ?? 0, wdecimals(a.symbol))}</WMonoNum></div>
                     </div>
                     <div style={{ width: 18, height: 18, borderRadius: 9, border: `1.5px solid ${on ? WBRAND.red : WBRAND.line2}`, background: on ? WBRAND.red : 'transparent', display: 'grid', placeItems: 'center' }}>
-                      {on && <div style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}/>}
+                      {on && <div style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.onBrand }}/>}
                     </div>
                   </button>
                 );
@@ -95,7 +95,7 @@ export function WebDeposit({ navigate, initialAsset }) {
                       </div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.redSoft, borderRadius: 10, marginTop: 16 }}>
-                      <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', fontFamily: WFONT, fontSize: 11, fontWeight: 800, flexShrink: 0 }}>!</div>
+                      <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: WBRAND.onBrand, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontSize: 11, fontWeight: 800, flexShrink: 0 }}>!</div>
                       <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
                         {t('Send only')} <strong>{cryptoAsset.symbol}</strong> {t('on the')} <strong>{t('Ethereum (ERC-20)')}</strong> {t('network. Other tokens or networks will result in permanent loss of funds.')}
                       </div>
@@ -150,7 +150,7 @@ export function WebDeposit({ navigate, initialAsset }) {
               </WCard>
 
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 16px', background: WBRAND.redSoft, borderRadius: 10 }}>
-                <div style={{ width: 20, height: 20, borderRadius: 10, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 12, fontWeight: 800 }}>!</div>
+                <div style={{ width: 20, height: 20, borderRadius: 10, background: WBRAND.red, color: WBRAND.onBrand, display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 12, fontWeight: 800 }}>!</div>
                 <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.ink, lineHeight: 1.5 }}>
                   {t('You must include the reference code')} <strong>{bank.ref}</strong> {t('exactly in your bank transfer, and send only from an account registered under your verified legal name. Funds typically arrive in')} <strong>{t('1–2 business days')}</strong>.
                 </div>

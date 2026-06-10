@@ -238,7 +238,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
                 return (
                   <button key={it.id} onClick={() => setDestId(it.id)} style={{ width: '100%', background: 'transparent', border: 'none', padding: '12px 22px', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12, borderTop: i === 0 ? 'none' : `1px solid ${WBRAND.line}` }}>
                     <div style={{ width: 18, height: 18, borderRadius: 9, border: `1.5px solid ${on ? WBRAND.red : WBRAND.line2}`, background: on ? WBRAND.red : 'transparent', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-                      {on && <div style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}/>}
+                      {on && <div style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.onBrand }}/>}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -278,12 +278,12 @@ export function WebWithdraw({ navigate, initialAsset }) {
             </div>
           </WCard>
 
-          <WPrimary size="lg" onClick={() => amt > 0 && setVerifying(true)} disabled={amt <= 0} style={{ width: '100%', justifyContent: 'center' }} icon={WIcon.shield('#fff')}>
+          <WPrimary size="lg" onClick={() => amt > 0 && setVerifying(true)} disabled={amt <= 0} style={{ width: '100%', justifyContent: 'center' }} icon={WIcon.shield(WBRAND.onBrand)}>
             {t('Confirm withdrawal')}
           </WPrimary>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px', background: WBRAND.redSoft, borderRadius: 10 }}>
-            <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
+            <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: WBRAND.onBrand, display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
               {t("You'll be asked to approve this withdrawal with your hardware key.")} {kind === 'crypto' ? t('Crypto withdrawals are irreversible — double-check the destination address.') : t("Bank transfers can take 1–2 business days to settle and are subject to your bank's cut-off times.")}
             </div>

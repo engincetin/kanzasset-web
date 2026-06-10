@@ -168,7 +168,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
           </WPrimary>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.redSoft, borderRadius: 10 }}>
-            <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
+            <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: WBRAND.onBrand, display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
               {t('AGOLD is backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.')} <span style={{ color: WBRAND.red, fontWeight: 700, cursor: 'pointer' }}>{t('Read full terms')}</span>
             </div>

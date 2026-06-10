@@ -68,7 +68,7 @@ export function WebSupport({ navigate, prefillTx }) {
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
       {/* New-ticket action (page title lives in the topbar) */}
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'flex-end' }}>
-        <WPrimary size="md" onClick={() => { setActivePrefill(null); setComposing(true); setOpenId(null); }} icon={WIcon.plus('#fff')}>{t('New ticket')}</WPrimary>
+        <WPrimary size="md" onClick={() => { setActivePrefill(null); setComposing(true); setOpenId(null); }} icon={WIcon.plus(WBRAND.onBrand)}>{t('New ticket')}</WPrimary>
       </div>
 
       {/* KPI row */}

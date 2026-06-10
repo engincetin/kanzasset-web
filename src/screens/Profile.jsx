@@ -117,7 +117,7 @@ function ProfAccount({ navigate }) {
             </span>
           </div>
           <WPrimary onClick={() => navigate && navigate('support')}
-            icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round"/></svg>}>
+            icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8A8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" stroke={WBRAND.onBrand} strokeWidth="1.7" strokeLinejoin="round"/></svg>}>
             {t('Contact support')}
           </WPrimary>
         </div>
@@ -191,7 +191,7 @@ function ProfSecurity() {
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ width: 36, height: 36, borderRadius: 9, background: on ? WBRAND.redSoft : WBRAND.surface, color: on ? WBRAND.red : WBRAND.muted, display: 'grid', placeItems: 'center' }}>{m.icon}</div>
-                    <div style={{ width: 18, height: 18, borderRadius: 9, border: `1.5px solid ${on ? WBRAND.red : WBRAND.line2}`, background: on ? WBRAND.red : 'transparent', display: 'grid', placeItems: 'center' }}>{on && <div style={{ width: 6, height: 6, borderRadius: 3, background: '#fff' }}/>}</div>
+                    <div style={{ width: 18, height: 18, borderRadius: 9, border: `1.5px solid ${on ? WBRAND.red : WBRAND.line2}`, background: on ? WBRAND.red : 'transparent', display: 'grid', placeItems: 'center' }}>{on && <div style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.onBrand }}/>}</div>
                   </div>
                   <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, marginTop: 12, letterSpacing: '-0.01em' }}>{m.label}</div>
                   <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{m.dest}</div>
@@ -365,7 +365,7 @@ function ProfDestinations() {
     <SectionCard
       title={t('Whitelisted destinations')}
       sub={t('Pre-approved crypto addresses, bank accounts and shipping addresses. Withdrawals and physical delivery can only be sent to verified destinations.')}
-      footer={<WPrimary onClick={() => setAddOpen(true)}>{WIcon.plus('#fff')} {tab === 'crypto' ? t('Add new address') : tab === 'bank' ? t('Add bank account') : t('Add shipping address')}</WPrimary>}
+      footer={<WPrimary onClick={() => setAddOpen(true)}>{WIcon.plus(WBRAND.onBrand)} {tab === 'crypto' ? t('Add new address') : tab === 'bank' ? t('Add bank account') : t('Add shipping address')}</WPrimary>}
     >
       <div style={{ padding: '0 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', gap: 4, overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
         {tabs.map(t => {
@@ -798,7 +798,7 @@ function CloseAccountModal({ onClose, onLogout }) {
         </div>
         <div style={{ padding: '20px 28px 24px', display: 'flex', gap: 8 }}>
           <WSecondary size="lg" onClick={onClose} style={{ flex: 1, justifyContent: 'center', height: 52 }}>{t('Cancel')}</WSecondary>
-          <button onClick={() => ok && onLogout && onLogout()} style={{ flex: 1, height: 52, borderRadius: 10, border: 'none', cursor: ok ? 'pointer' : 'not-allowed', opacity: ok ? 1 : 0.45, background: WBRAND.red, color: '#fff', fontFamily: WFONT, fontWeight: 700, fontSize: 15, letterSpacing: '-0.005em' }}>{t('Close account')}</button>
+          <button onClick={() => ok && onLogout && onLogout()} style={{ flex: 1, height: 52, borderRadius: 10, border: 'none', cursor: ok ? 'pointer' : 'not-allowed', opacity: ok ? 1 : 0.45, background: WBRAND.red, color: WBRAND.onBrand, fontFamily: WFONT, fontWeight: 700, fontSize: 15, letterSpacing: '-0.005em' }}>{t('Close account')}</button>
         </div>
       </div>
     </div>
