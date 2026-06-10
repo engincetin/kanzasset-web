@@ -130,13 +130,12 @@ export function WCoinDot({ symbol, size = 32 }) {
   const isAhlg = symbol === 'AHLG';
   const meta = COIN_ICONS[symbol];
 
+  let inner;
   if (isAhlg) {
-    return <AHLGMark size={size} />;
-  }
-
-  if (meta && meta.kind === 'flag') {
+    inner = <AHLGMark size={size} />;
+  } else if (meta && meta.kind === 'flag') {
     const Flag = meta.comp;
-    return (
+    inner = (
       <div style={{
         width: size, height: size, borderRadius: size / 2,
         flexShrink: 0, overflow: 'hidden',
@@ -144,19 +143,21 @@ export function WCoinDot({ symbol, size = 32 }) {
         <Flag size={size} />
       </div>
     );
+  } else {
+    inner = (
+      <div style={{
+        width: size, height: size, borderRadius: size / 2,
+        background: WBRAND.surface,
+        border: `1px solid ${WBRAND.line}`,
+        display: 'grid', placeItems: 'center',
+        color: WBRAND.ink,
+        fontFamily: WFONT, fontWeight: 700, fontSize: size * 0.31,
+        letterSpacing: '-0.01em', flexShrink: 0,
+      }}>
+        {symbol.slice(0, symbol.length > 3 ? 4 : 3)}
+      </div>
+    );
   }
 
-  return (
-    <div style={{
-      width: size, height: size, borderRadius: size / 2,
-      background: WBRAND.surface,
-      border: `1px solid ${WBRAND.line}`,
-      display: 'grid', placeItems: 'center',
-      color: WBRAND.ink,
-      fontFamily: WFONT, fontWeight: 700, fontSize: size * 0.31,
-      letterSpacing: '-0.01em', flexShrink: 0,
-    }}>
-      {symbol.slice(0, symbol.length > 3 ? 4 : 3)}
-    </div>
-  );
+  return <span className="kz-coin" style={{ flexShrink: 0 }}>{inner}</span>;
 }

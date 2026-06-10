@@ -155,7 +155,23 @@ export function WebActivity({ navigate, onOpenTx }) {
         </div>
 
         {filtered.length === 0 ? (
-          <div style={{ padding: '60px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 14, color: WBRAND.muted }}>{t('No transactions match the current filters.')}</div>
+          <div style={{ padding: '52px 22px 56px', textAlign: 'center' }}>
+            {/* Magnifier over a gold coin */}
+            <svg width="84" height="84" viewBox="0 0 84 84" fill="none" style={{ display: 'block', margin: '0 auto' }}>
+              <circle cx="38" cy="36" r="13" fill="#F6D77B"/>
+              <circle cx="38" cy="36" r="13" stroke="#C9962F" strokeWidth="2"/>
+              <circle cx="38" cy="36" r="8.5" stroke="#C9962F" strokeWidth="1.4" strokeDasharray="2.5 2.5"/>
+              <text x="38" y="40.5" textAnchor="middle" fontSize="11" fontWeight="800" fill="#A8761B" fontFamily="sans-serif">₺</text>
+              <circle cx="42" cy="40" r="22" stroke={WBRAND.muted2} strokeWidth="3.2"/>
+              <path d="M58 56l12 12" stroke={WBRAND.muted2} strokeWidth="5" strokeLinecap="round"/>
+              <path d="M30 30c2-4 6-6.5 10.5-6.5" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, marginTop: 14, letterSpacing: '-0.01em' }}>{t('No transactions match the current filters.')}</div>
+            <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 6 }}>{t('Try widening the date range or clearing a filter.')}</div>
+            <button onClick={() => { setSearch(''); setTypeFilter('All'); setAssetFilter('All'); setStatusFilter('All'); }} style={{ marginTop: 16, height: 36, padding: '0 16px', borderRadius: 8, background: WBRAND.redSoft, color: WBRAND.red, border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>
+              {t('Clear all')}
+            </button>
+          </div>
         ) : filtered.map((tx, i) => <WTxRow key={tx.id} tx={tx} last={i === filtered.length - 1} onOpen={onOpenTx}/>)}
         </div>
         </div>

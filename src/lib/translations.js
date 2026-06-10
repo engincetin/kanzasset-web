@@ -288,6 +288,7 @@ export const tr = {
   "Mint": "Al",
   "Delivery": "Teslimat",
   "Trade fee": "İşlem ücreti",
+  "Try widening the date range or clearing a filter.": "Tarih aralığını genişletmeyi veya bir filtreyi kaldırmayı deneyin.",
   "Mint & redeem confirmations": "İhraç ve itfa onayları",
   "Mint AHL Gold tokens backed 1:1 by physical bullion held in the Ahlatcı Metal Refinery FZCO vault.": "Ahlatcı Metal Refinery FZCO kasasında saklanan fiziki külçeyle 1:1 teminatlandırılan AHL Gold tokenlarını ihraç edin.",
   "Mint AHLG": "AHLG Al",

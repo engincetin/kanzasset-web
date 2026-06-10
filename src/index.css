@@ -88,6 +88,20 @@ main > * > *:nth-child(n+5) { animation-delay: .24s; }
   100% { transform: translate(var(--kz-drift, 0px), 460px) rotate(var(--kz-rot, 220deg)); opacity: 0; }
 }
 
+/* Gold bars pop in one by one (physical delivery picker) */
+@keyframes kzBarIn {
+  from { opacity: 0; transform: translateY(10px) scale(.75); }
+  to   { opacity: 1; transform: none; }
+}
+.kz-bar { animation: kzBarIn .32s cubic-bezier(.2, .8, .3, 1) both; }
+
+/* Transaction rows nudge right on hover */
+.kz-row:hover { transform: translateX(3px); }
+
+/* Coins give a playful tilt on row hover */
+.kz-coin { display: inline-flex; transition: transform .18s ease; }
+.kz-row:hover .kz-coin, .kz-coin:hover { transform: scale(1.12) rotate(-8deg); }
+
 /* Gold sheen sweep — periodic glint across hero/brand surfaces */
 @keyframes kzSheen {
   0%, 55%   { transform: translateX(-130%); }

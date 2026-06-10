@@ -257,12 +257,12 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '8px 10px', borderRadius: 8, background: WBRAND.surface,
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.positive, boxShadow: `0 0 0 3px rgba(15,122,71,0.16)` }}/>
+            <span className="kz-pulse" style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.positive }}/>
             <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t('All systems operational', 'Tüm sistemler çalışıyor')}</span>
           </div>
         ) : (
           <div title="All systems operational" style={{ display: 'grid', placeItems: 'center', padding: '8px 0' }}>
-            <span style={{ width: 8, height: 8, borderRadius: 4, background: WBRAND.positive, boxShadow: `0 0 0 3px rgba(15,122,71,0.16)` }}/>
+            <span className="kz-pulse" style={{ width: 8, height: 8, borderRadius: 4, background: WBRAND.positive }}/>
           </div>
         )}
       </div>

@@ -128,6 +128,7 @@ export function WTxRow({ tx, last, onOpen }) {
 
   return (
     <div
+      className={onOpen ? 'kz-row' : undefined}
       onClick={() => onOpen && onOpen(tx)}
       onMouseEnter={onOpen ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
       onMouseLeave={onOpen ? (e => e.currentTarget.style.background = 'transparent') : undefined}
@@ -137,7 +138,7 @@ export function WTxRow({ tx, last, onOpen }) {
         gap: 12, padding: '14px 22px', alignItems: 'center',
         borderBottom: last ? 'none' : `1px solid ${WBRAND.line}`,
         cursor: onOpen ? 'pointer' : 'default',
-        transition: 'background .12s',
+        transition: 'background .12s, transform .15s ease',
       }}>
       <div style={{
         width: 32, height: 32, borderRadius: 8, background: WBRAND.surface,

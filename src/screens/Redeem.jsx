@@ -208,6 +208,24 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
   );
 }
 
+// CSS-drawn 1kg gold ingot — trapezoid body, glint sweep, stamped label
+function GoldBar({ delay = 0 }) {
+  const clip = 'polygon(12% 0, 88% 0, 100% 100%, 0 100%)';
+  return (
+    <div className="kz-bar" style={{ animationDelay: `${delay}s`, width: 46, height: 26, position: 'relative', flexShrink: 0 }}>
+      <div style={{
+        position: 'absolute', inset: 0, clipPath: clip,
+        background: 'linear-gradient(160deg, #F6D77B 0%, #E3B74E 40%, #C9962F 75%, #E8C766 100%)',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.55)',
+      }}/>
+      <div style={{ position: 'absolute', inset: 0, clipPath: clip, overflow: 'hidden' }}>
+        <div className="kz-sheen" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.5) 50%, transparent 65%)' }}/>
+      </div>
+      <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontSize: 7, fontWeight: 800, letterSpacing: '0.08em', color: 'rgba(120, 84, 10, 0.75)' }}>1 KG</span>
+    </div>
+  );
+}
+
 function RedeemPhysicalWeb({ navigate }) {
   const mobile = useIsMobile();
   const addresses = [
@@ -255,6 +273,12 @@ function RedeemPhysicalWeb({ navigate }) {
           <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, fontVariantNumeric: 'tabular-nums', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
             <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
             <button onClick={() => setKgPicked(maxKg)} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, flexShrink: 0 }}>{t('MAX')}</button>
+          </div>
+
+          {/* Your bars, stacking up as you pick */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 14, flexWrap: 'wrap' }}>
+            {Array.from({ length: Math.min(kgPicked, 6) }, (_, i) => <GoldBar key={`${kgPicked}-${i}`} delay={i * 0.06}/>)}
+            {kgPicked > 6 && <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.muted }}>+{kgPicked - 6} kg</span>}
           </div>
         </div>
 
