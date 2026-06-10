@@ -83,14 +83,13 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
           {/* Buy / Sell toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
-              { id: 'buy',  label: t('Buy'),  sub: t('Pay cash · receive AHLG') },
-              { id: 'sell', label: t('Sell'), sub: t('Pay AHLG · receive cash') },
+              { id: 'buy',  label: t('Buy') },
+              { id: 'sell', label: t('Sell') },
             ].map(opt => {
               const on = side === opt.id;
               return (
-                <button key={opt.id} onClick={() => switchTo(opt.id)} style={{ padding: '10px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.panel : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'left' }}>
-                  <div style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 13, letterSpacing: '-0.005em' }}>{opt.label}</div>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, color: on ? 'rgba(255,255,255,0.65)' : WBRAND.muted, marginTop: 2, fontWeight: 500 }}>{opt.sub}</div>
+                <button key={opt.id} onClick={() => switchTo(opt.id)} style={{ padding: '13px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.panel : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'center' }}>
+                  <div style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 15, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{opt.label}</div>
                 </button>
               );
             })}
@@ -99,7 +98,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
           {/* Swap card — remounts (and flips in) whenever the side changes */}
           <div key={side} className="kz-flip">
           <WCard padding={0}>
-            <div style={{ padding: mobile ? '18px 16px 16px' : '22px 24px 20px' }}>
+            <div style={{ padding: mobile ? '18px 16px 22px' : '22px 24px 26px' }}>
               <WEyebrow>{t('You pay')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
@@ -107,14 +106,16 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
                   ? <WAssetSelector value={from.symbol} options={buySources} onChange={s => setFrom(buySources.find(x => x.symbol === s))}/>
                   : <AHLGChip/>}
               </div>
-              <div style={{ fontFamily: WFONT, fontSize: 12, color: insufficient ? WBRAND.red : WBRAND.muted, marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-                <span>{t('Balance')}: <WMonoNum size={12} color={insufficient ? WBRAND.red : WBRAND.ink}>{wfmt(payBalance, wdecimals(paySymbol))}</WMonoNum> {paySymbol}</span>
-                <span style={{ display: 'flex', gap: 6 }}>
-                  {[25, 50, 75].map(p => (
-                    <button key={p} onClick={() => setAmount(wgroup(String(payBalance * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
-                  ))}
-                  <button onClick={() => setAmount(wgroup(String(payBalance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
-                </span>
+              {/* Balance + quick-percent chips on their own rows so long
+                  balances never collide with the chips */}
+              <div style={{ fontFamily: WFONT, fontSize: 12, color: insufficient ? WBRAND.red : WBRAND.muted, marginTop: 12 }}>
+                {t('Balance')}: <WMonoNum size={12} color={insufficient ? WBRAND.red : WBRAND.ink}>{wfmt(payBalance, wdecimals(paySymbol))}</WMonoNum> {paySymbol}
+              </div>
+              <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                {[25, 50, 75].map(p => (
+                  <button key={p} onClick={() => setAmount(wgroup(String(payBalance * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 7, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
+                ))}
+                <button onClick={() => setAmount(wgroup(String(payBalance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 7, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
               </div>
             </div>
 
@@ -125,7 +126,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
               </button>
             </div>
 
-            <div style={{ padding: mobile ? '18px 16px 18px' : '22px 24px 22px', background: WBRAND.surface2 }}>
+            <div style={{ padding: mobile ? '24px 16px 18px' : '28px 24px 22px', background: WBRAND.surface2 }}>
               <WEyebrow>{t('You receive')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums', minWidth: 0, overflow: 'hidden' }}>{wfmt(out, outDecimals)}</div>
