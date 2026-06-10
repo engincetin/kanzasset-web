@@ -57,6 +57,37 @@ main > * > *:nth-child(n+5) { animation-delay: .24s; }
 @keyframes kzFillIn { from { opacity: 0; } to { opacity: 1; } }
 .kz-chart-fill { animation: kzFillIn .8s ease .45s both; }
 
+/* Theme switch: colors crossfade instead of snapping (class is added
+   for ~500ms by applyTheme) */
+.kz-theme-anim *, .kz-theme-anim *::before, .kz-theme-anim *::after {
+  transition: background-color .4s ease, color .4s ease,
+              border-color .4s ease, box-shadow .4s ease, fill .4s ease, stroke .4s ease !important;
+}
+
+/* Buy/Sell direction flip */
+@keyframes kzFlip {
+  from { opacity: 0; transform: perspective(900px) rotateX(-7deg) translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.kz-flip { animation: kzFlip .32s cubic-bezier(.2, .7, .3, 1); transform-origin: top center; }
+
+/* Notification bell swing (has unread) */
+@keyframes kzRing {
+  0%, 100% { transform: rotate(0); }
+  6%  { transform: rotate(14deg); }
+  12% { transform: rotate(-11deg); }
+  18% { transform: rotate(7deg); }
+  24% { transform: rotate(-4deg); }
+  30% { transform: rotate(0); }
+}
+.kz-ring { animation: kzRing 4.5s ease-in-out infinite; transform-origin: top center; display: inline-grid; place-items: center; }
+
+/* Confetti burst (trade success) */
+@keyframes kzConfetti {
+  0%   { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(var(--kz-drift, 0px), 460px) rotate(var(--kz-rot, 220deg)); opacity: 0; }
+}
+
 /* Gold sheen sweep — periodic glint across hero/brand surfaces */
 @keyframes kzSheen {
   0%, 55%   { transform: translateX(-130%); }

@@ -51,11 +51,19 @@ const _resolve = (t) => t === 'system'
 
 export const getTheme = () => _theme;
 export const isDark = () => _resolve(_theme) === 'dark';
+let _themeAnimTimer = null;
 export const applyTheme = (t) => {
   if (t !== 'light' && t !== 'dark' && t !== 'system') return;
   _theme = t;
   Object.assign(WBRAND, _resolve(t) === 'dark' ? WDARK : WLIGHT);
-  if (typeof document !== 'undefined') document.body.style.background = WBRAND.surface;
+  if (typeof document !== 'undefined') {
+    document.body.style.background = WBRAND.surface;
+    // Briefly let every element transition its colors so the theme
+    // crossfades instead of snapping.
+    document.documentElement.classList.add('kz-theme-anim');
+    clearTimeout(_themeAnimTimer);
+    _themeAnimTimer = setTimeout(() => document.documentElement.classList.remove('kz-theme-anim'), 500);
+  }
   try { localStorage.setItem('kz-theme', t); } catch { /* noop */ }
   _themeSubs.forEach(fn => { try { fn(); } catch { /* noop */ } });
 };

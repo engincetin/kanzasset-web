@@ -78,7 +78,7 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
         display: 'grid', placeItems: 'center', cursor: 'pointer',
         position: 'relative',
       }}>
-        {WIcon.bell()}
+        <span className="kz-ring">{WIcon.bell()}</span>
         <span style={{
           position: 'absolute', top: 8, right: 9, width: 7, height: 7,
           borderRadius: 4, background: WBRAND.red,

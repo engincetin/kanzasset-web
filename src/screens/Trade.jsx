@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { AHLGMark } from '../components/coinicons.jsx';
@@ -96,7 +96,8 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
             })}
           </div>
 
-          {/* Swap card */}
+          {/* Swap card — remounts (and flips in) whenever the side changes */}
+          <div key={side} className="kz-flip">
           <WCard padding={0}>
             <div style={{ padding: mobile ? '18px 16px 16px' : '22px 24px 20px' }}>
               <WEyebrow>{t('You pay')}</WEyebrow>
@@ -139,6 +140,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
               </div>
             </div>
           </WCard>
+          </div>
 
           {/* Quote details */}
           <WCard padding={0}>
@@ -268,6 +270,34 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   );
 }
 
+// Lightweight CSS confetti burst — celebrates a completed trade.
+function KzConfetti() {
+  const pieces = useMemo(() => {
+    const colors = ['#D4202B', '#E8C97B', '#0F7A47', '#D9A441', '#24252C', '#F6D77B'];
+    return Array.from({ length: 28 }, (_, i) => ({
+      left: Math.random() * 100,
+      delay: Math.random() * 0.3,
+      dur: 1.1 + Math.random() * 0.9,
+      w: 5 + Math.random() * 5,
+      c: colors[i % colors.length],
+      drift: (Math.random() - 0.5) * 140,
+      rot: 140 + Math.random() * 360,
+    }));
+  }, []);
+  return (
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', borderRadius: 16 }}>
+      {pieces.map((p, i) => (
+        <span key={i} style={{
+          position: 'absolute', top: -12, left: `${p.left}%`,
+          width: p.w, height: p.w * 0.62, background: p.c, borderRadius: 1.5,
+          '--kz-drift': `${p.drift}px`, '--kz-rot': `${p.rot}deg`,
+          animation: `kzConfetti ${p.dur}s ease-in ${p.delay}s forwards`,
+        }}/>
+      ))}
+    </div>
+  );
+}
+
 function TradeProgressModal({ side, amt, out, asset, onClose, onTrack }) {
   const mobile = useIsMobile();
   const STEPS = side === 'buy'
@@ -309,7 +339,9 @@ function TradeProgressModal({ side, amt, out, asset, onClose, onTrack }) {
       <div onClick={e => e.stopPropagation()} className="kz-pop" style={{
         width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white,
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
+        position: 'relative',
       }}>
+        {done && <KzConfetti/>}
         <div style={{ padding: mobile ? '16px 16px 14px' : '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
