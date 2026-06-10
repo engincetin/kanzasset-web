@@ -89,6 +89,7 @@ const _applyBrand = () => {
   WBRAND.red = p.hex;
   WBRAND.redDeep = p.deep;
   WBRAND.redSoft = p.soft;
+  WBRAND.panel = p.hex;   // active nav / toggles / brand panel all take the brand colour
 };
 
 export const getBrand = () => _brand;
