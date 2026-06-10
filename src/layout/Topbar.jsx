@@ -70,8 +70,6 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
         </div>
       </div>
 
-      {!mobile && <LivePriceChip onClick={() => onNavigate && onNavigate('trade')}/>}
-
       <button onClick={onNotifs} className="kz-btn-secondary" style={{
         width: 38, height: 38, borderRadius: 8,
         background: WBRAND.white, border: `1px solid ${WBRAND.line}`,

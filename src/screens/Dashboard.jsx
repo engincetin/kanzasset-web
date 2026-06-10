@@ -181,9 +181,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                   maskImage: 'radial-gradient(130% 110% at 100% 0%, #000 25%, transparent 72%)',
                 }}/>
                 <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: 120, background: WBRAND.red, opacity: dark ? 0.18 : 0.16, filter: 'blur(50px)' }}/>
-                <div className="kz-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'linear-gradient(105deg, transparent 42%, rgba(255, 200, 90, 0.16) 50%, transparent 58%)' }}/>
                 <div style={{ position: 'relative' }}>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: heroLabel }}>{t('AHL Gold holdings')}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: heroLabel }}>AHLG Holdings</div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative' }}>
                   <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: heroText, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(animAhlg, 0)}</span>
