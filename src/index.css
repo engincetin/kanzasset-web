@@ -131,6 +131,11 @@ main > * > *:nth-child(n+5) { animation-delay: .24s; }
 }
 .kz-pulse { animation: kzPulse 2s ease-out infinite; }
 
+/* Green (buy) primary: hover glow in green instead of red */
+.kz-btn-green:not(:disabled):hover {
+  box-shadow: 0 1px 0 rgba(255,255,255,0.14) inset, 0 8px 22px -8px rgba(15, 122, 71, 0.55);
+}
+
 /* Secondary / ghost / nav: subtle theme-neutral hover wash */
 .kz-btn-secondary:not(:disabled):hover { background: rgba(127, 127, 127, 0.08) !important; }
 .kz-ghost:hover { background: rgba(127, 127, 127, 0.08); }

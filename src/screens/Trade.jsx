@@ -83,12 +83,12 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
           {/* Buy / Sell toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
-              { id: 'buy',  label: t('Buy') },
-              { id: 'sell', label: t('Sell') },
+              { id: 'buy',  label: t('Buy'),  bg: 'linear-gradient(180deg, #18A765, #0F7A47)' },
+              { id: 'sell', label: t('Sell'), bg: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})` },
             ].map(opt => {
               const on = side === opt.id;
               return (
-                <button key={opt.id} onClick={() => switchTo(opt.id)} style={{ padding: '13px 16px', border: 'none', cursor: 'pointer', background: on ? WBRAND.panel : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'center' }}>
+                <button key={opt.id} onClick={() => switchTo(opt.id)} style={{ padding: '13px 16px', border: 'none', cursor: 'pointer', background: on ? opt.bg : 'transparent', color: on ? '#fff' : WBRAND.ink, borderRadius: 8, textAlign: 'center', boxShadow: on ? '0 1px 0 rgba(255,255,255,0.14) inset' : 'none' }}>
                   <div style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 15, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{opt.label}</div>
                 </button>
               );
@@ -168,7 +168,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
             </div>
           </WCard>
 
-          <WPrimary size="lg" onClick={() => canSubmit && setConfirming(true)} disabled={!canSubmit} style={{ width: '100%', justifyContent: 'center' }}>
+          <WPrimary size="lg" tone={side === 'buy' ? 'green' : 'red'} onClick={() => canSubmit && setConfirming(true)} disabled={!canSubmit} style={{ width: '100%', justifyContent: 'center' }}>
             {side === 'buy'
               ? `${t('Buy')} ${wfmt(out, 4)} AHLG`
               : `${t('Sell')} ${wfmt(amt, 4)} AHLG`}

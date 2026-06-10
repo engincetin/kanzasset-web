@@ -40,19 +40,24 @@ export function WCard({ children, style = {}, padding = 24, onClick }) {
 }
 
 // ─── Buttons ──────────────────────────────────────────────────
-export function WPrimary({ children, onClick, style = {}, size = 'md', icon, disabled }) {
+export function WPrimary({ children, onClick, style = {}, size = 'md', icon, disabled, tone = 'red' }) {
   const h = size === 'lg' ? 52 : size === 'sm' ? 36 : 44;
   const fs = size === 'lg' ? 15 : size === 'sm' ? 13 : 14;
+  const tones = {
+    red:   { bg: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})`, shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(168,22,31,0.45)' },
+    green: { bg: 'linear-gradient(180deg, #18A765, #0F7A47)',                 shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(15,122,71,0.45)' },
+  };
+  const tn = tones[tone] ?? tones.red;
   return (
-    <button onClick={onClick} disabled={disabled} className="kz-btn-primary" style={{
+    <button onClick={onClick} disabled={disabled} className={tone === 'green' ? 'kz-btn-primary kz-btn-green' : 'kz-btn-primary'} style={{
       height: h, padding: '0 20px', borderRadius: 10,
-      background: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})`,
+      background: tn.bg,
       color: '#fff',
       border: 'none', cursor: disabled ? 'not-allowed' : 'pointer',
       fontFamily: WFONT, fontWeight: 700, fontSize: fs,
       letterSpacing: '-0.005em',
       display: 'inline-flex', alignItems: 'center', gap: 8,
-      boxShadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(168,22,31,0.45)',
+      boxShadow: tn.shadow,
       opacity: disabled ? 0.5 : 1,
       ...style,
     }}>
