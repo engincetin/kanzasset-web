@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
-import { AHLGMark } from '../components/coinicons.jsx';
+import { AGOLDMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
@@ -23,7 +23,7 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <WEyebrow>{t('You redeem')}</WEyebrow>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>{t('Minimum redeem')} · <WMonoNum size={11} color={WBRAND.ink}>1</WMonoNum> AHLG</span>
+              <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 600 }}>{t('Minimum redeem')} · <WMonoNum size={11} color={WBRAND.ink}>1</WMonoNum> AGOLD</span>
               <button onClick={() => setInfoOpen(true)} title={t('Redeem rules')} style={{ width: 20, height: 20, borderRadius: 10, border: `1px solid ${WBRAND.line2}`, background: WBRAND.white, cursor: 'pointer', display: 'grid', placeItems: 'center', color: WBRAND.muted, padding: 0, flexShrink: 0 }}>
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 11v6M12 7.5v.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="12" cy="12" r="9.2" stroke="currentColor" strokeWidth="1.5"/></svg>
               </button>
@@ -32,17 +32,17 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
             <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
             <div style={{ background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line2}`, borderRadius: 999, padding: '6px 14px 6px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <AHLGMark size={28}/>
-              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AHLG</span>
+              <AGOLDMark size={28}/>
+              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AGOLD</span>
             </div>
           </div>
           <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-            <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
+            <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AGOLD, 4)}</WMonoNum> AGOLD</span>
             <span style={{ display: 'flex', gap: 6 }}>
               {[25, 50, 75].map(p => (
-                <button key={p} onClick={() => setAmount(wgroup(String(WBALANCES.AHLG * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
+                <button key={p} onClick={() => setAmount(wgroup(String(WBALANCES.AGOLD * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
               ))}
-              <button onClick={() => setAmount(wgroup(String(WBALANCES.AHLG)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
+              <button onClick={() => setAmount(wgroup(String(WBALANCES.AGOLD)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
             </span>
           </div>
         </div>
@@ -77,7 +77,7 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
         </div>
         <div style={{ padding: '4px 22px 8px' }}>
           {[
-            { l: 'Spot rate',  v: `1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
+            { l: 'Spot rate',  v: `1 AGOLD = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
             { l: 'Redeem fee', v: t('0.00% — promotional') },
             { l: 'Settlement', v: t('Instant to balance') },
           ].map((r, i, arr) => (
@@ -108,7 +108,7 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
             <div style={{ padding: '22px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
-                  <AHLGMark size={24}/>
+                  <AGOLDMark size={24}/>
                 </div>
                 <h2 style={{ margin: 0, fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t('Digital redeem rules')}</h2>
               </div>
@@ -118,8 +118,8 @@ function RedeemDigital({ targets, to, setTo, navigate }) {
             </div>
             <div style={{ padding: '18px 24px 8px', display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { t: t('Minimum 1 AHLG'), d: t('Digital redemption starts at 1 AHLG — equal to 1 gram of vaulted gold.') },
-                { t: t('Fractional amounts allowed'), d: t('Unlike physical delivery, you can redeem any amount from 1 AHLG upward, including fractions (e.g. 1.5, 12.25).') },
+                { t: t('Minimum 1 AGOLD'), d: t('Digital redemption starts at 1 AGOLD — equal to 1 gram of vaulted gold.') },
+                { t: t('Fractional amounts allowed'), d: t('Unlike physical delivery, you can redeem any amount from 1 AGOLD upward, including fractions (e.g. 1.5, 12.25).') },
                 { t: t('Instant settlement'), d: t('Funds are credited to your Kanzasset {sym} balance immediately at the live rate.').replace('{sym}', to.symbol) },
               ].map((r, i) => (
                 <div key={i} style={{ display: 'flex', gap: 12 }}>
@@ -145,9 +145,9 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
   const mobile = useIsMobile();
   const STEPS = [
     { id: 'submitted', title: t('Redeem request received'), sub: t('Order accepted and queued') },
-    { id: 'settling',  title: t('Settling to balance'),     sub: () => `${t('Converting at')} 1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
+    { id: 'settling',  title: t('Settling to balance'),     sub: () => `${t('Converting at')} 1 AGOLD = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
     { id: 'credited',  title: t('Funds credited'),          sub: () => `${wfmt(out, wdecimals(to.symbol))} ${to.symbol} ${t('added to your wallet')}` },
-    { id: 'burning',   title: t('Burning AHLG'),            sub: () => `${wfmt(burn, 4)} ${t('AHLG removed from circulation')}` },
+    { id: 'burning',   title: t('Burning AGOLD'),            sub: () => `${wfmt(burn, 4)} ${t('AGOLD removed from circulation')}` },
   ];
   const [active, setActive] = useState(0);
   const [stamps, setStamps] = useState({});
@@ -177,7 +177,7 @@ function RedeemDigitalModal({ burn, out, to, onClose, onTrack }) {
         <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <AHLGMark size={40}/>
+              <AGOLDMark size={40}/>
               <div>
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? t('Redeem complete') : t('Redeeming')}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{wfmt(out, wdecimals(to.symbol))} {to.symbol}</div>
@@ -233,7 +233,7 @@ function RedeemPhysicalWeb({ navigate }) {
     { id: 'o', label: 'Office',   city: 'Dubai',    line: 'DMCC Almas Tower, Floor 38',        country: 'UAE' },
     { id: 'i', label: 'Istanbul', city: 'Istanbul', line: 'Levent Mah. Büyükdere Cad. No:185', country: 'Türkiye' },
   ];
-  const maxKg = Math.max(1, Math.floor(WBALANCES.AHLG / 1000));
+  const maxKg = Math.max(1, Math.floor(WBALANCES.AGOLD / 1000));
   const [kgPicked, setKgPicked] = useState(1);
   const [addrId, setAddrId] = useState('h');
   const [shipping, setShipping] = useState(false);
@@ -271,7 +271,7 @@ function RedeemPhysicalWeb({ navigate }) {
             </div>
           </div>
           <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, fontVariantNumeric: 'tabular-nums', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-            <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AHLG, 4)}</WMonoNum> AHLG</span>
+            <span>{t('Balance')}: <WMonoNum size={12}>{wfmt(WBALANCES.AGOLD, 4)}</WMonoNum> AGOLD</span>
             <button onClick={() => setKgPicked(maxKg)} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, flexShrink: 0 }}>{t('MAX')}</button>
           </div>
         </div>
@@ -310,7 +310,7 @@ function RedeemPhysicalWeb({ navigate }) {
         <div style={{ padding: '4px 22px 8px' }}>
           {[
             { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 ${t('fine')} · Ahlatci Gold Refinery` },
-            { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AHLG · ≈ $${wfmt(kgPicked * 1000 * WRATES.AHLG, 0)}` },
+            { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AGOLD · ≈ $${wfmt(kgPicked * 1000 * WRATES.AGOLD, 0)}` },
             { l: 'Shipping',          v: `Brinks · AED 120 · ${t('fully insured')}` },
             { l: 'Estimated arrival', v: t('3–5 business days') },
           ].map((r, i, arr) => (
@@ -358,7 +358,7 @@ function RedeemPhysicalWeb({ navigate }) {
             <div style={{ padding: '6px 24px 4px' }}>
               {[
                 { l: 'Bar',               v: `${kgPicked} × 1 kg · 999.5 ${t('fine')} · Ahlatci Gold Refinery` },
-                { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AHLG · ≈ $${wfmt(kgPicked * 1000 * WRATES.AHLG, 0)}` },
+                { l: 'Burned',            v: `${wfmt(kgPicked * 1000, 0)} AGOLD · ≈ $${wfmt(kgPicked * 1000 * WRATES.AGOLD, 0)}` },
                 { l: 'Ship to',           v: addr ? `${addr.label} · ${addr.city} — ${addr.line}, ${addr.country}` : '—' },
                 { l: 'Shipping',          v: `Brinks · AED 120 · ${t('fully insured')}` },
                 { l: 'Estimated arrival', v: t('3–5 business days') },
@@ -374,7 +374,7 @@ function RedeemPhysicalWeb({ navigate }) {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
                 {WIcon.shield(WBRAND.ink)}
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
-                  {t('Burning AHLG for physical delivery is irreversible. Please confirm the bar count and shipping address are correct.')}
+                  {t('Burning AGOLD for physical delivery is irreversible. Please confirm the bar count and shipping address are correct.')}
                 </div>
               </div>
             </div>
@@ -420,9 +420,9 @@ function RedeemPhysicalWeb({ navigate }) {
             </div>
             <div style={{ padding: '18px 24px 8px', display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { t: t('Minimum 1 kg'), d: t('Physical redemption starts at one 1 kg bar — equal to 1,000 AHLG.') },
+                { t: t('Minimum 1 kg'), d: t('Physical redemption starts at one 1 kg bar — equal to 1,000 AGOLD.') },
                 { t: t('Whole-kilogram multiples'), d: t('Bars are cast in 1 kg units, so you can only redeem whole kilograms (1, 2, 3 …). Fractional amounts stay in your digital balance.') },
-                { t: t('Up to your balance'), d: t('With {bal} AHLG you can take delivery of up to {kg} kg right now.').replace('{bal}', wfmt(WBALANCES.AHLG, 0)).replace('{kg}', maxKg) },
+                { t: t('Up to your balance'), d: t('With {bal} AGOLD you can take delivery of up to {kg} kg right now.').replace('{bal}', wfmt(WBALANCES.AGOLD, 0)).replace('{kg}', maxKg) },
               ].map((r, i) => (
                 <div key={i} style={{ display: 'flex', gap: 12 }}>
                   <div style={{ width: 22, height: 22, borderRadius: 11, background: WBRAND.redSoft, color: WBRAND.red, display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>{i + 1}</div>
@@ -448,7 +448,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
   const STEPS = [
     { id: 'submitted', title: t('Delivery request received'), sub: () => `${kg} × 1 kg ${t('bar')}${kg > 1 ? t('s') : ''} · ${t('ship to')} ${addr ? addr.label + ', ' + addr.city : t('your address')}` },
     { id: 'handover',  title: t('Handed to carrier'),         sub: `Brinks Secure Logistics · ${t('insured in transit')}` },
-    { id: 'burning',   title: t('Burning AHLG'),              sub: () => `${wfmt(kg * 1000, 4)} ${t('AHLG removed from circulation')}` },
+    { id: 'burning',   title: t('Burning AGOLD'),              sub: () => `${wfmt(kg * 1000, 4)} ${t('AGOLD removed from circulation')}` },
     { id: 'done',      title: t('Shipped — tracking ready'),  sub: t('Your bars are on the way') },
   ];
   const [active, setActive] = useState(0);
@@ -565,14 +565,14 @@ export function WebRedeem({ navigate, onOpenTx }) {
   const priceData = wMakePriceData(90);
 
   const targets = Object.keys(WBALANCES)
-    .filter(s => s !== 'AHLG')
-    .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES.AHLG / WRATES[s] }));
+    .filter(s => s !== 'AGOLD')
+    .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES.AGOLD / WRATES[s] }));
   const [to, setTo] = useState(targets[0]);
 
   const quote = mode === 'digital' ? to.symbol : 'USDT';
   const quoteRate = WRATES[quote] || 1;
   const quotedData = priceData.map(d => ({ t: d.t, v: d.v / quoteRate }));
-  const spot = WRATES.AHLG / quoteRate;
+  const spot = WRATES.AGOLD / quoteRate;
   const first = quotedData[0].v;
   const diff = spot - first;
   const pct = (diff / first) * 100;
@@ -583,10 +583,10 @@ export function WebRedeem({ navigate, onOpenTx }) {
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
       <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 24 }}>
         <div style={{ flex: 1 }}>
-          <WEyebrow>{t('Redeem AHLG')}</WEyebrow>
+          <WEyebrow>{t('Redeem AGOLD')}</WEyebrow>
           <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Convert gold back to cash or claim physical bars')}</h1>
           <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-            {t('Burn AHLG tokens to receive instant settlement in your Kanzasset balance, or request physical delivery to your address.')}
+            {t('Burn AGOLD tokens to receive instant settlement in your Kanzasset balance, or request physical delivery to your address.')}
           </div>
         </div>
       </div>
@@ -619,7 +619,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
           <WCard padding={0}>
             <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AHLG / {quote}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AGOLD / {quote}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
                   <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>{px(spot)}</WNum>
                   <span style={{ fontFamily: WFONT, fontSize: 13, color: pct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
@@ -659,9 +659,9 @@ export function WebRedeem({ navigate, onOpenTx }) {
                   <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
                 </div>
-                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 4)} AHLG</WMonoNum>
+                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 4)} AGOLD</WMonoNum>
                 <WMonoNum size={12} color={WBRAND.ink}>{tx.paid}</WMonoNum>
-                <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AHLG)} USDT</WMonoNum>
+                <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AGOLD)} USDT</WMonoNum>
                 <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
@@ -683,7 +683,7 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   const quote = 'USDT';
   const quoteRate = WRATES[quote] || 1;
   const quotedData = priceData.map(d => ({ t: d.t, v: d.v / quoteRate }));
-  const spot = WRATES.AHLG / quoteRate;
+  const spot = WRATES.AGOLD / quoteRate;
   const first = quotedData[0].v;
   const diff = spot - first;
   const pct = (diff / first) * 100;
@@ -701,7 +701,7 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
           <WCard padding={0}>
             <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AHLG / {quote}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AGOLD / {quote}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
                   <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>{px(spot)}</WNum>
                   <span style={{ fontFamily: WFONT, fontSize: 13, color: pct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
@@ -741,9 +741,9 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
                   <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
                 </div>
-                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 4)} AHLG</WMonoNum>
+                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 4)} AGOLD</WMonoNum>
                 <WMonoNum size={12} color={WBRAND.ink}>{tx.paid}</WMonoNum>
-                <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AHLG)} USDT</WMonoNum>
+                <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AGOLD)} USDT</WMonoNum>
                 <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}

@@ -18,7 +18,7 @@ export function WebWallet({ navigate }) {
     return {
       symbol: s, name: WMETA[s].name, kind: WMETA[s].kind,
       balance: bal, valUSDT,
-      pct24h: s === 'AHLG' ? 0.24 : s === 'USDT' ? 0.00 : s === 'USDC' ? -0.01 : 0.08,
+      pct24h: s === 'AGOLD' ? 0.24 : s === 'USDT' ? 0.00 : s === 'USDC' ? -0.01 : 0.08,
     };
   });
   const totalUSDT = allAssets.reduce((a, c) => a + c.valUSDT, 0);
@@ -94,7 +94,7 @@ export function WebWallet({ navigate }) {
           <div style={{ padding: '40px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>{t('No assets match this filter.')}</div>
         ) : assets.map((a, i) => {
           const zero = a.balance === 0;
-          const priceStr = a.symbol === 'AHLG' ? '$151.56' : a.symbol === 'AED' ? '$0.272' : a.symbol === 'EUR' ? '$1.080' : a.symbol === 'GBP' ? '$1.270' : '$1.000';
+          const priceStr = a.symbol === 'AGOLD' ? '$151.56' : a.symbol === 'AED' ? '$0.272' : a.symbol === 'EUR' ? '$1.080' : a.symbol === 'GBP' ? '$1.270' : '$1.000';
           return (
             <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 0.9fr 1.2fr 0.7fr 1fr 200px', gap: 12, padding: '14px 22px', alignItems: 'center', borderBottom: i === assets.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: zero ? 0.65 : 1 }}>
@@ -113,7 +113,7 @@ export function WebWallet({ navigate }) {
               <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: zero ? WBRAND.muted2 : a.pct24h >= 0 ? WBRAND.positive : WBRAND.red, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{a.pct24h >= 0 ? '+' : ''}{wfmt(a.pct24h, 2)}%</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: zero ? 0.5 : 1 }}>
                 <div style={{ flex: 1, height: 4, background: WBRAND.surface, borderRadius: 2, overflow: 'hidden' }}>
-                  <div style={{ width: `${a.alloc}%`, height: '100%', background: a.symbol === 'AHLG' ? WBRAND.red : WBRAND.ink }}/>
+                  <div style={{ width: `${a.alloc}%`, height: '100%', background: a.symbol === 'AGOLD' ? WBRAND.red : WBRAND.ink }}/>
                 </div>
                 <WMonoNum size={11} color={WBRAND.muted}>{wfmt(a.alloc, 1)}%</WMonoNum>
               </div>

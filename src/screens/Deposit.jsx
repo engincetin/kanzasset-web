@@ -9,7 +9,7 @@ import { useIsMobile } from '../lib/useResponsive.js';
 
 export function WebDeposit({ navigate, initialAsset }) {
   const mobile = useIsMobile();
-  const cryptoAssets = ['AHLG', 'USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name }));
+  const cryptoAssets = ['AGOLD', 'USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name }));
   const fiatAssets   = ['AED', 'USD', 'EUR', 'GBP'].map(s => ({ symbol: s, name: WMETA[s].name }));
   const initialKind  = initialAsset && WMETA[initialAsset]?.kind === 'fiat' ? 'fiat' : 'crypto';
 
@@ -18,10 +18,10 @@ export function WebDeposit({ navigate, initialAsset }) {
   const [fiatAsset, setFiatAsset] = useState(fiatAssets.find(a => a.symbol === initialAsset) ?? fiatAssets[0]);
 
   const bankFor = {
-    AED: { bank: 'Emirates NBD',    iban: 'AE07 0331 2345 6789 0001 198',  swift: 'EBILAEAD', ref: 'AHLG-7421-AED' },
-    USD: { bank: 'JP Morgan Chase', iban: 'ACH 021000021 · 802135 2249',   swift: 'CHASUS33', ref: 'AHLG-7421-USD' },
-    EUR: { bank: 'Garanti BBVA',    iban: 'TR33 0006 2000 4290 0000 0001', swift: 'TGBATRIS', ref: 'AHLG-7421-EUR' },
-    GBP: { bank: 'Lloyds Bank',     iban: 'GB29 LOYD 3092 1031 9876 54',   swift: 'LOYDGB2L', ref: 'AHLG-7421-GBP' },
+    AED: { bank: 'Emirates NBD',    iban: 'AE07 0331 2345 6789 0001 198',  swift: 'EBILAEAD', ref: 'AGOLD-7421-AED' },
+    USD: { bank: 'JP Morgan Chase', iban: 'ACH 021000021 · 802135 2249',   swift: 'CHASUS33', ref: 'AGOLD-7421-USD' },
+    EUR: { bank: 'Garanti BBVA',    iban: 'TR33 0006 2000 4290 0000 0001', swift: 'TGBATRIS', ref: 'AGOLD-7421-EUR' },
+    GBP: { bank: 'Lloyds Bank',     iban: 'GB29 LOYD 3092 1031 9876 54',   swift: 'LOYDGB2L', ref: 'AGOLD-7421-GBP' },
   };
   const bank = bankFor[fiatAsset.symbol];
   const depositAddress = '0x7A4f3B9c2De04A8FbE9eC1A2eE9c2A1d3b7E5C09';

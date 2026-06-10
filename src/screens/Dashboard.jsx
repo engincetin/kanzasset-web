@@ -41,7 +41,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   const total = wTotalIn(currency);
   const totalAed = wTotalIn('AED');
   const animTotal = useCountUp(total);
-  const animAhlg  = useCountUp(WBALANCES.AHLG);
+  const animAhlg  = useCountUp(WBALANCES.AGOLD);
 
   const assets = Object.keys(WBALANCES).map(s => {
     const bal = WBALANCES[s];
@@ -49,7 +49,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
     return {
       symbol: s, name: WMETA[s].name, kind: WMETA[s].kind,
       balance: bal, valUSDT,
-      pct24h: s === 'AHLG' ? 0.24 : s === 'USDT' ? 0.00 : s === 'USDC' ? -0.01 : 0.08,
+      pct24h: s === 'AGOLD' ? 0.24 : s === 'USDT' ? 0.00 : s === 'USDC' ? -0.01 : 0.08,
       alloc: 0,
     };
   }).sort((a, b) => b.valUSDT - a.valUSDT);
@@ -59,7 +59,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   const priceData = wMakePriceData(90);
   const quoteRate = WRATES[quote] || 1;
   const quotedPriceData = priceData.map(d => ({ t: d.t, v: d.v / quoteRate }));
-  const quotedSpot = WRATES.AHLG / quoteRate;
+  const quotedSpot = WRATES.AGOLD / quoteRate;
   const quotedFirst = quotedPriceData[0].v;
   const quotedDiff = quotedSpot - quotedFirst;
   const quotedPct = (quotedDiff / quotedFirst) * 100;
@@ -95,7 +95,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                       boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
                     }}>
                       {[
-                        { label: 'Crypto', items: ['USDT', 'USDC', 'AHLG'] },
+                        { label: 'Crypto', items: ['USDT', 'USDC', 'AGOLD'] },
                         { label: 'Fiat', items: ['USD', 'AED', 'EUR', 'GBP'] },
                       ].map((grp, gi) => (
                         <div key={grp.label} style={{ marginTop: gi > 0 ? 4 : 0, paddingTop: gi > 0 ? 4 : 0, borderTop: gi > 0 ? `1px solid ${WBRAND.line}` : 'none' }}>
@@ -159,7 +159,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           </div>
         </WCard>
 
-        {/* AHLG holdings */}
+        {/* AGOLD holdings */}
         <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           {(() => {
             const dark = isDark();
@@ -182,15 +182,15 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                 }}/>
                 <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: 120, background: WBRAND.red, opacity: dark ? 0.18 : 0.16, filter: 'blur(50px)' }}/>
                 <div style={{ position: 'relative' }}>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: heroLabel }}>{t('AHLG Holdings')}</div>
+                  <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: heroLabel }}>{t('AGOLD Holdings')}</div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative' }}>
                   <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: heroText, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(animAhlg, 0)}</span>
-                  <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: mobile ? 14 : 18, color: heroLabel, letterSpacing: '-0.01em' }}>AHLG</span>
+                  <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: mobile ? 14 : 18, color: heroLabel, letterSpacing: '-0.01em' }}>AGOLD</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative', flexWrap: mobile ? 'wrap' : 'nowrap' }}>
-                  <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, padding: '5px 10px', borderRadius: 6, background: heroPillBg, color: heroPillText, fontVariantNumeric: 'tabular-nums' }}>{(WBALANCES.AHLG / 1000).toFixed(1)} {t('kg in vault')}</span>
-                  <span style={{ fontFamily: WFONT, fontSize: 12, color: heroLabel, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AHLG * WRATES.AHLG)}</span>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, padding: '5px 10px', borderRadius: 6, background: heroPillBg, color: heroPillText, fontVariantNumeric: 'tabular-nums' }}>{(WBALANCES.AGOLD / 1000).toFixed(1)} {t('kg in vault')}</span>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, color: heroLabel, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AGOLD * WRATES.AGOLD)}</span>
                 </div>
               </div>
             );
@@ -198,7 +198,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
 
           <div style={{ height: 80, flexShrink: 0, padding: mobile ? '0 16px' : '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
             <div>
-              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{t('AHLG price')}</div>
+              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{t('AGOLD price')}</div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 4 }}>
                 <WNum size={18} weight={800} style={{ letterSpacing: '-0.02em' }}>$151.56</WNum>
                 <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.positive, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>+0.24%</span>
@@ -228,7 +228,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                 background: WBRAND.surface, border: 'none', padding: '6px 12px', borderRadius: 6,
                 cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em',
               }}>
-                <span>AHLG / {quote}</span>
+                <span>AGOLD / {quote}</span>
                 {WIcon.arrowDown(WBRAND.muted)}
               </button>
               {quoteOpen && (
@@ -243,14 +243,14 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                         <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px 4px' }}>{t(grp.label)}</div>
                         {grp.items.map(q => {
                           const on = q === quote;
-                          const r = WRATES.AHLG / (WRATES[q] || 1);
+                          const r = WRATES.AGOLD / (WRATES[q] || 1);
                           return (
                             <button key={q} onClick={() => { setQuote(q); setQuoteOpen(false); }} style={{
                               width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                               padding: '8px 10px', borderRadius: 6, border: 'none',
                               background: on ? WBRAND.surface : 'transparent', cursor: 'pointer', textAlign: 'left',
                             }}>
-                              <span style={{ flex: 1, fontFamily: WFONT, fontSize: 12, fontWeight: on ? 700 : 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>AHLG / {q}</span>
+                              <span style={{ flex: 1, fontFamily: WFONT, fontSize: 12, fontWeight: on ? 700 : 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>AGOLD / {q}</span>
                               <WMonoNum size={11} color={on ? WBRAND.ink : WBRAND.muted}>{wfmt(r, 2)}</WMonoNum>
                             </button>
                           );
@@ -337,7 +337,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                 <WMonoNum size={13} weight={600} color={zero ? WBRAND.muted2 : WBRAND.ink} style={{ textAlign: 'right' }}>${wfmt(a.valUSDT)}</WMonoNum>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, opacity: zero ? 0.5 : 1 }}>
                   <div style={{ width: 72, height: 4, background: WBRAND.surface, borderRadius: 2, overflow: 'hidden' }}>
-                    <div style={{ width: `${a.alloc}%`, height: '100%', background: a.symbol === 'AHLG' ? WBRAND.red : WBRAND.ink }}/>
+                    <div style={{ width: `${a.alloc}%`, height: '100%', background: a.symbol === 'AGOLD' ? WBRAND.red : WBRAND.ink }}/>
                   </div>
                   <WMonoNum size={11} color={WBRAND.muted} style={{ minWidth: 38, textAlign: 'right' }}>{wfmt(a.alloc, 1)}%</WMonoNum>
                 </div>
@@ -367,7 +367,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </div>
             <div style={{ borderTop: `1px solid ${WBRAND.line}`, paddingTop: 12 }}>
               {[
-                { k: t('Tokens in circulation'), v: '142,718.4203 AHLG' },
+                { k: t('Tokens in circulation'), v: '142,718.4203 AGOLD' },
                 { k: t('Physical gold reserve'), v: '142.72 kg' },
                 { k: t('Last audit'),            v: 'Apr 30, 2026' },
                 { k: t('Reserve ratio'),         v: '100.00%' },
@@ -394,10 +394,10 @@ export function WebPortfolio({ navigate, onOpenTx }) {
               <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.muted }}>{t('Mark all read')}</button>
             </div>
             {[
-              { tone: 'pos',  title: t('Mint completed'),        sub: `1.2000 AHLG · ${t('12 min ago')}`,               unread: true  },
+              { tone: 'pos',  title: t('Mint completed'),        sub: `1.2000 AGOLD · ${t('12 min ago')}`,               unread: true  },
               { tone: 'warn', title: t('New whitelist pending'),  sub: `USDC ${t('address · 24h review · 8h left')}`,    unread: true  },
               { tone: 'neu',  title: t('Vault audit published'),  sub: t('April attestation available'),            unread: true  },
-              { tone: 'neu',  title: t('Price alert'),            sub: t('AHLG crossed $150 threshold'),            unread: false },
+              { tone: 'neu',  title: t('Price alert'),            sub: t('AGOLD crossed $150 threshold'),            unread: false },
             ].map((n, i, arr) => {
               const dotColor = n.tone === 'pos' ? WBRAND.positive : n.tone === 'warn' ? WBRAND.warn : WBRAND.muted;
               return (

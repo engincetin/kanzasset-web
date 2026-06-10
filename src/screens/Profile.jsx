@@ -569,7 +569,7 @@ function ProfPrefs() {
       </FormRow>
       <FormRow label={t('Display currency')} hint={t('Default currency for portfolio totals and quotes.')}>
         <SelectField value={ccy} onChange={setCcy} groups={[
-          { label: 'Crypto', options: ['USDT — US dollar tether', 'USDC — USD Coin', 'AHLG — AHL Gold'] },
+          { label: 'Crypto', options: ['USDT — US dollar tether', 'USDC — USD Coin', 'AGOLD — AGOLD'] },
           { label: 'Fiat',   options: ['USD — US Dollar', 'AED — UAE Dirham', 'EUR — Euro', 'GBP — Pound Sterling'] },
         ]}/>
       </FormRow>
@@ -738,7 +738,7 @@ function ProfCloseAccount({ onLogout }) {
         <div style={{ padding: '18px 22px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '16px', background: WBRAND.surface2, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
-              t('Your AHLG balance must be zero — redeem or withdraw all gold first.'),
+              t('Your AGOLD balance must be zero — redeem or withdraw all gold first.'),
               t('All open delivery orders must be completed or cancelled.'),
               t('Closing is permanent and cannot be undone. Transaction records are retained for 7 years for compliance.'),
             ].map((t, i) => (

@@ -3,9 +3,9 @@ import { WBRAND, WFONT, WMONO, wfmt, getTheme, applyTheme, BRANDS, getBrand, set
 import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WPill } from '../components/primitives.jsx';
-import { AHLGMark, WMark } from '../components/coinicons.jsx';
+import { AGOLDMark, WMark } from '../components/coinicons.jsx';
 
-// Live AHLG price chip — gently jitters every few seconds to feel alive.
+// Live AGOLD price chip — gently jitters every few seconds to feel alive.
 function LivePriceChip({ onClick }) {
   const [px, setPx] = useState(151.56);
   const [delta, setDelta] = useState(0.24);
@@ -24,7 +24,7 @@ function LivePriceChip({ onClick }) {
       background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
       display: 'inline-flex', alignItems: 'center', gap: 8, cursor: 'pointer',
     }}>
-      <AHLGMark size={24}/>
+      <AGOLDMark size={24}/>
       <span style={{ fontFamily: WMONO, fontSize: 13, fontWeight: 700, color: WBRAND.ink, fontVariantNumeric: 'tabular-nums' }}>${wfmt(px, 2)}</span>
       <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: up ? WBRAND.positive : WBRAND.red, fontVariantNumeric: 'tabular-nums' }}>
         {up ? '▲' : '▼'} {wfmt(Math.abs(delta), 2)}%

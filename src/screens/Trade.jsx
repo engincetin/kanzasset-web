@@ -1,19 +1,19 @@
 import { useState, useEffect, useMemo } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
-import { AHLGMark } from '../components/coinicons.jsx';
+import { AGOLDMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector, WTimeline } from '../components/shared.jsx';
 import { useIsMobile } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
-// Fixed AHLG chip (mirrors the rounded asset chip used in the pay/receive boxes)
-function AHLGChip() {
+// Fixed AGOLD chip (mirrors the rounded asset chip used in the pay/receive boxes)
+function AGOLDChip() {
   return (
     <div style={{ background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line2}`, borderRadius: 999, padding: '6px 14px 6px 6px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-      <AHLGMark size={28}/>
-      <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AHLG</span>
+      <AGOLDMark size={28}/>
+      <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AGOLD</span>
     </div>
   );
 }
@@ -25,11 +25,11 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const [range, setRange] = useState('3M');
   const [confirming, setConfirming] = useState(false);
 
-  // Buy: spend a non-AHLG asset to receive AHLG. Sell: spend AHLG to receive a non-AHLG asset.
-  const buySources  = Object.keys(WBALANCES).filter(s => s !== 'AHLG' && WBALANCES[s] > 0)
-    .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AHLG }));
-  const sellTargets = Object.keys(WBALANCES).filter(s => s !== 'AHLG')
-    .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES.AHLG / WRATES[s] }));
+  // Buy: spend a non-AGOLD asset to receive AGOLD. Sell: spend AGOLD to receive a non-AGOLD asset.
+  const buySources  = Object.keys(WBALANCES).filter(s => s !== 'AGOLD' && WBALANCES[s] > 0)
+    .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AGOLD }));
+  const sellTargets = Object.keys(WBALANCES).filter(s => s !== 'AGOLD')
+    .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES.AGOLD / WRATES[s] }));
 
   const [from, setFrom] = useState(buySources[0]);   // buy: asset you pay with
   const [to, setTo]     = useState(sellTargets[0]);  // sell: asset you receive
@@ -40,13 +40,13 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const amt = wparse(amount);
   const out = side === 'buy' ? amt * from.rate : amt * to.rate;
 
-  // The non-AHLG asset drives the chart quote + fee panel
+  // The non-AGOLD asset drives the chart quote + fee panel
   const counter   = side === 'buy' ? from : to;
   const quote     = counter.symbol;
   const quoteRate = WRATES[quote] || 1;
   const priceData = wMakePriceData(90);
   const quotedData = priceData.map(d => ({ t: d.t, v: d.v / quoteRate }));
-  const spot = WRATES.AHLG / quoteRate;
+  const spot = WRATES.AGOLD / quoteRate;
   const first = quotedData[0].v;
   const diff = spot - first;
   const pct = (diff / first) * 100;
@@ -56,8 +56,8 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const px = (v, d = 2) => `${isFiat ? '$' : ''}${wfmt(v, d)}${isFiat ? '' : ' ' + quote}`;
 
   // Pay / receive box config
-  const payBalance = side === 'sell' ? WBALANCES.AHLG : from.balance;
-  const paySymbol  = side === 'sell' ? 'AHLG' : from.symbol;
+  const payBalance = side === 'sell' ? WBALANCES.AGOLD : from.balance;
+  const paySymbol  = side === 'sell' ? 'AGOLD' : from.symbol;
   const outDecimals = side === 'buy' ? 4 : wdecimals(to.symbol);
   const insufficient = amt > payBalance + 1e-9;
   const canSubmit = out > 0 && !insufficient;
@@ -97,7 +97,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
                 <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 {side === 'buy'
                   ? <WAssetSelector value={from.symbol} options={buySources} onChange={s => setFrom(buySources.find(x => x.symbol === s))}/>
-                  : <AHLGChip/>}
+                  : <AGOLDChip/>}
               </div>
               {/* Balance + quick-percent chips on their own rows so long
                   balances never collide with the chips */}
@@ -124,7 +124,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums', minWidth: 0, overflow: 'hidden' }}>{wfmt(out, outDecimals)}</div>
                 {side === 'buy'
-                  ? <AHLGChip/>
+                  ? <AGOLDChip/>
                   : <WAssetSelector value={to.symbol} options={sellTargets} onChange={s => setTo(sellTargets.find(x => x.symbol === s))}/>}
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8 }}>
@@ -149,7 +149,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
             </div>
             <div style={{ padding: '4px 22px 8px' }}>
               {[
-                { l: t('Spot rate'),  v: side === 'buy' ? `1 AHLG = ${wfmt(WRATES.AHLG)} USDT` : `1 AHLG = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
+                { l: t('Spot rate'),  v: side === 'buy' ? `1 AGOLD = ${wfmt(WRATES.AGOLD)} USDT` : `1 AGOLD = ${wfmt(to.rate, wdecimals(to.symbol))} ${to.symbol}` },
                 { l: t('Trade fee'),  v: `0.00% — ${t('promotional')}` },
                 { l: t('Settlement'), v: side === 'buy' ? t('Instant on-chain') : t('Instant to balance') },
               ].map((r, i, arr) => (
@@ -163,14 +163,14 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
 
           <WPrimary size="lg" tone={side === 'buy' ? 'green' : 'red'} onClick={() => canSubmit && setConfirming(true)} disabled={!canSubmit} style={{ width: '100%', justifyContent: 'center' }}>
             {side === 'buy'
-              ? `${t('Buy')} ${wfmt(out, 4)} AHLG`
-              : `${t('Sell')} ${wfmt(amt, 4)} AHLG`}
+              ? `${t('Buy')} ${wfmt(out, 4)} AGOLD`
+              : `${t('Sell')} ${wfmt(amt, 4)} AGOLD`}
           </WPrimary>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.redSoft, borderRadius: 10 }}>
             <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
-              {t('AHLG is backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.')} <span style={{ color: WBRAND.red, fontWeight: 700, cursor: 'pointer' }}>{t('Read full terms')}</span>
+              {t('AGOLD is backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.')} <span style={{ color: WBRAND.red, fontWeight: 700, cursor: 'pointer' }}>{t('Read full terms')}</span>
             </div>
           </div>
         </div>
@@ -180,7 +180,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
           <WCard padding={0}>
             <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AHLG / {quote}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AGOLD / {quote}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
                   <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>{px(spot)}</WNum>
                   <span style={{ fontFamily: WFONT, fontSize: 13, color: pct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
@@ -221,7 +221,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
             <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
             <div style={{ minWidth: mobile ? 520 : 'auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.8fr 1.1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-              {['Date', 'Type', 'AHLG', 'Value', 'Status'].map((h, i) => (
+              {['Date', 'Type', 'AGOLD', 'Value', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
               ))}
             </div>
@@ -238,7 +238,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
                 </div>
                 <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: isBuy ? WBRAND.positive : WBRAND.ink }}>{isBuy ? t('Buy') : t('Sell')}</span>
-                <WMonoNum size={12} color={isBuy ? WBRAND.positive : WBRAND.ink} weight={500}>{isBuy ? '+' : '−'}{wfmt(Math.abs(tx.amount), 4)} AHLG</WMonoNum>
+                <WMonoNum size={12} color={isBuy ? WBRAND.positive : WBRAND.ink} weight={500}>{isBuy ? '+' : '−'}{wfmt(Math.abs(tx.amount), 4)} AGOLD</WMonoNum>
                 <WMonoNum size={12} color={WBRAND.muted}>{tx.paid}</WMonoNum>
                 <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
@@ -299,13 +299,13 @@ function TradeProgressModal({ side, amt, out, asset, onClose, onTrack }) {
         { id: 'submitted',  title: t('Order received'),       sub: t('Order accepted and queued') },
         { id: 'locked',     title: t('Payment locked'),       sub: () => `${wfmt(amt, wdecimals(asset.symbol))} ${asset.symbol} ${t('reserved from balance')}` },
         { id: 'processing', title: t('Processing on-chain'),  sub: t('Issuing your gold tokens') },
-        { id: 'done',       title: t('AHLG credited'),        sub: () => `${wfmt(out, 4)} AHLG ${t('credited to your wallet')}` },
+        { id: 'done',       title: t('AGOLD credited'),        sub: () => `${wfmt(out, 4)} AGOLD ${t('credited to your wallet')}` },
       ]
     : [
         { id: 'submitted', title: t('Order received'),     sub: t('Order accepted and queued') },
-        { id: 'settling',  title: t('Settling to balance'), sub: () => `${t('Converting at')} 1 AHLG = ${wfmt(asset.rate, wdecimals(asset.symbol))} ${asset.symbol}` },
+        { id: 'settling',  title: t('Settling to balance'), sub: () => `${t('Converting at')} 1 AGOLD = ${wfmt(asset.rate, wdecimals(asset.symbol))} ${asset.symbol}` },
         { id: 'credited',  title: t('Funds credited'),      sub: () => `${wfmt(out, wdecimals(asset.symbol))} ${asset.symbol} ${t('added to your wallet')}` },
-        { id: 'done',      title: t('Finalising sale'),     sub: () => `${wfmt(amt, 4)} ${t('AHLG removed from circulation')}` },
+        { id: 'done',      title: t('Finalising sale'),     sub: () => `${wfmt(amt, 4)} ${t('AGOLD removed from circulation')}` },
       ];
   const [active, setActive] = useState(0);
   const [stamps, setStamps] = useState({});
@@ -320,7 +320,7 @@ function TradeProgressModal({ side, amt, out, asset, onClose, onTrack }) {
   }, []);
 
   const done = active >= STEPS.length - 1;
-  const headAmount = side === 'buy' ? `${wfmt(out, 4)} AHLG` : `${wfmt(out, wdecimals(asset.symbol))} ${asset.symbol}`;
+  const headAmount = side === 'buy' ? `${wfmt(out, 4)} AGOLD` : `${wfmt(out, wdecimals(asset.symbol))} ${asset.symbol}`;
   const headLabel = done
     ? (side === 'buy' ? t('Buy complete') : t('Sell complete'))
     : (side === 'buy' ? t('Buying') : t('Selling'));
@@ -339,7 +339,7 @@ function TradeProgressModal({ side, amt, out, asset, onClose, onTrack }) {
         <div style={{ padding: mobile ? '16px 16px 14px' : '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <AHLGMark size={40}/>
+              <AGOLDMark size={40}/>
               <div>
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{headLabel}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{headAmount}</div>

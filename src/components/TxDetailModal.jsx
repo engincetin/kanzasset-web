@@ -11,8 +11,8 @@ export function txMeta(tx) {
   const date = tx.ts.slice(0, 10);
   const time = tx.ts.slice(11, 19);
   const base = {
-    Mint:     { title: 'Mint AHLG',   network: 'Ethereum · ERC-20', counterLabel: 'Paid' },
-    Redeem:   { title: 'Redeem AHLG', network: 'Ethereum · ERC-20', counterLabel: 'Received' },
+    Mint:     { title: 'Mint AGOLD',   network: 'Ethereum · ERC-20', counterLabel: 'Paid' },
+    Redeem:   { title: 'Redeem AGOLD', network: 'Ethereum · ERC-20', counterLabel: 'Received' },
     Deposit:  { title: 'Deposit',     network: ['AED', 'USD', 'EUR', 'GBP'].includes(tx.asset) ? 'Bank wire · SWIFT' : 'Ethereum · ERC-20', counterLabel: 'Source' },
     Withdraw: { title: 'Withdraw',    network: 'Bank wire · SWIFT', counterLabel: 'Destination' },
     Transfer: { title: 'Transfer',    network: 'Kanzasset internal', counterLabel: 'Counterparty' },

@@ -1,9 +1,9 @@
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
-import { WMark, WLogotype, AHLGMark } from '../components/coinicons.jsx';
+import { WMark, WLogotype, AGOLDMark } from '../components/coinicons.jsx';
 
 const NAV_TR = {
-  Overview: 'Genel', Funds: 'Fonlar', 'AHL Gold': 'AHL Altın', Account: 'Hesap',
+  Overview: 'Genel', Funds: 'Fonlar', 'AGOLD': 'AHL Altın', Account: 'Hesap',
   Dashboard: 'Panel', Wallet: 'Cüzdan', Deposit: 'Para Yatır', Withdraw: 'Para Çek',
   Mint: 'Üret', Redeem: 'Boz', Activity: 'İşlemler', Support: 'Destek', Profile: 'Profil',
 };
@@ -61,7 +61,7 @@ export const NAV_GROUPS = [
   },
   {
     id: 'ahlg',
-    label: 'AHLG Token',
+    label: 'AGOLD Token',
     items: [
       {
         id: 'trade', label: 'Buy / Sell',

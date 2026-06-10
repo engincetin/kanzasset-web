@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
-import { AHLGMark } from '../components/coinicons.jsx';
+import { AGOLDMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector } from '../components/shared.jsx';
@@ -11,8 +11,8 @@ import { t } from '../lib/i18n.js';
 export function WebMint({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
   const sources = Object.keys(WBALANCES)
-    .filter(s => s !== 'AHLG' && WBALANCES[s] > 0)
-    .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AHLG }));
+    .filter(s => s !== 'AGOLD' && WBALANCES[s] > 0)
+    .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AGOLD }));
 
   const [from, setFrom] = useState(sources[0]);
   const [amount, setAmount] = useState('');
@@ -25,7 +25,7 @@ export function WebMint({ navigate, onOpenTx }) {
   const quote = from.symbol;
   const quoteRate = WRATES[quote] || 1;
   const quotedData = priceData.map(d => ({ t: d.t, v: d.v / quoteRate }));
-  const spot = WRATES.AHLG / quoteRate;
+  const spot = WRATES.AGOLD / quoteRate;
   const first = quotedData[0].v;
   const diff = spot - first;
   const pct = (diff / first) * 100;
@@ -39,10 +39,10 @@ export function WebMint({ navigate, onOpenTx }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
       <div style={{ marginBottom: 20 }}>
-        <WEyebrow>{t('Mint AHLG')}</WEyebrow>
+        <WEyebrow>{t('Mint AGOLD')}</WEyebrow>
         <h1 style={{ margin: '6px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Convert cash to vaulted gold')}</h1>
         <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 6 }}>
-          {t('Mint AHL Gold tokens backed 1:1 by physical bullion held in the Ahlatcı Metal Refinery FZCO vault.')}
+          {t('Mint AGOLD tokens backed 1:1 by physical bullion held in the Ahlatcı Metal Refinery FZCO vault.')}
         </div>
       </div>
 
@@ -79,8 +79,8 @@ export function WebMint({ navigate, onOpenTx }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
                 <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums' }}>{wfmt(out, 4)}</div>
                 <div style={{ background: WBRAND.white, color: WBRAND.ink, border: `1px solid ${WBRAND.line2}`, borderRadius: 999, padding: '6px 14px 6px 6px', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <AHLGMark size={28}/>
-                  <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AHLG</span>
+                  <AGOLDMark size={28}/>
+                  <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14 }}>AGOLD</span>
                 </div>
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8 }}>
@@ -101,7 +101,7 @@ export function WebMint({ navigate, onOpenTx }) {
             </div>
             <div style={{ padding: '4px 22px 8px' }}>
               {[
-                { l: t('Spot rate'),  v: `1 AHLG = ${wfmt(WRATES.AHLG)} USDT` },
+                { l: t('Spot rate'),  v: `1 AGOLD = ${wfmt(WRATES.AGOLD)} USDT` },
                 { l: t('Network'),    v: 'Ethereum · ERC-20' },
                 { l: t('Mint fee'),   v: `0.00% — ${t('promotional')}` },
                 { l: t('Settlement'), v: t('Instant on-chain') },
@@ -115,13 +115,13 @@ export function WebMint({ navigate, onOpenTx }) {
           </WCard>
 
           <WPrimary size="lg" onClick={() => out > 0 && setMinting(true)} disabled={out <= 0} style={{ width: '100%', justifyContent: 'center' }}>
-            {t('Mint')} {wfmt(out, 4)} AHLG
+            {t('Mint')} {wfmt(out, 4)} AGOLD
           </WPrimary>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.redSoft, borderRadius: 10 }}>
             <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
-              {t('By minting, you acknowledge AHLG tokens are backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.')} <span style={{ color: WBRAND.red, fontWeight: 700, cursor: 'pointer' }}>{t('Read full terms')}</span>
+              {t('By minting, you acknowledge AGOLD tokens are backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.')} <span style={{ color: WBRAND.red, fontWeight: 700, cursor: 'pointer' }}>{t('Read full terms')}</span>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ export function WebMint({ navigate, onOpenTx }) {
           <WCard padding={0}>
             <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
               <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AHLG / {quote}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AGOLD / {quote}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
                   <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>{px(spot)}</WNum>
                   <span style={{ fontFamily: WFONT, fontSize: 13, color: pct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
@@ -187,8 +187,8 @@ export function WebMint({ navigate, onOpenTx }) {
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
                 </div>
                 <WMonoNum size={12}>{tx.paid}</WMonoNum>
-                <WMonoNum size={12} color={WBRAND.positive} weight={500}>+{wfmt(tx.amount, 4)} AHLG</WMonoNum>
-                <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AHLG)} USDT</WMonoNum>
+                <WMonoNum size={12} color={WBRAND.positive} weight={500}>+{wfmt(tx.amount, 4)} AGOLD</WMonoNum>
+                <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AGOLD)} USDT</WMonoNum>
                 <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
@@ -229,7 +229,7 @@ function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
     { id: 'submitted', title: t('Mint request received'), sub: t('Order accepted and queued') },
     { id: 'locked',    title: t('Payment locked'),         sub: () => `${wfmt(paid, wdecimals(from.symbol))} ${from.symbol} ${t('reserved from balance')}` },
     { id: 'minting',   title: t('Minting on-chain'),       sub: t('Issuing tokens against vaulted gold') },
-    { id: 'done',      title: t('AHLG minted'),            sub: () => `${wfmt(amount, 4)} AHLG ${t('credited to your wallet')}` },
+    { id: 'done',      title: t('AGOLD minted'),            sub: () => `${wfmt(amount, 4)} AGOLD ${t('credited to your wallet')}` },
   ];
   const [active, setActive] = useState(0);
   const [stamps, setStamps] = useState({});
@@ -261,10 +261,10 @@ function MintProgressModal({ amount, from, paid, onClose, onTrack }) {
         <div style={{ padding: mobile ? '16px 16px 14px' : '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <AHLGMark size={44}/>
+              <AGOLDMark size={44}/>
               <div>
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? t('Mint complete') : t('Minting')}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{wfmt(amount, 4)} AHLG</div>
+                <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{wfmt(amount, 4)} AGOLD</div>
               </div>
             </div>
             <WMonoNum size={11} color={WBRAND.muted}>{ref}</WMonoNum>

@@ -82,8 +82,8 @@ export function WebActivity({ navigate, onOpenTx }) {
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 16, marginBottom: 20 }}>
         {[
-          { l: 'Total minted',   v: `${wfmt(totalMints, 4)} AHLG`,   sub: `≈ $${wfmt(totalMints * WRATES.AHLG)}` },
-          { l: 'Total redeemed', v: `${wfmt(totalRedeems, 4)} AHLG`, sub: `≈ $${wfmt(totalRedeems * WRATES.AHLG)}` },
+          { l: 'Total minted',   v: `${wfmt(totalMints, 4)} AGOLD`,   sub: `≈ $${wfmt(totalMints * WRATES.AGOLD)}` },
+          { l: 'Total redeemed', v: `${wfmt(totalRedeems, 4)} AGOLD`, sub: `≈ $${wfmt(totalRedeems * WRATES.AGOLD)}` },
           { l: 'Deposits',       v: String(totalDeposits),            sub: t('past 30 days') },
           { l: 'Withdrawals',    v: String(totalWithdrws),            sub: t('past 30 days') },
         ].map((k, i) => (
@@ -103,7 +103,7 @@ export function WebActivity({ navigate, onOpenTx }) {
               <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('Search by ID, asset, counterparty…')} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink }}/>
             </div>
             <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw', 'Delivery']}  onChange={setTypeFilter}/>
-            <FilterDropdown label="Asset"  value={assetFilter}  options={['All', 'AHLG', 'USDT', 'USDC', 'AED', 'USD', 'EUR', 'GBP']}   onChange={setAssetFilter}/>
+            <FilterDropdown label="Asset"  value={assetFilter}  options={['All', 'AGOLD', 'USDT', 'USDC', 'AED', 'USD', 'EUR', 'GBP']}   onChange={setAssetFilter}/>
             <FilterDropdown label="Status" value={statusFilter} options={['All', 'Completed', 'Pending', 'Failed']}                      onChange={setStatusFilter}/>
             <div style={{ flex: 1 }}/>
             <WRangeTabs value={range} onChange={setRange} options={['7D', '30D', '90D', '1Y', 'ALL']}/>

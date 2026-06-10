@@ -4,7 +4,7 @@ import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { useIsMobile } from '../lib/useResponsive.js';
 import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
-import { WMark, AHLGMark } from '../components/coinicons.jsx';
+import { WMark, AGOLDMark } from '../components/coinicons.jsx';
 import { WPrimary, WSecondary, WPill } from '../components/primitives.jsx';
 import { WCountdown } from '../components/shared.jsx';
 
@@ -55,7 +55,7 @@ function WAuthLayout({ children }) {
         </div>
 
         <div style={{ position: 'relative' }}>
-          <AHLGMark size={52}/>
+          <AGOLDMark size={52}/>
           <h2 style={{ margin: '24px 0 0', fontFamily: WFONT, fontSize: 34, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}>{t('Gold you can hold,')}<br/><span className="kz-gold-text">{t('tokenised.')}</span></h2>
           <p style={{ margin: '16px 0 0', fontFamily: WFONT, fontSize: 14, lineHeight: 1.6, color: 'rgba(255,255,255,0.6)', maxWidth: 360 }}>
             {t('Mint, redeem and take delivery of investment-grade gold — backed 1:1 by bullion in the Ahlatcı Metal Refinery vault.')}
