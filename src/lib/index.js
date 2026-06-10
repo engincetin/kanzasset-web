@@ -88,9 +88,17 @@ try { const b = localStorage.getItem('kz-brand'); if (b && BRANDS.some(x => x.id
 
 const _applyBrand = () => {
   const p = BRANDS.find(x => x.id === _brand) || BRANDS[1];
-  WBRAND.red = p.hex;
-  WBRAND.redDeep = p.deep;
-  WBRAND.redSoft = p.soft;
+  // The black brand is invisible on dark surfaces — flip the accent to
+  // white in dark mode so charts, buttons and links stay visible.
+  if (p.id === 'black' && _resolve(_theme) === 'dark') {
+    WBRAND.red = '#FFFFFF';
+    WBRAND.redDeep = '#E2E2E2';
+    WBRAND.redSoft = 'rgba(255,255,255,0.12)';
+  } else {
+    WBRAND.red = p.hex;
+    WBRAND.redDeep = p.deep;
+    WBRAND.redSoft = p.soft;
+  }
 };
 
 export const getBrand = () => _brand;

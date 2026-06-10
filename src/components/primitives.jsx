@@ -39,22 +39,31 @@ export function WCard({ children, style = {}, padding = 24, onClick }) {
   );
 }
 
+// Is a hex colour light enough to need dark text on top?
+function isLightHex(hex) {
+  if (typeof hex !== 'string' || hex[0] !== '#' || hex.length < 7) return false;
+  const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 175;
+}
+
 // ─── Buttons ──────────────────────────────────────────────────
 export function WPrimary({ children, onClick, style = {}, size = 'md', icon, disabled, tone = 'brand' }) {
   const h = size === 'lg' ? 52 : size === 'sm' ? 36 : 44;
   const fs = size === 'lg' ? 15 : size === 'sm' ? 13 : 14;
+  // On a light brand surface (e.g. white accent in dark mode) use dark text.
+  const brandFg = isLightHex(WBRAND.red) ? WBRAND.ink : '#fff';
   const tones = {
     // brand follows the colour picker; green/red are STATIC (buy / sell)
-    brand: { bg: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})`, shadow: '0 1px 0 rgba(255,255,255,0.12) inset, 0 2px 8px -3px rgba(16,17,20,0.4)', cls: '' },
-    green: { bg: 'linear-gradient(180deg, #18A765, #0F7A47)',                 shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(15,122,71,0.45)', cls: ' kz-btn-green' },
-    red:   { bg: 'linear-gradient(180deg, #D4202B, #A8161F)',                 shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(168,22,31,0.45)', cls: ' kz-btn-red' },
+    brand: { bg: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})`, shadow: '0 1px 0 rgba(255,255,255,0.12) inset, 0 2px 8px -3px rgba(16,17,20,0.4)', cls: '', fg: brandFg },
+    green: { bg: 'linear-gradient(180deg, #18A765, #0F7A47)',                 shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(15,122,71,0.45)', cls: ' kz-btn-green', fg: '#fff' },
+    red:   { bg: 'linear-gradient(180deg, #D4202B, #A8161F)',                 shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(168,22,31,0.45)', cls: ' kz-btn-red', fg: '#fff' },
   };
   const tn = tones[tone] ?? tones.brand;
   return (
     <button onClick={onClick} disabled={disabled} className={'kz-btn-primary' + tn.cls} style={{
       height: h, padding: '0 20px', borderRadius: 10,
       background: tn.bg,
-      color: '#fff',
+      color: tn.fg,
       border: 'none', cursor: disabled ? 'not-allowed' : 'pointer',
       fontFamily: WFONT, fontWeight: 700, fontSize: fs,
       letterSpacing: '-0.005em',
