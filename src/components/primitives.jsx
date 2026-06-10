@@ -40,16 +40,17 @@ export function WCard({ children, style = {}, padding = 24, onClick }) {
 }
 
 // ─── Buttons ──────────────────────────────────────────────────
-export function WPrimary({ children, onClick, style = {}, size = 'md', icon, disabled, tone = 'red' }) {
+export function WPrimary({ children, onClick, style = {}, size = 'md', icon, disabled, tone = 'accent' }) {
   const h = size === 'lg' ? 52 : size === 'sm' ? 36 : 44;
   const fs = size === 'lg' ? 15 : size === 'sm' ? 13 : 14;
   const tones = {
-    red:   { bg: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})`, shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(168,22,31,0.45)' },
-    green: { bg: 'linear-gradient(180deg, #18A765, #0F7A47)',                 shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(15,122,71,0.45)' },
+    accent:{ bg: `linear-gradient(180deg, ${WBRAND.accent}, ${WBRAND.accentDeep})`, shadow: '0 1px 0 rgba(255,255,255,0.10) inset, 0 2px 8px -3px rgba(16,17,20,0.4)', cls: '' },
+    red:   { bg: `linear-gradient(180deg, ${WBRAND.red}, ${WBRAND.redDeep})`, shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(168,22,31,0.45)', cls: ' kz-btn-red' },
+    green: { bg: 'linear-gradient(180deg, #18A765, #0F7A47)',                 shadow: '0 1px 0 rgba(255,255,255,0.14) inset, 0 2px 8px -2px rgba(15,122,71,0.45)', cls: ' kz-btn-green' },
   };
-  const tn = tones[tone] ?? tones.red;
+  const tn = tones[tone] ?? tones.accent;
   return (
-    <button onClick={onClick} disabled={disabled} className={tone === 'green' ? 'kz-btn-primary kz-btn-green' : 'kz-btn-primary'} style={{
+    <button onClick={onClick} disabled={disabled} className={'kz-btn-primary' + tn.cls} style={{
       height: h, padding: '0 20px', borderRadius: 10,
       background: tn.bg,
       color: '#fff',
@@ -174,8 +175,8 @@ export function WPill({ children, tone = 'neutral', style = {} }) {
     positive: { bg: 'rgba(15,122,71,0.10)', fg: WBRAND.positive },
     negative: { bg: WBRAND.redSoft, fg: WBRAND.red },
     warn:     { bg: 'rgba(183,121,31,0.10)', fg: WBRAND.warn },
-    accent:   { bg: WBRAND.redSoft, fg: WBRAND.red },
-    inkInv:   { bg: WBRAND.ink, fg: '#fff' },
+    accent:   { bg: WBRAND.accentSoft, fg: WBRAND.ink },
+    inkInv:   { bg: WBRAND.accent, fg: '#fff' },
   };
   const t = tones[tone] ?? tones.neutral;
   return (

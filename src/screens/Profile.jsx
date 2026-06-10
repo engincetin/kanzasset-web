@@ -255,7 +255,7 @@ function ProfKYC() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 4 }}>
             {['Tier 1 · Identity', 'Tier 2 · Address', 'Tier 3 · Institutional'].map((l, i) => (
-              <div key={i} style={{ height: 4, borderRadius: 2, background: WBRAND.red }}/>
+              <div key={i} style={{ height: 4, borderRadius: 2, background: WBRAND.positive }}/>
             ))}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginTop: 8 }}>
@@ -306,7 +306,7 @@ function ProfKYC() {
                   <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>/ {k.total}</span>
                 </div>
                 <div style={{ height: 4, background: WBRAND.surface, borderRadius: 2, marginTop: 10, overflow: 'hidden' }}>
-                  <div style={{ width: `${Math.max(k.pct, 1)}%`, height: '100%', background: WBRAND.red }}/>
+                  <div style={{ width: `${Math.max(k.pct, 1)}%`, height: '100%', background: WBRAND.accent }}/>
                 </div>
                 <div style={{ fontFamily: WMONO, fontSize: 11, color: WBRAND.muted, marginTop: 6 }}>{wfmt(k.pct, 1)}% {t('used')}</div>
               </div>
@@ -362,7 +362,7 @@ function ProfDestinations() {
             <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: '12px 14px 14px', border: 'none', background: 'transparent', cursor: 'pointer', position: 'relative', fontFamily: WFONT, fontSize: 13, fontWeight: on ? 700 : 500, color: on ? WBRAND.ink : WBRAND.muted, letterSpacing: '-0.005em', display: 'flex', alignItems: 'center', gap: 8, marginBottom: -1, flexShrink: 0, whiteSpace: 'nowrap' }}>
               <span>{t.label}</span>
               <span style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, background: on ? WBRAND.panel : WBRAND.surface, color: on ? '#fff' : WBRAND.muted, padding: '2px 7px', borderRadius: 10, fontVariantNumeric: 'tabular-nums' }}>{t.count}</span>
-              {on && <span style={{ position: 'absolute', left: 0, right: 0, bottom: -1, height: 2, background: WBRAND.red }}/>}
+              {on && <span style={{ position: 'absolute', left: 0, right: 0, bottom: -1, height: 2, background: WBRAND.accent }}/>}
             </button>
           );
         })}

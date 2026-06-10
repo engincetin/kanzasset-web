@@ -63,7 +63,7 @@ export function WebMint({ navigate, onOpenTx }) {
                   {[25, 50, 75].map(p => (
                     <button key={p} onClick={() => setAmount(wgroup(String(from.balance * p / 100)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.ink }}>{p}%</button>
                   ))}
-                  <button onClick={() => setAmount(wgroup(String(from.balance)))} style={{ background: WBRAND.redSoft, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('MAX')}</button>
+                  <button onClick={() => setAmount(wgroup(String(from.balance)))} style={{ background: WBRAND.surface, border: 'none', cursor: 'pointer', padding: '2px 8px', borderRadius: 6, fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.ink }}>{t('MAX')}</button>
                 </span>
               </div>
             </div>
@@ -121,7 +121,7 @@ export function WebMint({ navigate, onOpenTx }) {
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.redSoft, borderRadius: 10 }}>
             <div style={{ width: 18, height: 18, borderRadius: 9, background: WBRAND.red, color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0, fontFamily: WFONT, fontSize: 11, fontWeight: 800 }}>!</div>
             <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.ink, lineHeight: 1.5 }}>
-              {t('By minting, you acknowledge AHLG tokens are backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.')} <span style={{ color: WBRAND.red, fontWeight: 700, cursor: 'pointer' }}>{t('Read full terms')}</span>
+              {t('By minting, you acknowledge AHLG tokens are backed 1:1 by physical gold custodied at the Ahlatcı Metal Refinery FZCO vault, audited monthly by Bureau Veritas.')} <span style={{ color: WBRAND.ink, fontWeight: 700, cursor: 'pointer' }}>{t('Read full terms')}</span>
             </div>
           </div>
         </div>
@@ -165,8 +165,8 @@ export function WebMint({ navigate, onOpenTx }) {
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent mints')}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
               </div>
-              <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>
-                {t('View all')} {WIcon.arrowRight(WBRAND.red)}
+              <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.ink, display: 'flex', alignItems: 'center', gap: 4 }}>
+                {t('View all')} {WIcon.arrowRight(WBRAND.ink)}
               </button>
             </div>
             <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>

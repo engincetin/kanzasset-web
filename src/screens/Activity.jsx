@@ -116,7 +116,7 @@ export function WebActivity({ navigate, onOpenTx }) {
               {typeFilter !== 'All' && <FilterChip label={`${t('Type')}: ${t(typeFilter)}`} onClear={() => setTypeFilter('All')}/>}
               {assetFilter !== 'All' && <FilterChip label={`${t('Asset')}: ${assetFilter}`} onClear={() => setAssetFilter('All')}/>}
               {statusFilter !== 'All' && <FilterChip label={`${t('Status')}: ${t(statusFilter)}`} onClear={() => setStatusFilter('All')}/>}
-              <button onClick={() => { setSearch(''); setTypeFilter('All'); setAssetFilter('All'); setStatusFilter('All'); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('Clear all')}</button>
+              <button onClick={() => { setSearch(''); setTypeFilter('All'); setAssetFilter('All'); setStatusFilter('All'); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.ink }}>{t('Clear all')}</button>
             </div>
           )}
         </div>
@@ -159,7 +159,7 @@ export function WebActivity({ navigate, onOpenTx }) {
             </svg>
             <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, marginTop: 14, letterSpacing: '-0.01em' }}>{t('No transactions match the current filters.')}</div>
             <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 6 }}>{t('Try widening the date range or clearing a filter.')}</div>
-            <button onClick={() => { setSearch(''); setTypeFilter('All'); setAssetFilter('All'); setStatusFilter('All'); }} style={{ marginTop: 16, height: 36, padding: '0 16px', borderRadius: 8, background: WBRAND.redSoft, color: WBRAND.red, border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>
+            <button onClick={() => { setSearch(''); setTypeFilter('All'); setAssetFilter('All'); setStatusFilter('All'); }} style={{ marginTop: 16, height: 36, padding: '0 16px', borderRadius: 8, background: WBRAND.surface, color: WBRAND.ink, border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>
               {t('Clear all')}
             </button>
           </div>

@@ -94,7 +94,7 @@ const authInput = {
 };
 const authLink = {
   background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,
-  fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red,
+  fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink,
 };
 
 function AuthField({ label, trailing, children }) {
@@ -134,7 +134,7 @@ function WebLogin({ onContinue }) {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-              <span style={{ width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${WBRAND.red}`, background: WBRAND.red, display: 'grid', placeItems: 'center' }}>
+              <span style={{ width: 18, height: 18, borderRadius: 5, border: `1.5px solid ${WBRAND.accent}`, background: WBRAND.accent, display: 'grid', placeItems: 'center' }}>
                 {WIcon.check('#fff')}
               </span>
               <span style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.ink, fontWeight: 500 }}>{t('Keep me signed in')}</span>

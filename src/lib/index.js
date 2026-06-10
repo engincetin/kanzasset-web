@@ -18,6 +18,10 @@ const WLIGHT = {
   white:   '#FFFFFF',   // card background
   positive:'#0F7A47',
   warn:    '#B7791F',
+  accent:  '#34353B',   // general UI accent (soft graphite, not pure black)
+  accentDeep:'#1E1F24',
+  accentSoft:'rgba(40,41,46,0.06)',
+  selBg:   '#EEEEEB',   // selected / active nav background
   panel:   '#0A0A0A',   // dark accent surface (white text on top)
   heroBg:  '#2C2D33',   // holdings hero (charcoal grey in light)
 };
@@ -37,6 +41,10 @@ const WDARK = {
   white:   '#17181C',
   positive:'#3DD68C',
   warn:    '#E0A042',
+  accent:  '#3C3D45',   // general UI accent (graphite, lighter than page)
+  accentDeep:'#2A2B31',
+  accentSoft:'rgba(255,255,255,0.07)',
+  selBg:   '#262730',   // selected / active nav background
   panel:   '#24252C',
   heroBg:  '#121317',   // holdings hero (deep, distinct from page in dark)
 };

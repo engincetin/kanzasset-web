@@ -205,14 +205,14 @@ export function WQuoteCountdown({ seconds = 10 }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 6,
-      background: WBRAND.redSoft, color: WBRAND.red,
+      background: WBRAND.surface, color: WBRAND.muted,
       borderRadius: 6, padding: '3px 10px 3px 6px',
       fontFamily: WMONO, fontSize: 11, fontWeight: 700,
       letterSpacing: '0.02em', fontVariantNumeric: 'tabular-nums',
     }}>
       <svg width="14" height="14" viewBox="0 0 14 14" style={{ display: 'block', transform: 'rotate(-90deg)' }}>
-        <circle cx="7" cy="7" r={r} fill="none" stroke={WBRAND.red} strokeWidth="1.5" opacity="0.22"/>
-        <circle cx="7" cy="7" r={r} fill="none" stroke={WBRAND.red} strokeWidth="1.5"
+        <circle cx="7" cy="7" r={r} fill="none" stroke={WBRAND.muted} strokeWidth="1.5" opacity="0.22"/>
+        <circle cx="7" cy="7" r={r} fill="none" stroke={WBRAND.muted} strokeWidth="1.5"
           strokeDasharray={C} strokeDashoffset={offset} strokeLinecap="round"
           style={{ transition: 'stroke-dashoffset .9s linear' }}/>
       </svg>
