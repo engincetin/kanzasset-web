@@ -20,19 +20,15 @@ export function WMark({ size = 24, color, variant }) {
   // dark mode (where black would be invisible); other colours stay as-is.
   const fill = color || ((isDark() && getBrand() === 'black') ? '#FFFFFF' : WBRAND.red);
 
-  if (v === 'monogram') {
+  if (v === 'sharp') {
+    // Bold angular "K◆" — vector recreation, sized like the classic mark
+    const w = Math.round(size * (120 / 100));
     return (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} style={{ display: 'block', flexShrink: 0 }} role="img" aria-label="Kanzasset">
-        <rect x="3.4" y="3" width="3.7" height="18" rx="0.6"/>
-        <path d="M7.8 12.2 L16 3 H20.7 L12.4 12.1 L20.7 21 H16 Z"/>
-      </svg>
-    );
-  }
-  if (v === 'diamond') {
-    return (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} style={{ display: 'block', flexShrink: 0 }} role="img" aria-label="Kanzasset">
-        <path d="M12 2 L22 12 L12 22 L2 12 Z"/>
-        <path d="M12 7.4 L16.6 12 L12 16.6 L7.4 12 Z" fill={WBRAND.white}/>
+      <svg width={w} height={size} viewBox="0 0 120 100" fill={fill} style={{ display: 'block', flexShrink: 0 }} role="img" aria-label="Kanzasset">
+        <rect x="8" y="8" width="20" height="84" rx="1.5"/>
+        <path d="M30 50 L70 8 H92 L52 50 Z"/>
+        <path d="M30 50 L70 92 H92 L52 50 Z"/>
+        <path d="M101 18 L113 30 L101 42 L89 30 Z"/>
       </svg>
     );
   }

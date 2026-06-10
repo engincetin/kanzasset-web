@@ -109,9 +109,8 @@ export const setBrand = (id) => {
 
 // ─── Logo variant (board-demo) ────────────────────────────────
 export const LOGOS = [
-  { id: 'classic',  name: 'Klasik' },
-  { id: 'monogram', name: 'Monogram' },
-  { id: 'diamond',  name: 'Elmas' },
+  { id: 'classic', name: 'Klasik' },
+  { id: 'sharp',   name: 'Keskin' },
 ];
 let _logo = 'classic';
 try { const l = localStorage.getItem('kz-logo'); if (l && LOGOS.some(x => x.id === l)) _logo = l; } catch { /* noop */ }
