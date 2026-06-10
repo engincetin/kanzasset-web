@@ -31,6 +31,7 @@ export const tr = {
   "Processing on-chain": "Zincirde işleniyor",
   "Issuing your gold tokens": "Altın tokenleriniz oluşturuluyor",
   "AHLG credited": "AHLG hesabınıza geçti",
+  "AHLG Holdings": "AHLG Varlıkları",
   "Finalising sale": "Satış tamamlanıyor",
   "Redeem completed": "Satım tamamlandı",
   "≈ 3 minutes": "≈ 3 dakika",
