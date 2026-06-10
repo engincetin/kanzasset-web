@@ -20,10 +20,11 @@ export function WMark({ size = 24, color, variant }) {
   // dark mode (where black would be invisible); other colours stay as-is.
   const fill = color || ((isDark() && getBrand() === 'black') ? '#FFFFFF' : WBRAND.red);
 
-  // Both variants are recolourable PNG masks (same 384×304 footprint)
+  // Both variants are recolourable PNG masks (same 384×304 footprint).
+  // ?v cache-buster forces browsers/CDN to refetch when the file is replaced.
   const w = Math.round(size * (384 / 304));
   const file = v === 'sharp' ? 'kanzasset-mark-transparent-2.png' : 'kanzasset-mark-transparent.png';
-  const url = `${import.meta.env.BASE_URL}assets/${file}`;
+  const url = `${import.meta.env.BASE_URL}assets/${file}?v=3`;
   return (
     <span
       role="img"
