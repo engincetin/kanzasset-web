@@ -1,7 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { t } from '../lib/i18n.js';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WIcon } from './icons.jsx';
+
+// ─── Count-up number animation ────────────────────────────────
+// Rolls from the previous value (0 on first mount) to the new one.
+export function useCountUp(value, duration = 750) {
+  const [display, setDisplay] = useState(0);
+  const prev = useRef(0);
+  useEffect(() => {
+    const from = prev.current;
+    const to = value;
+    if (from === to) { setDisplay(to); return; }
+    const t0 = performance.now();
+    let raf;
+    const tick = (now) => {
+      const p = Math.min(1, (now - t0) / duration);
+      const e = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      setDisplay(from + (to - from) * e);
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else prev.current = to;
+    };
+    raf = requestAnimationFrame(tick);
+    return () => { cancelAnimationFrame(raf); prev.current = to; };
+  }, [value, duration]);
+  return display;
+}
 
 // ─── Card ──────────────────────────────────────────────────────
 export function WCard({ children, style = {}, padding = 24, onClick }) {

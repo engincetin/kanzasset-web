@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wTotalIn, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData, isDark } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
-import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WSectionTitle } from '../components/primitives.jsx';
+import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WSectionTitle, useCountUp } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs } from '../components/charts.jsx';
 import { WTxRow, AssetActionBtn } from '../components/shared.jsx';
 import { useIsMobile, useIsTablet } from '../lib/useResponsive.js';
@@ -40,6 +40,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
 
   const total = wTotalIn(currency);
   const totalAed = wTotalIn('AED');
+  const animTotal = useCountUp(total);
+  const animAhlg  = useCountUp(WBALANCES.AHLG);
 
   const assets = Object.keys(WBALANCES).map(s => {
     const bal = WBALANCES[s];
@@ -121,7 +123,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginTop: 14 }}>
-              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: WBRAND.ink, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(total, wdecimals(currency))}</span>
+              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: WBRAND.ink, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(animTotal, wdecimals(currency))}</span>
               <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: mobile ? 14 : 18, color: WBRAND.muted, letterSpacing: '-0.01em' }}>{currency}</span>
             </div>
 
@@ -183,7 +185,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                   <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: heroLabel }}>{t('AHL Gold holdings')}</div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative' }}>
-                  <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: heroText, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(WBALANCES.AHLG, 0)}</span>
+                  <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: heroText, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(animAhlg, 0)}</span>
                   <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: mobile ? 14 : 18, color: heroLabel, letterSpacing: '-0.01em' }}>AHLG</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative', flexWrap: mobile ? 'wrap' : 'nowrap' }}>

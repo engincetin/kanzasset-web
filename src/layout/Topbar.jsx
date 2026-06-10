@@ -15,7 +15,7 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
       display: 'flex', alignItems: 'center', gap: mobile ? 12 : 24,
     }}>
       {onMenu && (
-        <button onClick={onMenu} title="Menu" style={{
+        <button onClick={onMenu} title="Menu" className="kz-btn-secondary" style={{
           width: 38, height: 38, borderRadius: 8, flexShrink: 0,
           background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
           display: 'grid', placeItems: 'center', cursor: 'pointer', padding: 0,
@@ -40,7 +40,7 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
         </div>
       </div>
 
-      <button onClick={onNotifs} style={{
+      <button onClick={onNotifs} className="kz-btn-secondary" style={{
         width: 38, height: 38, borderRadius: 8,
         background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
         display: 'grid', placeItems: 'center', cursor: 'pointer',
@@ -55,7 +55,7 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
       </button>
 
       <div style={{ position: 'relative' }}>
-        <button onClick={() => setMenuOpen(!menuOpen)} style={{
+        <button onClick={() => setMenuOpen(!menuOpen)} className="kz-btn-secondary" style={{
           display: 'flex', alignItems: 'center', gap: 10,
           padding: mobile ? 3 : '4px 10px 4px 4px', height: 38, borderRadius: 8,
           background: menuOpen ? WBRAND.surface : WBRAND.white,

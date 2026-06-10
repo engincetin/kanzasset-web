@@ -304,7 +304,7 @@ function TradeProgressModal({ side, amt, out, asset, onClose, onTrack }) {
   return (
     <div onClick={done ? onClose : undefined} style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
+      background: 'rgba(10,10,10,0.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} className="kz-pop" style={{
         width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white,

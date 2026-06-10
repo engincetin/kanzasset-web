@@ -109,8 +109,8 @@ export function WPriceChart({ data, height = 260, color = WBRAND.red, showGrid =
         ))}
 
         {/* Area + line */}
-        <path d={area} fill={`url(#${gradId})`} />
-        <path d={path} fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={area} fill={`url(#${gradId})`} className="kz-chart-fill" />
+        <path d={path} fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" pathLength="1" className="kz-chart-line" />
 
         {/* Crosshair */}
         {hover && (

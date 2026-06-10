@@ -26,7 +26,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
   return (
     <div onClick={step === 'submitted' ? onClose : undefined} style={{
       position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(10,10,10,0.42)',
+      background: 'rgba(10,10,10,0.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
     }}>
       <div onClick={e => e.stopPropagation()} className="kz-pop" style={{

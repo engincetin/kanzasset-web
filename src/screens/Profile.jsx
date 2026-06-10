@@ -482,7 +482,7 @@ export function AddDestinationModal({ tab, onClose }) {
   }[tab];
 
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
       <div onClick={e => e.stopPropagation()} className="kz-pop" style={{ width: 440, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
         {submitted ? (
           <>
@@ -772,7 +772,7 @@ function CloseAccountModal({ onClose, onLogout }) {
   const [text, setText] = useState('');
   const ok = text.trim().toUpperCase() === 'CLOSE';
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.42)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,10,10,0.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
       <div onClick={e => e.stopPropagation()} className="kz-pop" style={{ width: 440, maxWidth: '100%', boxSizing: 'border-box', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)' }}>
         <div style={{ padding: '28px 28px 0', textAlign: 'center' }}>
           <div style={{ width: 60, height: 60, borderRadius: 30, margin: '0 auto', background: WBRAND.redSoft, display: 'grid', placeItems: 'center' }}>

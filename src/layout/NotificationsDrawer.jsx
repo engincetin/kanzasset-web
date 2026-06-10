@@ -103,6 +103,7 @@ export function WNotificationsDrawer({ open, onClose }) {
     <>
       <div onClick={onClose} style={{
         position: 'absolute', inset: 0, background: 'rgba(10,10,10,0.32)',
+        backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)',
         zIndex: 80,
         opacity: open ? 1 : 0,
         pointerEvents: open ? 'auto' : 'none',

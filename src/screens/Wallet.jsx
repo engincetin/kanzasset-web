@@ -3,7 +3,7 @@ import { WBRAND, WFONT, wfmt, wdecimals, wTotalIn, WRATES, WBALANCES, WMETA } fr
 import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
-import { WCard, WSecondary, WGhost, WEyebrow, WNum, WMonoNum, WSectionTitle } from '../components/primitives.jsx';
+import { WCard, WSecondary, WGhost, WEyebrow, WNum, WMonoNum, WSectionTitle, useCountUp } from '../components/primitives.jsx';
 import { AssetActionBtn } from '../components/shared.jsx';
 import { useIsMobile } from '../lib/useResponsive.js';
 
@@ -34,6 +34,7 @@ export function WebWallet({ navigate }) {
 
   const total = wTotalIn(currency);
   const totalAed = wTotalIn('AED');
+  const animTotal = useCountUp(total);
   const crypto = allAssets.filter(a => a.kind === 'crypto').reduce((s, a) => s + a.valUSDT, 0);
   const fiat   = allAssets.filter(a => a.kind === 'fiat').reduce((s, a) => s + a.valUSDT, 0);
 
@@ -54,7 +55,7 @@ export function WebWallet({ navigate }) {
             <div>
               <WEyebrow>{t('Total balance')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
-                <WNum size={34} weight={800} style={{ letterSpacing: '-0.03em' }}>{wfmt(total, wdecimals(currency))}</WNum>
+                <WNum size={34} weight={800} style={{ letterSpacing: '-0.03em' }}>{wfmt(animTotal, wdecimals(currency))}</WNum>
                 <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14, color: WBRAND.muted }}>{currency}</span>
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
