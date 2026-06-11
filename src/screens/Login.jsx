@@ -182,6 +182,7 @@ function WebVerify2FA({ onVerified, onBack }) {
   };
   const onKey = (i, e) => {
     if (e.key === 'Backspace' && !code[i] && i > 0 && refs.current[i - 1]) refs.current[i - 1].focus();
+    if (e.key === 'Enter' && full) { e.preventDefault(); onVerified(); }
   };
 
   return (
