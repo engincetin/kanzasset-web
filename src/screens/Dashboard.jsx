@@ -177,7 +177,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         </WCard>
 
         {/* AGOLD holdings */}
-        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
           {(() => {
             const dark = isDark();
             const heroBg    = dark ? WBRAND.heroBg : WBRAND.white;
@@ -187,7 +187,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             const heroPillText = dark ? '#fff' : WBRAND.ink;
             const dotColor  = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.05)';
             return (
-              <div style={{ padding: mobile ? '18px 16px' : '24px 28px 24px', flex: 1, background: heroBg, color: heroText, borderTopLeftRadius: 16, borderTopRightRadius: 16, borderBottom: `1px solid ${WBRAND.line}`, position: 'relative', overflow: 'hidden' }}>
+              <div style={{ padding: mobile ? '18px 16px' : '24px 28px 24px', flex: 1, background: heroBg, color: heroText, borderBottom: `1px solid ${WBRAND.line}`, position: 'relative', overflow: 'hidden' }}>
                 <style>{`@keyframes kzDotDrift{from{background-position:0 0}to{background-position:40px 40px}}`}</style>
                 <div style={{
                   position: 'absolute', inset: 0, pointerEvents: 'none',
