@@ -8,6 +8,31 @@
 // • Sözlükte olmayan bir metin otomatik İngilizce gösterilir (çökmez).
 // ─────────────────────────────────────────────────────────────
 export const tr = {
+  // ── Profil: doğrulama / belgeler / limitler / güvenlik / yasal ──
+  "Tier 1 · Identity": "Kademe 1 · Kimlik",
+  "Tier 2 · Address": "Kademe 2 · Adres",
+  "Passport": "Pasaport",
+  "Address proof": "Adres kanıtı",
+  "Source of funds": "Fon kaynağı",
+  "Beneficial owner declaration": "Gerçek faydalanıcı beyanı",
+  "Tax residency form (CRS)": "Vergi ikametgah formu (CRS)",
+  "TR-U12345678 · uploaded Apr 30, 2024": "TR-U12345678 · 30 Nis 2024 yüklendi",
+  "Utility bill · uploaded May 1, 2024": "Fatura · 1 May 2024 yüklendi",
+  "Bank statement · uploaded May 2, 2024": "Banka ekstresi · 2 May 2024 yüklendi",
+  "Notarised · uploaded May 2, 2024": "Noter onaylı · 2 May 2024 yüklendi",
+  "TR · uploaded May 2, 2024": "TR · 2 May 2024 yüklendi",
+  "Daily mint limit": "Günlük alım limiti",
+  "Daily redeem limit": "Günlük satım limiti",
+  "Daily withdrawal": "Günlük çekim limiti",
+  "Physical delivery / month": "Aylık fiziksel teslimat",
+  "Last changed Mar 12, 2026": "12 Mar 2026’da değişti",
+  "Right now": "Şu anda",
+  "12 minutes ago": "12 dakika önce",
+  "2 days ago": "2 gün önce",
+  "Istanbul · 87.245.190.x": "İstanbul · 87.245.190.x",
+  "Dubai · 94.200.4.x": "Dubai · 94.200.4.x",
+  "v4.2 · effective Apr 1, 2026": "v4.2 · yürürlük 1 Nis 2026",
+  "v3.1 · effective Mar 15, 2026": "v3.1 · yürürlük 15 Mar 2026",
   // ── Destek talepleri ve konuşmalar (support tickets) ──
   "Withdrawals": "Para Çekme",
   "Minting": "Üretim",

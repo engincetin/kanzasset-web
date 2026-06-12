@@ -219,7 +219,7 @@ function ProfSecurity() {
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t(r.l)}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{r.v}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{t(r.v)}</div>
               </div>
               {r.pill}
               <WSecondary size="sm">{t(r.cta)}</WSecondary>
@@ -241,7 +241,7 @@ function ProfSecurity() {
                   <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{s.dev}</span>
                   {s.curr && <WPill tone="positive">{t('This device')}</WPill>}
                 </div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{s.loc} · {s.ts}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{t(s.loc)} · {t(s.ts)}</div>
               </div>
               {!s.curr && <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red }}>{t('Revoke')}</button>}
             </div>
@@ -262,7 +262,7 @@ function ProfKYC() {
             <div style={{ width: 64, height: 64, borderRadius: 12, background: WBRAND.redSoft, display: 'grid', placeItems: 'center', color: WBRAND.red, fontFamily: WFONT, fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>T3</div>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('Tier 3 · Institutional')}</div>
-              <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 4 }}>Verified May 2, 2024 · Renewal Apr 2027</div>
+              <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 4 }}>{t('Verified May 2, 2024 · Renewal Apr 2027', '2 May 2024 doğrulandı · Yenileme Nis 2027')}</div>
             </div>
             <WPill tone="positive" style={{ fontSize: 12, padding: '6px 12px' }}>{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
           </div>
@@ -294,7 +294,7 @@ function ProfKYC() {
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t(d.l)}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{d.v}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{t(d.v)}</div>
               </div>
               <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Approved')}</WPill>
               <WSecondary size="sm">{t('View')}</WSecondary>
@@ -690,7 +690,7 @@ function ProfHelp({ navigate }) {
             <button key={i} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t(r.l)}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{r.v}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 3 }}>{t(r.v)}</div>
               </div>
               {WIcon.external(WBRAND.muted)}
             </button>

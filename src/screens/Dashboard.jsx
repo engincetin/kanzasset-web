@@ -393,7 +393,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
               {[
                 { k: t('Tokens in circulation'), v: '142,718.4203 AGOLD' },
                 { k: t('Physical gold reserve'), v: '142.72 kg' },
-                { k: t('Last audit'),            v: 'Apr 30, 2026' },
+                { k: t('Last audit'),            v: t('May 28, 2026', '28 May 2026') },
                 { k: t('Reserve ratio'),         v: '100.00%' },
               ].map((r, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: i === 3 ? 'none' : `1px dashed ${WBRAND.line}` }}>

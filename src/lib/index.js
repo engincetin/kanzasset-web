@@ -273,7 +273,7 @@ const wMonthLabel = (d) => getLang() === 'tr'
 export function wMakePriceData(points = 90, base = 133, drift = 0.05, vol = 0.012) {
   const data = [];
   let v = base;
-  const start = new Date(2026, 1, 15);
+  const start = new Date(2026, 2, 19); // 90 daily points → last point lands on Jun 16, 2026
   for (let i = 0; i < points; i++) {
     const seed = Math.sin(i * 12.9898) * 43758.5453;
     const noise = (seed - Math.floor(seed)) - 0.5;
