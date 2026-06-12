@@ -171,14 +171,14 @@ export function WTxRow({ tx, last, onOpen }) {
 }
 
 // ─── Per-asset action button ──────────────────────────────────
-export function AssetActionBtn({ label, onClick, icon, accent = false, disabled = false }) {
+export function AssetActionBtn({ label, onClick, icon, accent = false, disabled = false, compact = false }) {
   return (
     <button
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       title={label}
       style={{
-        height: 28, minWidth: 76, padding: icon ? '0 10px' : '0 12px',
+        height: 28, minWidth: compact ? 30 : 76, padding: compact ? '0 7px' : (icon ? '0 10px' : '0 12px'),
         border: `1px solid ${accent ? WBRAND.red : WBRAND.line2}`,
         background: accent ? WBRAND.red : WBRAND.white,
         color: accent ? '#fff' : WBRAND.ink,
@@ -191,7 +191,7 @@ export function AssetActionBtn({ label, onClick, icon, accent = false, disabled 
         flexShrink: 0,
       }}>
       {icon}
-      {label}
+      {!compact && label}
     </button>
   );
 }

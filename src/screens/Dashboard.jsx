@@ -37,10 +37,15 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   // Allocation column before stacking, and only stack the right column below
   // when the table can no longer fit beside it.
   const [rowRef, gw] = useElementWidth();
-  const stack = mobile || (gw > 0 && gw < 1000);
+  const stack = mobile || (gw > 0 && gw < 940);
   const tableW = gw === 0 ? 9999 : (stack ? gw : gw - 400);
-  const hideAlloc = !mobile && tableW < 740;
-  const balCols = hideAlloc ? '2.2fr 1.3fr 1.3fr 200px' : '2.2fr 1.3fr 1.3fr 1.3fr 200px';
+  // Degrade gracefully as space tightens so the right column (Proof of
+  // Reserve / Notifications) can stay beside the table without the
+  // Deposit/Withdraw buttons overflowing: first drop the Allocation column,
+  // then compact the action buttons to icons.
+  const hideAlloc  = !mobile && tableW < 800;
+  const compactBtn = !mobile && tableW < 640;
+  const balCols = hideAlloc ? '2.4fr 1.3fr 1.3fr auto' : '2.2fr 1.3fr 1.3fr 1.3fr auto';
   const [currency, setCurrency] = useState('USDT');
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [range, setRange] = useState('3M');
@@ -320,9 +325,9 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </button>
           </div>
 
-          <div style={{ overflowX: (mobile || (stack && tableW < 620)) ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-          <div style={{ minWidth: mobile ? 820 : (tableW < 620 ? 620 : 'auto') }}>
-          <div style={{ display: 'grid', gridTemplateColumns: balCols, gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+          <div style={{ overflowX: (mobile || tableW < 520) ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ minWidth: mobile ? 820 : (tableW < 520 ? 520 : 'auto') }}>
+          <div style={{ display: 'grid', gridTemplateColumns: balCols, gap: 16, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
             {(hideAlloc ? ['Asset', 'Balance', 'Value', 'Actions'] : ['Asset', 'Balance', 'Value', 'Allocation', 'Actions']).map((h, i) => (
               <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i === 0 ? 'left' : 'right' }}>{t(h)}</div>
             ))}
@@ -331,7 +336,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           {assets.map((a, i, arr) => {
             const zero = a.balance === 0;
             return (
-              <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: balCols, gap: 20, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+              <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: balCols, gap: 16, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: zero ? 0.65 : 1 }}>
                   <WCoinDot symbol={a.symbol} size={32}/>
                   <div>
@@ -353,8 +358,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                   </div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
-                  <AssetActionBtn label={t('Deposit')} onClick={() => navigate('deposit')}/>
-                  <AssetActionBtn label={t('Withdraw')} onClick={() => navigate('withdraw')} disabled={zero}/>
+                  <AssetActionBtn label={t('Deposit')} compact={compactBtn} icon={compactBtn ? WIcon.download(WBRAND.ink) : undefined} onClick={() => navigate('deposit')}/>
+                  <AssetActionBtn label={t('Withdraw')} compact={compactBtn} icon={compactBtn ? WIcon.upload(WBRAND.ink) : undefined} onClick={() => navigate('withdraw')} disabled={zero}/>
                 </div>
               </div>
             );
