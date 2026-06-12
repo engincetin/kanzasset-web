@@ -5,7 +5,7 @@ import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WSectionTitle, useCountUp } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs } from '../components/charts.jsx';
 import { WTxRow, AssetActionBtn } from '../components/shared.jsx';
-import { useIsMobile, useIsTablet } from '../lib/useResponsive.js';
+import { useIsMobile, useIsTablet, useMediaQuery } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
 function AllocBar({ label, value, total, color }) {
@@ -32,6 +32,11 @@ function AllocBar({ label, value, total, color }) {
 export function WebPortfolio({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
   const tablet = useIsTablet();
+  // Narrow desktop / browser zoom (e.g. 125%): stack the bottom row and
+  // drop the Allocation column so the balances row never overflows.
+  const compact = useMediaQuery('(max-width: 1280px)');
+  const hideAlloc = compact && !mobile;
+  const balCols = hideAlloc ? '2.2fr 1.3fr 1.3fr 200px' : '2.2fr 1.3fr 1.3fr 1.3fr 200px';
   const [currency, setCurrency] = useState('USDT');
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [range, setRange] = useState('3M');
@@ -300,7 +305,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
       </WCard>
 
       {/* Bottom row */}
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: compact ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
 
         {/* Balances table */}
         <WCard padding={0} style={{ minWidth: 0 }}>
@@ -313,8 +318,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
 
           <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
           <div style={{ minWidth: mobile ? 820 : 'auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 200px', gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-            {['Asset', 'Balance', 'Value', 'Allocation', 'Actions'].map((h, i) => (
+          <div style={{ display: 'grid', gridTemplateColumns: balCols, gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+            {(hideAlloc ? ['Asset', 'Balance', 'Value', 'Actions'] : ['Asset', 'Balance', 'Value', 'Allocation', 'Actions']).map((h, i) => (
               <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i === 0 ? 'left' : 'right' }}>{t(h)}</div>
             ))}
           </div>
@@ -322,7 +327,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           {assets.map((a, i, arr) => {
             const zero = a.balance === 0;
             return (
-              <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: '2.2fr 1.3fr 1.3fr 1.3fr 200px', gap: 20, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+              <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: balCols, gap: 20, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: zero ? 0.65 : 1 }}>
                   <WCoinDot symbol={a.symbol} size={32}/>
                   <div>
@@ -335,12 +340,14 @@ export function WebPortfolio({ navigate, onOpenTx }) {
                 </div>
                 <WMonoNum size={13} color={zero ? WBRAND.muted2 : WBRAND.ink} style={{ textAlign: 'right' }}>{wfmt(a.balance, wdecimals(a.symbol))}</WMonoNum>
                 <WMonoNum size={13} weight={600} color={zero ? WBRAND.muted2 : WBRAND.ink} style={{ textAlign: 'right' }}>${wfmt(a.valUSDT)}</WMonoNum>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, opacity: zero ? 0.5 : 1 }}>
-                  <div style={{ width: 72, height: 4, background: WBRAND.surface, borderRadius: 2, overflow: 'hidden' }}>
-                    <div style={{ width: `${a.alloc}%`, height: '100%', background: a.symbol === 'AGOLD' ? WBRAND.red : WBRAND.ink }}/>
+                {!hideAlloc && (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, opacity: zero ? 0.5 : 1 }}>
+                    <div style={{ width: 72, height: 4, background: WBRAND.surface, borderRadius: 2, overflow: 'hidden' }}>
+                      <div style={{ width: `${a.alloc}%`, height: '100%', background: a.symbol === 'AGOLD' ? WBRAND.red : WBRAND.ink }}/>
+                    </div>
+                    <WMonoNum size={11} color={WBRAND.muted} style={{ minWidth: 38, textAlign: 'right' }}>{wfmt(a.alloc, 1)}%</WMonoNum>
                   </div>
-                  <WMonoNum size={11} color={WBRAND.muted} style={{ minWidth: 38, textAlign: 'right' }}>{wfmt(a.alloc, 1)}%</WMonoNum>
-                </div>
+                )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'flex-end' }}>
                   <AssetActionBtn label={t('Deposit')} onClick={() => navigate('deposit')}/>
                   <AssetActionBtn label={t('Withdraw')} onClick={() => navigate('withdraw')} disabled={zero}/>
