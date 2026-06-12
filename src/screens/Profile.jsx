@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, getNumberStyle, setNumberStyle, getTheme, applyTheme } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, getNumberStyle, setNumberStyle, getTheme, applyTheme, BRANDS, getBrand, setBrand, LOGOS, getLogo, setLogo } from '../lib/index.js';
 import { getAuthChannel, setAuthChannel } from '../lib/authChannel.js';
 import { getLang, setLang, t } from '../lib/i18n.js';
 import { toast } from '../components/Toast.jsx';
@@ -10,6 +10,7 @@ const NUMFMT_US = '1,234.56  ·  US / UK';
 const NUMFMT_EU = '1.234,56  ·  Europe';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
+import { WMark } from '../components/coinicons.jsx';
 import { useIsMobile } from '../lib/useResponsive.js';
 
 function FormRow({ label, hint, children }) {
@@ -613,6 +614,41 @@ function ProfPrefs() {
             const on = getTheme() === m.toLowerCase();
             return (
               <button key={m} onClick={() => { applyTheme(m.toLowerCase()); toast(t('Appearance') + ': ' + t(m), { title: t('Saved') }); }} style={{ padding: '8px 16px', borderRadius: 8, background: on ? WBRAND.panel : WBRAND.white, color: on ? '#fff' : WBRAND.ink, border: `1px solid ${on ? WBRAND.panel : WBRAND.line2}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>{t(m)}</button>
+            );
+          })}
+        </div>
+      </FormRow>
+      <FormRow label={t('Brand colour', 'Marka rengi')} hint={t('Accent colour used across the app.', 'Uygulama genelinde kullanılan vurgu rengi.')}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {BRANDS.map(b => {
+            const on = getBrand() === b.id;
+            return (
+              <button key={b.id} onClick={() => { setBrand(b.id); toast(t('Brand colour', 'Marka rengi') + ': ' + b.name, { title: t('Saved') }); }} title={b.name} style={{
+                width: 30, height: 30, borderRadius: 8, cursor: 'pointer', padding: 0,
+                background: b.hex,
+                border: on ? `2px solid ${WBRAND.ink}` : `1px solid ${WBRAND.line2}`,
+                boxShadow: on ? `0 0 0 2px ${WBRAND.white}` : 'none',
+                display: 'grid', placeItems: 'center',
+              }}>
+                {on && <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </button>
+            );
+          })}
+        </div>
+      </FormRow>
+      <FormRow label={t('Logo', 'Logo')} hint={t('Pick the logo mark style.', 'Logo işareti stilini seçin.')}>
+        <div style={{ display: 'flex', gap: 8, maxWidth: 320 }}>
+          {LOGOS.map(l => {
+            const on = getLogo() === l.id;
+            return (
+              <button key={l.id} onClick={() => { setLogo(l.id); toast(t('Logo', 'Logo') + ': ' + l.name, { title: t('Saved') }); }} title={l.name} style={{
+                flex: 1, height: 44, borderRadius: 8, cursor: 'pointer', padding: 0,
+                background: WBRAND.white,
+                border: on ? `2px solid ${WBRAND.ink}` : `1px solid ${WBRAND.line2}`,
+                display: 'grid', placeItems: 'center',
+              }}>
+                <WMark variant={l.id} size={20} color={WBRAND.ink}/>
+              </button>
             );
           })}
         </div>

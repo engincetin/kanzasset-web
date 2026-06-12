@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, getTheme, applyTheme, BRANDS, getBrand, setBrand, LOGOS, getLogo, setLogo } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, getTheme, applyTheme } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WPill } from '../components/primitives.jsx';
-import { AGOLDMark, WMark } from '../components/coinicons.jsx';
+import { AGOLDMark } from '../components/coinicons.jsx';
 
 // Live AGOLD price chip — gently jitters every few seconds to feel alive.
 function LivePriceChip({ onClick }) {
@@ -164,43 +164,6 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
                         fontFamily: WFONT, fontWeight: 700, fontSize: 11,
                         boxShadow: on ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
                       }}>{t(m, m === 'Light' ? 'Açık' : m === 'Dark' ? 'Koyu' : 'Sistem')}</button>
-                    );
-                  })}
-                </div>
-
-                {/* Brand colour — board demo palette */}
-                <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '14px 0 8px' }}>{t('Brand colour', 'Marka rengi')}</div>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {BRANDS.map(b => {
-                    const on = getBrand() === b.id;
-                    return (
-                      <button key={b.id} onClick={() => setBrand(b.id)} title={b.name} style={{
-                        width: 28, height: 28, borderRadius: 8, cursor: 'pointer', padding: 0,
-                        background: b.hex,
-                        border: on ? `2px solid ${WBRAND.ink}` : `1px solid ${WBRAND.line2}`,
-                        boxShadow: on ? `0 0 0 2px ${WBRAND.white}` : 'none',
-                        display: 'grid', placeItems: 'center',
-                      }}>
-                        {on && <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Logo variant */}
-                <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '14px 0 8px' }}>{t('Logo', 'Logo')}</div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  {LOGOS.map(l => {
-                    const on = getLogo() === l.id;
-                    return (
-                      <button key={l.id} onClick={() => setLogo(l.id)} title={l.name} style={{
-                        flex: 1, height: 40, borderRadius: 8, cursor: 'pointer', padding: 0,
-                        background: WBRAND.white,
-                        border: on ? `2px solid ${WBRAND.ink}` : `1px solid ${WBRAND.line2}`,
-                        display: 'grid', placeItems: 'center',
-                      }}>
-                        <WMark variant={l.id} size={18} color={WBRAND.ink}/>
-                      </button>
                     );
                   })}
                 </div>
