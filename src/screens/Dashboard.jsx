@@ -49,6 +49,10 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   // on the column — otherwise they size independently and misalign.
   const actW = compactBtn ? '72px' : '180px';
   const balCols = hideAlloc ? `2.4fr 1.3fr 1.3fr ${actW}` : `2.2fr 1.3fr 1.3fr 1.3fr ${actW}`;
+  // Hero row: stack the two big cards before their content (big figure / Buy-Sell
+  // buttons) collides when the row gets narrow.
+  const [heroRef, hw] = useElementWidth();
+  const heroStack = mobile || (hw > 0 && hw < 1080);
   const [currency, setCurrency] = useState('USDT');
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [range, setRange] = useState('3M');
@@ -85,7 +89,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', minHeight: '100%', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
       {/* Hero row */}
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1.4fr 1fr', gap: mobile ? 14 : 20, marginBottom: mobile ? 14 : 20 }}>
+      <div ref={heroRef} style={{ display: 'grid', gridTemplateColumns: heroStack ? '1fr' : '1.4fr 1fr', gap: mobile ? 14 : 20, marginBottom: mobile ? 14 : 20 }}>
 
         {/* Total portfolio */}
         <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
