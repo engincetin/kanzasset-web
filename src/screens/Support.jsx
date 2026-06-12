@@ -120,13 +120,13 @@ export function WebSupport({ navigate, prefillTx }) {
                   padding: '14px 18px',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                    <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{tk.subject}</span>
+                    <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t(tk.subject)}</span>
                     <WPill tone={ticketTone(tk.status)}>{t(tk.status[0].toUpperCase() + tk.status.slice(1))}</WPill>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 5 }}>
                     <WMonoNum size={10} color={WBRAND.muted}>{tk.id}</WMonoNum>
                     <span style={{ width: 1, height: 9, background: WBRAND.line }}/>
-                    <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{tk.category}</span>
+                    <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{t(tk.category)}</span>
                     {tk.tx && <><span style={{ width: 1, height: 9, background: WBRAND.line }}/><WMonoNum size={10} color={WBRAND.muted}>{tk.tx}</WMonoNum></>}
                   </div>
                 </button>
@@ -171,13 +171,13 @@ function TicketThread({ ticket, onReply }) {
     <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', maxHeight: 600, minWidth: 0 }}>
       <div style={{ padding: mobile ? '14px 16px 12px' : '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-          <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{ticket.subject}</div>
+          <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t(ticket.subject)}</div>
           <WPill tone={ticketTone(ticket.status)}>{t(ticket.status[0].toUpperCase() + ticket.status.slice(1))}</WPill>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
           <WMonoNum size={11} color={WBRAND.muted}>{ticket.id}</WMonoNum>
           <span style={{ width: 1, height: 10, background: WBRAND.line }}/>
-          <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{ticket.category}</span>
+          <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{t(ticket.category)}</span>
           {ticket.tx && <><span style={{ width: 1, height: 10, background: WBRAND.line }}/><span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted }}>{t('Linked')}: <WMonoNum size={11} color={WBRAND.ink}>{ticket.tx}</WMonoNum></span></>}
         </div>
       </div>
@@ -188,7 +188,7 @@ function TicketThread({ ticket, onReply }) {
           return (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: mine ? 'flex-end' : 'flex-start' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.ink }}>{msg.name}</span>
+                <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.ink }}>{t(msg.name)}</span>
                 <span style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted2 }}>{msg.ts}</span>
               </div>
               <div style={{
@@ -197,7 +197,7 @@ function TicketThread({ ticket, onReply }) {
                 color: mine ? '#fff' : WBRAND.ink,
                 fontFamily: WFONT, fontSize: 13, lineHeight: 1.5,
                 borderBottomRightRadius: mine ? 3 : 12, borderBottomLeftRadius: mine ? 12 : 3,
-              }}>{msg.body}</div>
+              }}>{t(msg.body)}</div>
             </div>
           );
         })}

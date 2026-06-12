@@ -8,6 +8,25 @@
 // • Sözlükte olmayan bir metin otomatik İngilizce gösterilir (çökmez).
 // ─────────────────────────────────────────────────────────────
 export const tr = {
+  // ── Destek talepleri ve konuşmalar (support tickets) ──
+  "Withdrawals": "Para Çekme",
+  "Minting": "Üretim",
+  "Account": "Hesap",
+  "You": "Siz",
+  "Selin · Support": "Selin · Destek",
+  "Mehmet · Support": "Mehmet · Destek",
+  "Withdrawal not received": "Para çekme alınmadı",
+  "Question about mint fees": "Üretim ücreti hakkında soru",
+  "Add new bank account verification": "Yeni banka hesabı doğrulaması ekleme",
+  "My AED 12,000 withdrawal (tx-9251) was marked complete but hasn't arrived in my Emirates NBD account.": "12,000 AED’lik para çekme işlemim (tx-9251) tamamlandı olarak işaretlendi ama Emirates NBD hesabıma henüz ulaşmadı.",
+  "Thanks for reaching out. I can see the transfer left our account on May 9. Bank settlement can take 1–2 business days — I'm chasing the correspondent bank now.": "Bize ulaştığınız için teşekkürler. Transferin 9 Mayıs’ta hesabımızdan çıktığını görüyorum. Banka mutabakatı 1–2 iş günü sürebilir — şu anda muhabir bankayı takip ediyorum.",
+  "Update: the funds cleared the intermediary this morning and should land in your account within a few hours. I'll keep this open until you confirm.": "Güncelleme: para bu sabah aracı bankadan geçti ve birkaç saat içinde hesabınıza ulaşmalı. Siz onaylayana kadar bu talebi açık tutacağım.",
+  "Is the 0.00% mint fee promotional? When does it end?": "%0.00 üretim ücreti promosyon mu? Ne zaman bitiyor?",
+  "Good question — the 0% mint fee is active through Q3 2026. We'll notify all users 30 days before any change.": "Güzel soru — %0 üretim ücreti 2026 3. çeyrek sonuna kadar geçerli. Herhangi bir değişiklikten 30 gün önce tüm kullanıcıları bilgilendireceğiz.",
+  "How long does it take to verify a new bank account for withdrawals?": "Para çekme için yeni bir banka hesabının doğrulanması ne kadar sürer?",
+  "New accounts go through a 24-hour security review. You'll get an email once it's approved.": "Yeni hesaplar 24 saatlik bir güvenlik incelemesinden geçer. Onaylandığında bir e-posta alırsınız.",
+  "Approved now, thanks!": "Onaylandı, teşekkürler!",
+  "Glad to hear it. Closing this ticket — reach out any time.": "Sevindim. Bu talebi kapatıyorum — istediğiniz zaman ulaşabilirsiniz.",
   // ── Bildirimler (notifications drawer) ──
   "New whitelist pending review": "Yeni beyaz liste onay bekliyor",
   "Price alert · AGOLD crossed $135": "Fiyat uyarısı · AGOLD 135 $’ı geçti",
