@@ -32,9 +32,12 @@ function AllocBar({ label, value, total, color }) {
 export function WebPortfolio({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
   const tablet = useIsTablet();
-  // Narrow desktop / browser zoom (e.g. 125%): stack the bottom row and
-  // drop the Allocation column so the balances row never overflows.
-  const compact = useMediaQuery('(max-width: 1280px)');
+  // Narrow desktop / browser zoom: first drop the Allocation column
+  // (≤1500, keeps the right column beside), then — only when really
+  // narrow (≤1320) — stack the right column below, so the Deposit/
+  // Withdraw actions never overflow.
+  const compact = useMediaQuery('(max-width: 1500px)');
+  const stack   = useMediaQuery('(max-width: 1320px)');
   const hideAlloc = compact && !mobile;
   const balCols = hideAlloc ? '2.2fr 1.3fr 1.3fr 200px' : '2.2fr 1.3fr 1.3fr 1.3fr 200px';
   const [currency, setCurrency] = useState('USDT');
@@ -305,7 +308,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
       </WCard>
 
       {/* Bottom row */}
-      <div style={{ display: 'grid', gridTemplateColumns: compact ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: stack ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
 
         {/* Balances table */}
         <WCard padding={0} style={{ minWidth: 0 }}>
@@ -316,8 +319,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </button>
           </div>
 
-          <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-          <div style={{ minWidth: mobile ? 820 : 'auto' }}>
+          <div style={{ overflowX: (mobile || stack) ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ minWidth: mobile ? 820 : (stack ? 640 : 'auto') }}>
           <div style={{ display: 'grid', gridTemplateColumns: balCols, gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
             {(hideAlloc ? ['Asset', 'Balance', 'Value', 'Actions'] : ['Asset', 'Balance', 'Value', 'Allocation', 'Actions']).map((h, i) => (
               <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i === 0 ? 'left' : 'right' }}>{t(h)}</div>
