@@ -292,7 +292,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             const low = Math.min(...vals);
             const prefix = ['USDT', 'USDC', 'USD'].includes(quote) ? '$' : '';
             return [
-              { l: t('Open'), v: `${prefix}${wfmt(open, 2)}` },
+              { l: t('Open', 'Açılış'), v: `${prefix}${wfmt(open, 2)}` },
               { l: t('High'), v: `${prefix}${wfmt(high, 2)}` },
               { l: t('Low'),  v: `${prefix}${wfmt(low, 2)}` },
               { l: t('Volume 24h'), v: '$8.41M' },

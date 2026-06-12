@@ -66,12 +66,12 @@ function WNotifRow({ n, last }) {
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{n.title}</span>
+          <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{t(n.title)}</span>
           {n.unread && <span style={{ width: 6, height: 6, borderRadius: 3, background: WBRAND.red, flexShrink: 0 }}/>}
         </div>
-        <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3, lineHeight: 1.45 }}>{n.sub}</div>
+        <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 3, lineHeight: 1.45 }}>{t(n.sub)}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
-          <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted2, fontWeight: 500 }}>{n.time}</span>
+          <span style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted2, fontWeight: 500 }}>{t(n.time)}</span>
           {n.actionLabel && (
             <button style={{
               background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,

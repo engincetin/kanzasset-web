@@ -25,5 +25,8 @@ export const setLang = (l) => {
 export const subscribeLang = (fn) => { _subs.add(fn); return () => _subs.delete(fn); };
 
 // t('English text') → Turkish from the dictionary when active, else English.
+// An optional second arg provides the Turkish inline (takes precedence over the
+// dictionary) — handy when the same English word needs different translations in
+// different contexts (e.g. "Open" → "Açık" for tickets vs "Açılış" for a chart).
 // Missing keys fall back to the English text, so nothing ever breaks.
-export const t = (en) => (_lang === 'tr' ? (tr[en] ?? en) : en);
+export const t = (en, tr2) => (_lang === 'tr' ? (tr2 ?? tr[en] ?? en) : en);

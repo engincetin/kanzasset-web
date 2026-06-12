@@ -146,7 +146,7 @@ export function WebMint({ navigate, onOpenTx }) {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
               {[
-                { l: t('Open'),       v: px(openV) },
+                { l: t('Open', 'Açılış'),       v: px(openV) },
                 { l: t('High'),       v: px(high) },
                 { l: t('Low'),        v: px(low) },
                 { l: t('Volume 24h'), v: '$8.41M' },
