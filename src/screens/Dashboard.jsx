@@ -5,7 +5,7 @@ import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WSectionTitle, useCountUp } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs } from '../components/charts.jsx';
 import { WTxRow, AssetActionBtn } from '../components/shared.jsx';
-import { useIsMobile, useIsTablet, useMediaQuery } from '../lib/useResponsive.js';
+import { useIsMobile, useIsTablet, useElementWidth } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
 function AllocBar({ label, value, total, color }) {
@@ -32,13 +32,14 @@ function AllocBar({ label, value, total, color }) {
 export function WebPortfolio({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
   const tablet = useIsTablet();
-  // Narrow desktop / browser zoom: first drop the Allocation column
-  // (≤1500, keeps the right column beside), then — only when really
-  // narrow (≤1320) — stack the right column below, so the Deposit/
-  // Withdraw actions never overflow.
-  const compact = useMediaQuery('(max-width: 1500px)');
-  const stack   = useMediaQuery('(max-width: 1320px)');
-  const hideAlloc = compact && !mobile;
+  // Measure the bottom row's real width (grows when the sidebar is collapsed):
+  // keep the right column beside as long as the table still fits, drop the
+  // Allocation column before stacking, and only stack the right column below
+  // when the table can no longer fit beside it.
+  const [rowRef, gw] = useElementWidth();
+  const stack = mobile || (gw > 0 && gw < 1000);
+  const tableW = gw === 0 ? 9999 : (stack ? gw : gw - 400);
+  const hideAlloc = !mobile && tableW < 740;
   const balCols = hideAlloc ? '2.2fr 1.3fr 1.3fr 200px' : '2.2fr 1.3fr 1.3fr 1.3fr 200px';
   const [currency, setCurrency] = useState('USDT');
   const [currencyOpen, setCurrencyOpen] = useState(false);
@@ -308,7 +309,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
       </WCard>
 
       {/* Bottom row */}
-      <div style={{ display: 'grid', gridTemplateColumns: stack ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
+      <div ref={rowRef} style={{ display: 'grid', gridTemplateColumns: stack ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
 
         {/* Balances table */}
         <WCard padding={0} style={{ minWidth: 0 }}>
@@ -319,8 +320,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             </button>
           </div>
 
-          <div style={{ overflowX: (mobile || stack) ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-          <div style={{ minWidth: mobile ? 820 : (stack ? 640 : 'auto') }}>
+          <div style={{ overflowX: (mobile || (stack && tableW < 620)) ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ minWidth: mobile ? 820 : (tableW < 620 ? 620 : 'auto') }}>
           <div style={{ display: 'grid', gridTemplateColumns: balCols, gap: 20, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
             {(hideAlloc ? ['Asset', 'Balance', 'Value', 'Actions'] : ['Asset', 'Balance', 'Value', 'Allocation', 'Actions']).map((h, i) => (
               <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i === 0 ? 'left' : 'right' }}>{t(h)}</div>

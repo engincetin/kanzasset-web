@@ -7,7 +7,7 @@ import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.j
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
 import { AddDestinationModal } from './Profile.jsx';
 import { t } from '../lib/i18n.js';
-import { useIsMobile, useMediaQuery } from '../lib/useResponsive.js';
+import { useIsMobile, useMediaQuery, useElementWidth } from '../lib/useResponsive.js';
 
 function RedeemDigital({ targets, to, setTo, navigate }) {
   const mobile = useIsMobile();
@@ -616,7 +616,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
           <WCard padding={0}>
-            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
+            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
               <div>
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AGOLD / {quote}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
@@ -677,7 +677,20 @@ export function WebRedeem({ navigate, onOpenTx }) {
 // Reuses the existing physical flow; digital redeem now lives in Buy/Sell.
 export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
-  const narrow = useMediaQuery('(max-width: 1300px)');
+  const [gridRef, gw] = useElementWidth();
+  const twoCol = !mobile && (gw === 0 || gw >= 840);
+  const paneW = twoCol ? Math.max(0, gw - 500) : gw;
+  const showDelivery = paneW === 0 || paneW >= 380;
+  const showShipping = paneW === 0 || paneW >= 470;
+  const compactSt = paneW > 0 && paneW < 430;
+  const recentColDefs = [
+    { w: '1.2fr', h: 'Date',     show: true },
+    { w: '1.1fr', h: 'Sold',     show: true },
+    { w: '0.7fr', h: 'Delivery', show: showDelivery },
+    { w: '1.2fr', h: 'Shipping', show: showShipping },
+    { w: compactSt ? '34px' : '110px', h: compactSt ? '' : 'Status', show: true },
+  ].filter(c => c.show);
+  const recentCols = recentColDefs.map(c => c.w).join(' ');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
   const quote = 'USDT';
@@ -692,14 +705,14 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
-      <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (narrow && !mobile) ? 600 : 'none' }}>
+      <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: twoCol ? '480px 1fr' : '1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (!twoCol && !mobile) ? 600 : 'none' }}>
           <RedeemPhysicalWeb navigate={navigate}/>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
           <WCard padding={0}>
-            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
+            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
               <div>
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AGOLD / {quote}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
@@ -725,29 +738,32 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
               <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
             </div>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 560 : 520 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.1fr 0.7fr 1.2fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-              {['Date', 'Sold', 'Delivery', 'Shipping', 'Status'].map((h, i) => (
-                <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: recentCols, gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+              {recentColDefs.map((c, i) => (
+                <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{c.h ? t(c.h) : ''}</div>
               ))}
             </div>
-            {WTXS.filter(tx => tx.type === 'Delivery').slice(0, 4).map((tx, i, arr) => (
+            {WTXS.filter(tx => tx.type === 'Delivery').slice(0, 4).map((tx, i, arr) => {
+              const done = tx.status === 'completed';
+              return (
               <div key={tx.id}
                 onClick={() => onOpenTx && onOpenTx(tx)}
                 onMouseEnter={onOpenTx ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
                 onMouseLeave={onOpenTx ? (e => e.currentTarget.style.background = 'transparent') : undefined}
-                style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.1fr 0.7fr 1.2fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
+                style={{ display: 'grid', gridTemplateColumns: recentCols, gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
                 <div>
                   <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
                 </div>
                 <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 0)} AGOLD</WMonoNum>
-                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount) / 1000, 0)} kg</WMonoNum>
-                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{tx.paid}</span>
-                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
+                {showDelivery && <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount) / 1000, 0)} kg</WMonoNum>}
+                {showShipping && <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{tx.paid}</span>}
+                {compactSt
+                  ? <span title={t(done ? 'Completed' : 'Pending')} style={{ justifySelf: 'start', width: 9, height: 9, borderRadius: 5, background: done ? WBRAND.positive : WBRAND.warn }}/>
+                  : <WPill tone={done ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>}
               </div>
-            ))}
-            </div>
+              );
+            })}
             </div>
           </WCard>
         </div>

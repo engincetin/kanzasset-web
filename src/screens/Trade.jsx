@@ -5,7 +5,7 @@ import { AGOLDMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector, WTimeline } from '../components/shared.jsx';
-import { useIsMobile, useMediaQuery } from '../lib/useResponsive.js';
+import { useIsMobile, useElementWidth } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
 // Fixed AGOLD chip (mirrors the rounded asset chip used in the pay/receive boxes)
@@ -20,8 +20,25 @@ function AGOLDChip() {
 
 export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const mobile = useIsMobile();
-  // Below ~1300px the fixed-width form + side table get crushed → stack them.
-  const narrow = useMediaQuery('(max-width: 1300px)');
+  // Measure the real available width so we keep the form + chart side-by-side as
+  // long as they physically fit (grows when the sidebar is collapsed), and only
+  // stack when the right pane can no longer shrink to fit.
+  const [gridRef, gw] = useElementWidth();
+  const twoCol = !mobile && (gw === 0 || gw >= 840);
+  const paneW = twoCol ? Math.max(0, gw - 500) : gw;
+  // Right-pane adaptive density.
+  const ohlc2      = paneW > 0 && paneW < 430;
+  const showType   = paneW === 0 || paneW >= 380;
+  const showValue  = paneW === 0 || paneW >= 470;
+  const compactSt  = paneW > 0 && paneW < 430;
+  const recentColDefs = [
+    { w: '1.1fr', h: 'Date',  show: true },
+    { w: '0.8fr', h: 'Type',  show: showType },
+    { w: '1.1fr', h: 'AGOLD', show: true },
+    { w: '1fr',   h: 'Value', show: showValue },
+    { w: compactSt ? '34px' : '110px', h: compactSt ? '' : 'Status', show: true },
+  ].filter(c => c.show);
+  const recentCols = recentColDefs.map(c => c.w).join(' ');
   const [side, setSide] = useState(initialSide === 'sell' ? 'sell' : 'buy');
   const [amount, setAmount] = useState('');
   const [range, setRange] = useState('3M');
@@ -70,10 +87,10 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
 
-      <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '480px 1fr', gap: mobile ? 16 : 20, alignItems: 'start' }}>
+      <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: twoCol ? '480px 1fr' : '1fr', gap: mobile ? 16 : 20, alignItems: 'start' }}>
 
         {/* Left: form */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (narrow && !mobile) ? 600 : 'none' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (!twoCol && !mobile) ? 600 : 'none' }}>
 
           {/* Buy / Sell toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
@@ -180,7 +197,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
         {/* Right: chart + recent */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
           <WCard padding={0}>
-            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
+            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
               <div>
                 <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AGOLD / {quote}</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
@@ -195,14 +212,14 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
             <div style={{ padding: '12px 16px 18px' }}>
               <WPriceChart data={quotedData} height={280}/>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
+            <div style={{ display: 'grid', gridTemplateColumns: ohlc2 ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
               {[
                 { l: t('Open', 'Açılış'),       v: px(openV) },
                 { l: t('High'),       v: px(high) },
                 { l: t('Low'),        v: px(low) },
                 { l: t('Volume 24h'), v: '$8.41M' },
               ].map((k, i) => (
-                <div key={i} style={{ padding: '12px 20px', borderRight: (mobile ? i % 2 === 0 : i < 3) ? `1px solid ${WBRAND.line}` : 'none', borderTop: mobile && i >= 2 ? `1px solid ${WBRAND.line}` : 'none' }}>
+                <div key={i} style={{ padding: '12px 20px', borderRight: (ohlc2 ? i % 2 === 0 : i < 3) ? `1px solid ${WBRAND.line}` : 'none', borderTop: ohlc2 && i >= 2 ? `1px solid ${WBRAND.line}` : 'none' }}>
                   <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{k.l}</div>
                   <WMonoNum size={14} style={{ marginTop: 4, display: 'block' }}>{k.v}</WMonoNum>
                 </div>
@@ -221,32 +238,33 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
               </button>
             </div>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 520 : 500 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.8fr 1.1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-              {['Date', 'Type', 'AGOLD', 'Value', 'Status'].map((h, i) => (
-                <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: recentCols, gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+              {recentColDefs.map((c, i) => (
+                <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{c.h ? t(c.h) : ''}</div>
               ))}
             </div>
             {recent.map((tx, i, arr) => {
               const isBuy = tx.type === 'Mint';
+              const done = tx.status === 'completed';
               return (
               <div key={tx.id}
                 onClick={() => onOpenTx && onOpenTx(tx)}
                 onMouseEnter={onOpenTx ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
                 onMouseLeave={onOpenTx ? (e => e.currentTarget.style.background = 'transparent') : undefined}
-                style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.8fr 1.1fr 1fr 110px', gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
+                style={{ display: 'grid', gridTemplateColumns: recentCols, gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
                 <div>
                   <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
                   <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
                 </div>
-                <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: isBuy ? WBRAND.positive : WBRAND.ink }}>{isBuy ? t('Buy') : t('Sell')}</span>
+                {showType && <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: isBuy ? WBRAND.positive : WBRAND.ink }}>{isBuy ? t('Buy') : t('Sell')}</span>}
                 <WMonoNum size={12} color={isBuy ? WBRAND.positive : WBRAND.ink} weight={500}>{isBuy ? '+' : '−'}{wfmt(Math.abs(tx.amount), 4)} AGOLD</WMonoNum>
-                <WMonoNum size={12} color={WBRAND.muted}>{tx.paid}</WMonoNum>
-                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
+                {showValue && <WMonoNum size={12} color={WBRAND.muted}>{tx.paid}</WMonoNum>}
+                {compactSt
+                  ? <span title={t(done ? 'Completed' : 'Pending')} style={{ justifySelf: 'start', width: 9, height: 9, borderRadius: 5, background: done ? WBRAND.positive : WBRAND.warn }}/>
+                  : <WPill tone={done ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>}
               </div>
               );
             })}
-            </div>
             </div>
           </WCard>
         </div>

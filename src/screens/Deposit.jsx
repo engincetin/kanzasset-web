@@ -5,10 +5,14 @@ import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WSecondary, WEyebrow, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
 import { WebQR } from '../components/shared.jsx';
 import { t } from '../lib/i18n.js';
-import { useIsMobile } from '../lib/useResponsive.js';
+import { useIsMobile, useElementWidth } from '../lib/useResponsive.js';
 
 export function WebDeposit({ navigate, initialAsset }) {
   const mobile = useIsMobile();
+  const [gridRef, gw] = useElementWidth();
+  const twoCol = !mobile && (gw === 0 || gw >= 900);
+  const paneW = twoCol ? Math.max(0, gw - 580) : gw;
+  const dense = paneW > 0 && paneW < 380;
   const cryptoAssets = ['AGOLD', 'USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name }));
   const fiatAssets   = ['AED', 'USD', 'EUR', 'GBP'].map(s => ({ symbol: s, name: WMETA[s].name }));
   const initialKind  = initialAsset && WMETA[initialAsset]?.kind === 'fiat' ? 'fiat' : 'crypto';
@@ -29,8 +33,8 @@ export function WebDeposit({ navigate, initialAsset }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '560px 1fr', gap: mobile ? 14 : 20 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: twoCol ? '560px 1fr' : '1fr', gap: mobile ? 14 : 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: (!twoCol && !mobile) ? 620 : 'none' }}>
           {/* Kind toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
@@ -81,7 +85,7 @@ export function WebDeposit({ navigate, initialAsset }) {
                   </div>
                   <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '180px 1fr', gap: mobile ? 16 : 24, padding: mobile ? '16px' : 24 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : (dense ? '130px 1fr' : '180px 1fr'), gap: mobile ? 16 : (dense ? 16 : 24), padding: mobile ? '16px' : (dense ? 18 : 24) }}>
                   <div style={{ background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: 12, aspectRatio: '1', maxWidth: '100%' }}>
                     <WebQR value={depositAddress}/>
                   </div>
@@ -105,13 +109,13 @@ export function WebDeposit({ navigate, initialAsset }) {
               </WCard>
 
               <WCard padding={0}>
-                <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: (mobile || dense) ? '1fr' : 'repeat(3, 1fr)' }}>
                   {[
                     { l: t('Minimum deposit'), v: `10.00 ${cryptoAsset.symbol}` },
                     { l: t('Confirmations'),   v: '12 blocks · ≈ 3 min' },
                     { l: t('Network fee'),     v: t('Paid by sender') },
                   ].map((k, i) => (
-                    <div key={i} style={{ padding: '16px 20px', borderRight: (!mobile && i < 2) ? `1px solid ${WBRAND.line}` : 'none', borderBottom: (mobile && i < 2) ? `1px solid ${WBRAND.line}` : 'none' }}>
+                    <div key={i} style={{ padding: '16px 20px', borderRight: (!mobile && !dense && i < 2) ? `1px solid ${WBRAND.line}` : 'none', borderBottom: ((mobile || dense) && i < 2) ? `1px solid ${WBRAND.line}` : 'none' }}>
                       <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{k.l}</div>
                       <WMonoNum size={14} style={{ marginTop: 4, display: 'block' }}>{k.v}</WMonoNum>
                     </div>

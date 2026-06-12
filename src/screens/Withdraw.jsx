@@ -5,7 +5,7 @@ import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WAssetSelector, WCountdown } from '../components/shared.jsx';
-import { useIsMobile, useMediaQuery } from '../lib/useResponsive.js';
+import { useIsMobile, useElementWidth } from '../lib/useResponsive.js';
 
 function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, amount, asset, kind, destination, onClose, onTrack }) {
   const mobile = useIsMobile();
@@ -140,7 +140,8 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
 
 export function WebWithdraw({ navigate, initialAsset }) {
   const mobile = useIsMobile();
-  const narrow = useMediaQuery('(max-width: 1300px)');
+  const [gridRef, gw] = useElementWidth();
+  const twoCol = !mobile && (gw === 0 || gw >= 900);
   const cryptoAssets = ['AGOLD', 'USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s] }));
   const fiatAssets   = ['AED', 'USD', 'EUR', 'GBP'].map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s] }));
   const initialKind  = initialAsset && WMETA[initialAsset]?.kind === 'fiat' ? 'fiat' : 'crypto';
@@ -177,8 +178,8 @@ export function WebWithdraw({ navigate, initialAsset }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
-      <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '560px 1fr', gap: mobile ? 14 : 20 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (narrow && !mobile) ? 620 : 'none' }}>
+      <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: twoCol ? '560px 1fr' : '1fr', gap: mobile ? 14 : 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (!twoCol && !mobile) ? 620 : 'none' }}>
           {/* Kind toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
