@@ -7,7 +7,7 @@ import { SelectField } from '../components/shared.jsx';
 import { txMeta } from '../components/TxDetailModal.jsx';
 import { toast } from '../components/Toast.jsx';
 import { t } from '../lib/i18n.js';
-import { useIsMobile } from '../lib/useResponsive.js';
+import { useIsMobile, useMediaQuery } from '../lib/useResponsive.js';
 
 // ─── Seed tickets ─────────────────────────────────────────────
 const WTICKETS = [
@@ -46,6 +46,7 @@ function ticketTone(status) {
 
 export function WebSupport({ navigate, prefillTx }) {
   const mobile = useIsMobile();
+  const narrow = useMediaQuery('(max-width: 1180px)');
   const [tickets, setTickets] = useState(WTICKETS);
   const [openId, setOpenId] = useState(null);
   const [composing, setComposing] = useState(!!prefillTx);
@@ -88,7 +89,7 @@ export function WebSupport({ navigate, prefillTx }) {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1.3fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '1fr 1.3fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
         {/* Ticket list */}
         <WCard padding={0} style={{ minWidth: 0 }}>
           <div style={{ padding: '16px 20px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

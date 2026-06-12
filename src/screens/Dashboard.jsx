@@ -365,12 +365,12 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         {/* Right column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
 
-          {/* Vault attestation */}
+          {/* Proof of Reserve */}
           <WCard padding={20}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>{WIcon.vault()}</div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Vault attestation')}</div>
+                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Proof of Reserve')}</div>
                 <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>Ahlatcı Metal Refinery FZCO<br/>{t('audited by Bureau Veritas')}</div>
               </div>
               <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>

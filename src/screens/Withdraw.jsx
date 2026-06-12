@@ -5,7 +5,7 @@ import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WAssetSelector, WCountdown } from '../components/shared.jsx';
-import { useIsMobile } from '../lib/useResponsive.js';
+import { useIsMobile, useMediaQuery } from '../lib/useResponsive.js';
 
 function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, amount, asset, kind, destination, onClose, onTrack }) {
   const mobile = useIsMobile();
@@ -140,6 +140,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
 
 export function WebWithdraw({ navigate, initialAsset }) {
   const mobile = useIsMobile();
+  const narrow = useMediaQuery('(max-width: 1180px)');
   const cryptoAssets = ['AGOLD', 'USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s] }));
   const fiatAssets   = ['AED', 'USD', 'EUR', 'GBP'].map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s] }));
   const initialKind  = initialAsset && WMETA[initialAsset]?.kind === 'fiat' ? 'fiat' : 'crypto';
@@ -176,7 +177,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '560px 1fr', gap: mobile ? 14 : 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '560px 1fr', gap: mobile ? 14 : 20 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           {/* Kind toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>

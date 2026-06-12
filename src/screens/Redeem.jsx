@@ -7,7 +7,7 @@ import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.j
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
 import { AddDestinationModal } from './Profile.jsx';
 import { t } from '../lib/i18n.js';
-import { useIsMobile } from '../lib/useResponsive.js';
+import { useIsMobile, useMediaQuery } from '../lib/useResponsive.js';
 
 function RedeemDigital({ targets, to, setTo, navigate }) {
   const mobile = useIsMobile();
@@ -558,6 +558,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
 
 export function WebRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
+  const narrow = useMediaQuery('(max-width: 1180px)');
   const [mode, setMode] = useState('digital');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
@@ -589,7 +590,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           {/* Mode toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
@@ -640,8 +641,8 @@ export function WebRedeem({ navigate, onOpenTx }) {
               </div>
               <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
             </div>
-            <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 520 : 'auto' }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: mobile ? 520 : 560 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Burned', 'Received', 'Rate', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
@@ -676,6 +677,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
 // Reuses the existing physical flow; digital redeem now lives in Buy/Sell.
 export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
+  const narrow = useMediaQuery('(max-width: 1180px)');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
   const quote = 'USDT';
@@ -690,7 +692,7 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           <RedeemPhysicalWeb navigate={navigate}/>
         </div>
@@ -722,8 +724,8 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
               </div>
               <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
             </div>
-            <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 560 : 'auto' }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: mobile ? 560 : 600 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.1fr 0.7fr 1.2fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Sold', 'Delivery', 'Shipping', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>

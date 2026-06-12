@@ -132,8 +132,8 @@ export function WebActivity({ navigate, onOpenTx }) {
           </div>
         </div>
 
-        <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-        <div style={{ minWidth: mobile ? 720 : 'auto' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+        <div style={{ minWidth: mobile ? 720 : 860 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1.2fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
           {['', 'Type', 'Asset', 'Amount', 'Counterparty', 'Date', 'Status'].map((h, i) => (
             <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h ? t(h) : h}</div>

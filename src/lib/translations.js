@@ -502,6 +502,7 @@ export const tr = {
   "Used to verify legal age and identity.": "Yasal yaş ve kimlik doğrulaması için kullanılır.",
   "Value": "Değer",
   "Value (USDT)": "Değer (USDT)",
+  "Proof of Reserve": "AGOLD rezerv kanıtı",
   "Vault attestation": "Kasa tasdiki",
   "Vault audit published": "Kasa denetimi yayımlandı",
   "Vault audit reports": "Kasa denetim raporları",

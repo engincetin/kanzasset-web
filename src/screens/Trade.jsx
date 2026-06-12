@@ -5,7 +5,7 @@ import { AGOLDMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector, WTimeline } from '../components/shared.jsx';
-import { useIsMobile } from '../lib/useResponsive.js';
+import { useIsMobile, useMediaQuery } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
 // Fixed AGOLD chip (mirrors the rounded asset chip used in the pay/receive boxes)
@@ -20,6 +20,8 @@ function AGOLDChip() {
 
 export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const mobile = useIsMobile();
+  // Below ~1180px the fixed-width form + side table get crushed → stack them.
+  const narrow = useMediaQuery('(max-width: 1180px)');
   const [side, setSide] = useState(initialSide === 'sell' ? 'sell' : 'buy');
   const [amount, setAmount] = useState('');
   const [range, setRange] = useState('3M');
@@ -68,7 +70,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box', position: 'relative' }}>
 
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '480px 1fr', gap: mobile ? 16 : 20, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '480px 1fr', gap: mobile ? 16 : 20, alignItems: 'start' }}>
 
         {/* Left: form */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
@@ -218,8 +220,8 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
                 {t('View all')} {WIcon.arrowRight(WBRAND.red)}
               </button>
             </div>
-            <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 520 : 'auto' }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: mobile ? 520 : 560 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.8fr 1.1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Type', 'AGOLD', 'Value', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
