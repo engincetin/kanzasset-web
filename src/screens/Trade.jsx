@@ -20,8 +20,8 @@ function AGOLDChip() {
 
 export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const mobile = useIsMobile();
-  // Below ~1180px the fixed-width form + side table get crushed → stack them.
-  const narrow = useMediaQuery('(max-width: 1180px)');
+  // Below ~1366px the fixed-width form + side table get crushed → stack them.
+  const narrow = useMediaQuery('(max-width: 1366px)');
   const [side, setSide] = useState(initialSide === 'sell' ? 'sell' : 'buy');
   const [amount, setAmount] = useState('');
   const [range, setRange] = useState('3M');
@@ -73,7 +73,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
       <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '480px 1fr', gap: mobile ? 16 : 20, alignItems: 'start' }}>
 
         {/* Left: form */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (narrow && !mobile) ? 600 : 'none' }}>
 
           {/* Buy / Sell toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>

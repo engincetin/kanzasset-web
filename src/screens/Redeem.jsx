@@ -558,7 +558,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
 
 export function WebRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
-  const narrow = useMediaQuery('(max-width: 1180px)');
+  const narrow = useMediaQuery('(max-width: 1366px)');
   const [mode, setMode] = useState('digital');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
@@ -591,7 +591,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (narrow && !mobile) ? 600 : 'none' }}>
           {/* Mode toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
@@ -677,7 +677,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
 // Reuses the existing physical flow; digital redeem now lives in Buy/Sell.
 export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
-  const narrow = useMediaQuery('(max-width: 1180px)');
+  const narrow = useMediaQuery('(max-width: 1366px)');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
   const quote = 'USDT';
@@ -693,7 +693,7 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
       <div style={{ display: 'grid', gridTemplateColumns: (mobile || narrow) ? '1fr' : '480px 1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (narrow && !mobile) ? 600 : 'none' }}>
           <RedeemPhysicalWeb navigate={navigate}/>
         </div>
 
