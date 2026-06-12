@@ -49,10 +49,11 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   // on the column — otherwise they size independently and misalign.
   const actW = compactBtn ? '72px' : '180px';
   const balCols = hideAlloc ? `2.4fr 1.3fr 1.3fr ${actW}` : `2.2fr 1.3fr 1.3fr 1.3fr ${actW}`;
-  // Hero row: stack the two big cards before their content (big figure / Buy-Sell
-  // buttons) collides when the row gets narrow.
+  // Hero row: stack the two big cards at the same width the bottom row stacks
+  // (the figures/Buy-Sell buttons still fit down to here), so the two rows fold
+  // together rather than the hero folding much earlier.
   const [heroRef, hw] = useElementWidth();
-  const heroStack = mobile || (hw > 0 && hw < 1080);
+  const heroStack = mobile || (hw > 0 && hw < 940);
   const [currency, setCurrency] = useState('USDT');
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [range, setRange] = useState('3M');
