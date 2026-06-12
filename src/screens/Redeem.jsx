@@ -558,7 +558,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
 
 export function WebRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
-  const narrow = useMediaQuery('(max-width: 1366px)');
+  const narrow = useMediaQuery('(max-width: 1300px)');
   const [mode, setMode] = useState('digital');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
@@ -642,7 +642,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
               <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
             </div>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 520 : 560 }}>
+            <div style={{ minWidth: mobile ? 520 : 500 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Burned', 'Received', 'Rate', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
@@ -661,7 +661,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
                 <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 4)} AGOLD</WMonoNum>
                 <WMonoNum size={12} color={WBRAND.ink}>{tx.paid}</WMonoNum>
                 <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AGOLD)} USDT</WMonoNum>
-                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
+                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
             </div>
@@ -677,7 +677,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
 // Reuses the existing physical flow; digital redeem now lives in Buy/Sell.
 export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
-  const narrow = useMediaQuery('(max-width: 1366px)');
+  const narrow = useMediaQuery('(max-width: 1300px)');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
   const quote = 'USDT';
@@ -725,7 +725,7 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
               <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
             </div>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 560 : 600 }}>
+            <div style={{ minWidth: mobile ? 560 : 520 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.1fr 0.7fr 1.2fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Sold', 'Delivery', 'Shipping', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
@@ -744,7 +744,7 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
                 <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 0)} AGOLD</WMonoNum>
                 <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount) / 1000, 0)} kg</WMonoNum>
                 <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{tx.paid}</span>
-                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
+                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
             </div>

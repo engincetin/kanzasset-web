@@ -140,7 +140,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
 
 export function WebWithdraw({ navigate, initialAsset }) {
   const mobile = useIsMobile();
-  const narrow = useMediaQuery('(max-width: 1366px)');
+  const narrow = useMediaQuery('(max-width: 1300px)');
   const cryptoAssets = ['AGOLD', 'USDT', 'USDC'].map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s] }));
   const fiatAssets   = ['AED', 'USD', 'EUR', 'GBP'].map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s] }));
   const initialKind  = initialAsset && WMETA[initialAsset]?.kind === 'fiat' ? 'fiat' : 'crypto';

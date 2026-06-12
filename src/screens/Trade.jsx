@@ -20,8 +20,8 @@ function AGOLDChip() {
 
 export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const mobile = useIsMobile();
-  // Below ~1366px the fixed-width form + side table get crushed → stack them.
-  const narrow = useMediaQuery('(max-width: 1366px)');
+  // Below ~1300px the fixed-width form + side table get crushed → stack them.
+  const narrow = useMediaQuery('(max-width: 1300px)');
   const [side, setSide] = useState(initialSide === 'sell' ? 'sell' : 'buy');
   const [amount, setAmount] = useState('');
   const [range, setRange] = useState('3M');
@@ -221,7 +221,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
               </button>
             </div>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ minWidth: mobile ? 520 : 560 }}>
+            <div style={{ minWidth: mobile ? 520 : 500 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.8fr 1.1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
               {['Date', 'Type', 'AGOLD', 'Value', 'Status'].map((h, i) => (
                 <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t(h)}</div>
@@ -242,7 +242,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
                 <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: isBuy ? WBRAND.positive : WBRAND.ink }}>{isBuy ? t('Buy') : t('Sell')}</span>
                 <WMonoNum size={12} color={isBuy ? WBRAND.positive : WBRAND.ink} weight={500}>{isBuy ? '+' : '−'}{wfmt(Math.abs(tx.amount), 4)} AGOLD</WMonoNum>
                 <WMonoNum size={12} color={WBRAND.muted}>{tx.paid}</WMonoNum>
-                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
+                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
               );
             })}

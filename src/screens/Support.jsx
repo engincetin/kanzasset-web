@@ -46,7 +46,7 @@ function ticketTone(status) {
 
 export function WebSupport({ navigate, prefillTx }) {
   const mobile = useIsMobile();
-  const narrow = useMediaQuery('(max-width: 1366px)');
+  const narrow = useMediaQuery('(max-width: 1300px)');
   const [tickets, setTickets] = useState(WTICKETS);
   const [openId, setOpenId] = useState(null);
   const [composing, setComposing] = useState(!!prefillTx);

@@ -189,7 +189,7 @@ export function WebMint({ navigate, onOpenTx }) {
                 <WMonoNum size={12}>{tx.paid}</WMonoNum>
                 <WMonoNum size={12} color={WBRAND.positive} weight={500}>+{wfmt(tx.amount, 4)} AGOLD</WMonoNum>
                 <WMonoNum size={11} color={WBRAND.muted}>{wfmt(WRATES.AGOLD)} USDT</WMonoNum>
-                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
+                <WPill tone={tx.status === 'completed' ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>
               </div>
             ))}
             </div>
