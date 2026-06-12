@@ -53,7 +53,7 @@ export const tr = {
   "Approved now, thanks!": "Onaylandı, teşekkürler!",
   "Glad to hear it. Closing this ticket — reach out any time.": "Sevindim. Bu talebi kapatıyorum — istediğiniz zaman ulaşabilirsiniz.",
   // ── Bildirimler (notifications drawer) ──
-  "New whitelist pending review": "Yeni beyaz liste onay bekliyor",
+  "New whitelist pending review": "Yeni adres onayı bekliyor",
   "Price alert · AGOLD crossed $135": "Fiyat uyarısı · AGOLD 135 $’ı geçti",
   "Login from new device": "Yeni cihazdan giriş",
   "Deposit received": "Para yatırma alındı",
@@ -380,7 +380,7 @@ export const tr = {
   "New support ticket": "Yeni destek talebi",
   "New ticket": "Yeni talep",
   "New to Kanzasset?": "Kanzasset'te yeni misiniz?",
-  "New whitelist pending": "Yeni beyaz liste onay bekliyor",
+  "New whitelist pending": "Yeni adres onayı bekliyor",
   "Newest": "En Yeni",
   "Next": "Sonraki",
   "No assets match this filter.": "Bu filtreyle eşleşen varlık yok.",

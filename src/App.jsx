@@ -27,7 +27,7 @@ const titlesFor = () => ({
   trade:     { title: t('Buy / Sell'),                  sub: t('Live rate · refreshed every 10s', 'Canlı kur · her 10 sn’de yenilenir') },
   physical:  { title: t('Physical delivery'),           sub: t('Gold bars · 3–5 days') },
   deposit:   { title: t('Deposit', 'Para Yatır'),       sub: t('Add crypto or fiat', 'Kripto veya fiat ekle') },
-  withdraw:  { title: t('Withdraw', 'Para Çek'),         sub: t('Send to whitelisted destination', 'Beyaz listedeki adrese gönder') },
+  withdraw:  { title: t('Withdraw', 'Para Çek'),         sub: t('Send to whitelisted destination', 'Onaylı adrese gönder') },
   activity:  { title: t('Activity', 'İşlemler'),         sub: t('All transaction history', 'Tüm işlem geçmişi') },
   support:   { title: t('Support', 'Destek'),            sub: t('Help & tickets', 'Yardım ve talepler') },
   profile:   { title: t('Account settings', 'Hesap ayarları'), sub: t('Tier 3 · institutional', 'Kademe 3 · kurumsal') },

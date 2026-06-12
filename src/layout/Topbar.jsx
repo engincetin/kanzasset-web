@@ -123,8 +123,8 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
-                  <WPill tone="positive" style={{ fontSize: 10, padding: '3px 8px' }}>{WIcon.check(WBRAND.positive)} Verified</WPill>
-                  <WPill tone="accent" style={{ fontSize: 10, padding: '3px 8px' }}>Tier 3</WPill>
+                  <WPill tone="positive" style={{ fontSize: 10, padding: '3px 8px' }}>{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
+                  <WPill tone="accent" style={{ fontSize: 10, padding: '3px 8px' }}>{t('Tier 3')}</WPill>
                 </div>
               </div>
 
@@ -132,7 +132,7 @@ export function WTopbar({ title, sub, onNavigate, onNotifs, onLogout, mobile = f
                 {[
                   { id: 'account',      label: t('Account settings', 'Hesap ayarları'),         icon: 'M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zM3 22c0-5 4-9 9-9s9 4 9 9' },
                   { id: 'security',     label: t('Security & 2FA', 'Güvenlik ve 2FA'),           icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z' },
-                  { id: 'destinations', label: t('Whitelisted destinations', 'Beyaz liste adresleri'), icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
+                  { id: 'destinations', label: t('Whitelisted destinations', 'Onaylı adresler'), icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
                   { id: 'prefs',        label: t('Preferences', 'Tercihler'),              icon: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.01a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.01a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z' },
                 ].map(it => (
                   <button key={it.id} onClick={() => { setMenuOpen(false); onNavigate && onNavigate('profile', it.id); }} style={{
