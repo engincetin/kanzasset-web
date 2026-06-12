@@ -7,7 +7,9 @@ const NAV_TR = {
   Dashboard: 'Panel', Wallet: 'Cüzdan', Deposit: 'Para Yatır', Withdraw: 'Para Çek',
   Mint: 'Üret', Redeem: 'Boz', Activity: 'İşlemler', Support: 'Destek', Profile: 'Profil',
 };
-const navT = (s) => t(s, NAV_TR[s] ?? s);
+// NAV_TR overrides win; anything not listed falls back to the shared dictionary
+// (don't pass the English string as the 2nd arg — it would override the dict).
+const navT = (s) => t(s, NAV_TR[s]);
 
 export const NAV_GROUPS = [
   {

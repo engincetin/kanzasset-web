@@ -45,7 +45,10 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   // then compact the action buttons to icons.
   const hideAlloc  = !mobile && tableW < 800;
   const compactBtn = !mobile && tableW < 640;
-  const balCols = hideAlloc ? '2.4fr 1.3fr 1.3fr auto' : '2.2fr 1.3fr 1.3fr 1.3fr auto';
+  // Fixed Actions width (not `auto`) so the header grid and each row grid agree
+  // on the column — otherwise they size independently and misalign.
+  const actW = compactBtn ? '72px' : '180px';
+  const balCols = hideAlloc ? `2.4fr 1.3fr 1.3fr ${actW}` : `2.2fr 1.3fr 1.3fr 1.3fr ${actW}`;
   const [currency, setCurrency] = useState('USDT');
   const [currencyOpen, setCurrencyOpen] = useState(false);
   const [range, setRange] = useState('3M');
