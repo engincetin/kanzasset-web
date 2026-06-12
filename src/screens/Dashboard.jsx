@@ -208,7 +208,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             <div>
               <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{t('AGOLD price')}</div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 4 }}>
-                <WNum size={18} weight={800} style={{ letterSpacing: '-0.02em' }}>$151.56</WNum>
+                <WNum size={18} weight={800} style={{ letterSpacing: '-0.02em' }}>$135.82</WNum>
                 <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.positive, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>+0.24%</span>
               </div>
             </div>
@@ -407,7 +407,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
               { tone: 'pos',  title: t('Mint completed'),        sub: `1.2000 AGOLD · ${t('12 min ago')}`,               unread: true  },
               { tone: 'warn', title: t('New whitelist pending'),  sub: `USDC ${t('address · 24h review · 8h left')}`,    unread: true  },
               { tone: 'neu',  title: t('Vault audit published'),  sub: t('April attestation available'),            unread: true  },
-              { tone: 'neu',  title: t('Price alert'),            sub: t('AGOLD crossed $150 threshold'),            unread: false },
+              { tone: 'neu',  title: t('Price alert'),            sub: t('AGOLD crossed $135 threshold'),            unread: false },
             ].map((n, i, arr) => {
               const dotColor = n.tone === 'pos' ? WBRAND.positive : n.tone === 'warn' ? WBRAND.warn : WBRAND.muted;
               return (

@@ -8,9 +8,9 @@ const NOTIF_GROUPS = [
   {
     label: 'Today',
     items: [
-      { id: 'n1', tone: 'positive', unread: true,  type: 'Mint',     title: 'Mint completed',                   sub: '1.2000 AGOLD · paid 181.87 USDT · tx 9301',              time: '12 min ago',   actionLabel: 'View tx' },
+      { id: 'n1', tone: 'positive', unread: true,  type: 'Mint',     title: 'Mint completed',                   sub: '1.2000 AGOLD · paid 162.98 USDT · tx 9301',              time: '12 min ago',   actionLabel: 'View tx' },
       { id: 'n2', tone: 'warn',     unread: true,  type: 'Security', title: 'New whitelist pending review',      sub: 'USDC address · 0xDeF456…789aBcD · 8h remaining',        time: '2 hours ago',  actionLabel: 'Review' },
-      { id: 'n3', tone: 'neutral',  unread: true,  type: 'Price',    title: 'Price alert · AGOLD crossed $150',   sub: 'Spot trading at $151.56 · +0.24% past 24h',             time: '4 hours ago' },
+      { id: 'n3', tone: 'neutral',  unread: true,  type: 'Price',    title: 'Price alert · AGOLD crossed $135',   sub: 'Spot trading at $135.82 · +0.24% past 24h',             time: '4 hours ago' },
       { id: 'n4', tone: 'neutral',  unread: false, type: 'System',   title: 'Login from new device',             sub: 'MacBook Pro · Chrome · Istanbul · 87.245.190.x',        time: '7 hours ago' },
     ],
   },
@@ -24,7 +24,7 @@ const NOTIF_GROUPS = [
   {
     label: 'Earlier this week',
     items: [
-      { id: 'n7', tone: 'neutral',  unread: false, type: 'Redeem',   title: 'Redeem completed',                  sub: '0.8000 AGOLD burned · 121.25 USDT credited',             time: 'May 10' },
+      { id: 'n7', tone: 'neutral',  unread: false, type: 'Redeem',   title: 'Redeem completed',                  sub: '0.8000 AGOLD burned · 108.66 USDT credited',             time: 'May 10' },
       { id: 'n8', tone: 'warn',     unread: false, type: 'Limit',    title: '80% of monthly withdrawal limit used', sub: '203k / 250k USDT · resets May 31',                   time: 'May 9' },
     ],
   },

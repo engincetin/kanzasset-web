@@ -7,7 +7,7 @@ import { AGOLDMark, WMark } from '../components/coinicons.jsx';
 
 // Live AGOLD price chip — gently jitters every few seconds to feel alive.
 function LivePriceChip({ onClick }) {
-  const [px, setPx] = useState(151.56);
+  const [px, setPx] = useState(135.82);
   const [delta, setDelta] = useState(0.24);
   useEffect(() => {
     const id = setInterval(() => {

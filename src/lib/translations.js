@@ -78,7 +78,7 @@ export const tr = {
   "addresses": "adresler",
   "AGOLD": "AGOLD Token",
   "AGOLD holdings": "AGOLD Token varlıkları",
-  "AGOLD crossed $150 threshold": "AGOLD 150 $ eşiğini aştı",
+  "AGOLD crossed $135 threshold": "AGOLD 135 $ eşiğini aştı",
   "AGOLD minted": "AGOLD ihraç edildi",
   "AGOLD price": "AGOLD fiyatı",
   "AGOLD removed from circulation": "AGOLD dolaşımdan çıkarıldı",

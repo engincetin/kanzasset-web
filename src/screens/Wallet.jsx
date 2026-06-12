@@ -94,7 +94,7 @@ export function WebWallet({ navigate }) {
           <div style={{ padding: '40px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>{t('No assets match this filter.')}</div>
         ) : assets.map((a, i) => {
           const zero = a.balance === 0;
-          const priceStr = a.symbol === 'AGOLD' ? '$151.56' : a.symbol === 'AED' ? '$0.272' : a.symbol === 'EUR' ? '$1.080' : a.symbol === 'GBP' ? '$1.270' : '$1.000';
+          const priceStr = a.symbol === 'AGOLD' ? '$135.82' : a.symbol === 'AED' ? '$0.272' : a.symbol === 'EUR' ? '$1.080' : a.symbol === 'GBP' ? '$1.270' : '$1.000';
           return (
             <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 0.9fr 1.2fr 0.7fr 1fr 200px', gap: 12, padding: '14px 22px', alignItems: 'center', borderBottom: i === assets.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, opacity: zero ? 0.65 : 1 }}>
