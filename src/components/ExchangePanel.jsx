@@ -148,7 +148,7 @@ function SwapBox({ label, symbol, exclude, onPick, amount, onAmount, readOnly, u
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
         {readOnly
           ? <div style={{ flex: 1, fontFamily: WFONT, fontWeight: 700, fontSize: 34, color: amount > 0 ? WBRAND.ink : WBRAND.muted2, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums', minWidth: 0, overflow: 'hidden' }}>{wfmt(amount, wdecimals(symbol))}</div>
-          : <input value={amount} onChange={e => onAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 700, fontSize: 34, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>}
+          : <input value={amount} onChange={e => onAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', padding: 0, margin: 0, fontFamily: WFONT, fontWeight: 700, fontSize: 34, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>}
         <WTokenSelect value={symbol} exclude={exclude} onChange={onPick}/>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8, minHeight: 24 }}>
@@ -271,12 +271,12 @@ function SlippageModal({ value, onClose, onSave }) {
 // success screen (check → summary → detail rows → track/close).
 function TradeDoneModal({ trade, onClose, onTrack }) {
   const mobile = useIsMobile();
-  const { from, to, paid, received, rate, ref } = trade;
+  const { from, to, paid, received, rate, feePct } = trade;
   const rows = [
     { l: t('You paid', 'Ödediğin'),      v: `${wfmt(paid, wdecimals(from))} ${from}` },
     { l: t('You received', 'Aldığın'),   v: `${wfmt(received, wdecimals(to))} ${to}` },
     { l: t('Rate', 'Fiyat'),             v: `1 ${to} = ${wfmt(rate, wPriceDecimals(rate))} ${from}` },
-    { l: t('Reference', 'İşlem no'),     v: ref },
+    { l: t('Fee', 'İşlem ücreti'),       v: feePct > 0 ? `%${wfmt(feePct, 2)}` : t('Free', 'Ücretsiz') },
     { l: t('Status', 'Durum'),           v: t('Completed', 'Tamamlandı'), pill: true },
   ];
   return (
@@ -385,7 +385,7 @@ export function WExchangePanel({ navigate }) {
     if (!canSubmit) return;
     setDone({
       from, to, paid: amt, received: out, rate: WRATES[to] / WRATES[from],
-      ref: 'TX-' + Math.floor(1000 + Math.random() * 8999),
+      feePct: currencyFeePct,
     });
     setAmount('');
   };
