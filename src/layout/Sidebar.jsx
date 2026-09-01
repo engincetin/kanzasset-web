@@ -261,6 +261,27 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
             <span className="kz-pulse" style={{ width: 8, height: 8, borderRadius: 4, background: WBRAND.positive }}/>
           </div>
         )}
+
+        {/* Account — pinned at the very bottom (Claude-style) */}
+        <button onClick={() => go('profile')} title={collapsed ? 'Ahmet Yılmaz' : undefined} style={{
+          display: 'flex', alignItems: 'center', gap: collapsed ? 0 : 10,
+          padding: collapsed ? '8px 0' : '8px 10px', borderRadius: 10,
+          justifyContent: collapsed ? 'center' : 'flex-start',
+          background: active === 'profile' ? WBRAND.selBg : WBRAND.surface,
+          border: `1px solid ${active === 'profile' ? WBRAND.line2 : WBRAND.line}`,
+          cursor: 'pointer', width: '100%',
+        }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: 'linear-gradient(135deg, #1F1F1F, #4a4a4a)', color: '#fff', display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 700, fontSize: 12 }}>AY</div>
+          {!collapsed && (
+            <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
+              <div style={{ fontFamily: WFONT, fontSize: 12.5, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Ahmet Yılmaz</div>
+              <div style={{ fontFamily: WFONT, fontSize: 10.5, color: WBRAND.muted, marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('Verified · Tier 3', 'Doğrulanmış · Kademe 3')}</div>
+            </div>
+          )}
+          {!collapsed && (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}><path d="M9 6l6 6-6 6" stroke={WBRAND.muted} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          )}
+        </button>
       </div>
     </aside>
   );
