@@ -276,7 +276,10 @@ export function wTotalIn(sym) { return wTotalUSDT() / (WRATES[sym] ?? 1); }
 
 // ─── Transaction history ──────────────────────────────────────
 export const WTXS = [
-  { id: 'tx-9312', ts: '2026-05-13 10:15:00', type: 'Delivery', asset: 'AGOLD', amount: -1000.0000, paid: "Brink's · Dubai",    status: 'pending'   },
+  { id: 'tx-9330', ts: '2026-05-14 11:02:00', type: 'Delivery', asset: 'AGOLD', amount: -1000.0000, paid: "Brink's · Dubai",    status: 'pending', stage: 'processing' },
+  { id: 'tx-9326', ts: '2026-05-14 09:20:00', type: 'Delivery', asset: 'AGOLD', amount: -2000.0000, paid: "Brink's · Istanbul", status: 'pending', stage: 'accepted'   },
+  { id: 'tx-9320', ts: '2026-05-13 16:44:00', type: 'Delivery', asset: 'AGOLD', amount: -1000.0000, paid: "Brink's · Dubai",    status: 'pending', stage: 'awaiting'   },
+  { id: 'tx-9312', ts: '2026-05-13 10:15:00', type: 'Delivery', asset: 'AGOLD', amount: -1000.0000, paid: "Brink's · Dubai",    status: 'pending', stage: 'transit'    },
   { id: 'tx-9301', ts: '2026-05-12 09:42:11', type: 'Mint',     asset: 'AGOLD', amount:   1.2000, paid: '162.98 USDT',  status: 'completed' },
   { id: 'tx-9298', ts: '2026-05-11 14:08:03', type: 'Deposit',  asset: 'USDT', amount:   5000.00, paid: '—',            status: 'completed' },
   { id: 'tx-9277', ts: '2026-05-10 18:51:44', type: 'Redeem',   asset: 'AGOLD', amount:  -0.8000, paid: '108.66 USDT',  status: 'completed' },
@@ -284,9 +287,9 @@ export const WTXS = [
   { id: 'tx-9218', ts: '2026-05-07 10:05:18', type: 'Mint',     asset: 'AGOLD', amount:   3.5000, paid: '475.37 USDT',  status: 'completed' },
   { id: 'tx-9201', ts: '2026-05-06 19:47:32', type: 'Deposit',  asset: 'AED',  amount:  80000.00, paid: '—',            status: 'completed' },
   { id: 'tx-9189', ts: '2026-05-05 13:14:01', type: 'Redeem',   asset: 'AGOLD', amount:  -0.5000, paid: '67.91 USDT',   status: 'pending'   },
-  { id: 'tx-9165', ts: '2026-05-04 15:20:00', type: 'Delivery', asset: 'AGOLD', amount: -2000.0000, paid: "Brink's · Istanbul", status: 'completed' },
-  { id: 'tx-9131', ts: '2026-05-03 09:40:00', type: 'Delivery', asset: 'AGOLD', amount: -1000.0000, paid: "Brink's · Dubai",    status: 'completed' },
-  { id: 'tx-9070', ts: '2026-04-29 16:05:00', type: 'Delivery', asset: 'AGOLD', amount: -3000.0000, paid: "Brink's · Dubai",    status: 'completed' },
+  { id: 'tx-9165', ts: '2026-05-04 15:20:00', type: 'Delivery', asset: 'AGOLD', amount: -2000.0000, paid: "Brink's · Istanbul", status: 'completed', stage: 'delivered' },
+  { id: 'tx-9131', ts: '2026-05-03 09:40:00', type: 'Delivery', asset: 'AGOLD', amount: -1000.0000, paid: "Brink's · Dubai",    status: 'completed', stage: 'delivered' },
+  { id: 'tx-9070', ts: '2026-04-29 16:05:00', type: 'Delivery', asset: 'AGOLD', amount: -3000.0000, paid: "Brink's · Dubai",    status: 'completed', stage: 'delivered' },
   { id: 'tx-9163', ts: '2026-05-04 09:11:25', type: 'Mint',     asset: 'AGOLD', amount:   2.0000, paid: '271.64 USDT',  status: 'completed' },
   { id: 'tx-9142', ts: '2026-05-03 17:38:12', type: 'Deposit',  asset: 'USDC', amount:   5000.00, paid: '—',            status: 'completed' },
   { id: 'tx-9120', ts: '2026-05-02 12:00:58', type: 'Redeem',   asset: 'AGOLD', amount:  -1.0000, paid: '135.82 USDT',  status: 'completed' },
@@ -294,6 +297,21 @@ export const WTXS = [
   { id: 'tx-9054', ts: '2026-04-28 14:09:47', type: 'Deposit',  asset: 'USDT', amount:  10000.00, paid: '—',            status: 'completed' },
   { id: 'tx-9032', ts: '2026-04-27 11:30:00', type: 'Mint',     asset: 'AGOLD', amount:   5.0000, paid: '679.10 USDT',  status: 'completed' },
 ];
+
+// ─── Physical-delivery pipeline stages ────────────────────────
+// Deliveries move through these steps; the UI renders a card per stage and a
+// tracking number appears once the bars are with the carrier (transit onward).
+export const DELIVERY_STAGES = {
+  processing: { order: 0, en: 'Processing',        tr: 'İşleniyor',        tone: 'warn'     },
+  accepted:   { order: 1, en: 'In processing',     tr: 'İşleme alındı',    tone: 'warn'     },
+  awaiting:   { order: 2, en: 'Awaiting shipment', tr: 'Nakliye bekliyor', tone: 'warn'     },
+  transit:    { order: 3, en: 'In transit',        tr: 'Nakliyede',        tone: 'neutral'  },
+  delivered:  { order: 4, en: 'Delivered',         tr: 'Tamamlandı',       tone: 'positive' },
+};
+// Whether a stage has a carrier tracking number yet.
+export const wHasTracking = (stage) => stage === 'transit' || stage === 'delivered';
+// Deterministic carrier tracking number from a tx id.
+export const wTracking = (id) => 'BRX' + ((id || '').replace(/\D/g, '') + '000000000').slice(0, 9) + 'AE';
 
 // ─── Price chart data ─────────────────────────────────────────
 const WMONTHS_TR = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];

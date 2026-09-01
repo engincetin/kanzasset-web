@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData, DELIVERY_STAGES, wHasTracking, wTracking } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { AGOLDMark } from '../components/coinicons.jsx';
-import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
+import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
 import { AddDestinationModal } from './Profile.jsx';
@@ -392,7 +392,7 @@ function RedeemPhysicalWeb({ navigate }) {
           kg={kgPicked}
           addr={addr}
           onClose={() => setShipping(false)}
-          onTrack={() => { setShipping(false); navigate && navigate('activity'); }}
+          onTrack={() => { setShipping(false); navigate && navigate('physical'); }}
         />
       )}
 
@@ -491,7 +491,7 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
         </div>
 
         <div style={{ padding: '16px 24px 22px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>{t('Track in Activity', 'İşlemlerde gör')}</WPrimary>
+          <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>{t('View my deliveries', 'Teslimatlarımı gör')}</WPrimary>
           <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>{t('Done', 'Kapat')}</WSecondary>
         </div>
       </div>
@@ -622,18 +622,6 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
   const [gridRef, gw] = useElementWidth();
   const twoCol = !mobile && (gw === 0 || gw >= 840);
-  const paneW = twoCol ? Math.max(0, gw - 500) : gw;
-  const showDelivery = paneW === 0 || paneW >= 380;
-  const showShipping = paneW === 0 || paneW >= 470;
-  const compactSt = paneW > 0 && paneW < 430;
-  const recentColDefs = [
-    { w: '1.2fr', h: 'Date',     show: true },
-    { w: '1.1fr', h: 'Sold',     show: true },
-    { w: '0.7fr', h: 'Delivery', show: showDelivery },
-    { w: '1.2fr', h: 'Shipping', show: showShipping },
-    { w: compactSt ? '34px' : '110px', h: compactSt ? '' : 'Status', show: true },
-  ].filter(c => c.show);
-  const recentCols = recentColDefs.map(c => c.w).join(' ');
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
   const quote = 'USDT';
@@ -673,40 +661,46 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
           </WCard>
 
           <WCard padding={0}>
-            <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent physical deliveries')}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
-              </div>
-              <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>{t('View all')} {WIcon.arrowRight(WBRAND.red)}</button>
+            <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}` }}>
+              <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent physical deliveries', 'Son fiziksel teslimatlarım')}</div>
+              <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
             </div>
-            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: recentCols, gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-              {recentColDefs.map((c, i) => (
-                <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{c.h ? t(c.h) : ''}</div>
-              ))}
-            </div>
-            {WTXS.filter(tx => tx.type === 'Delivery').slice(0, 4).map((tx, i, arr) => {
-              const done = tx.status === 'completed';
-              return (
-              <div key={tx.id}
-                onClick={() => onOpenTx && onOpenTx(tx)}
-                onMouseEnter={onOpenTx ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
-                onMouseLeave={onOpenTx ? (e => e.currentTarget.style.background = 'transparent') : undefined}
-                style={{ display: 'grid', gridTemplateColumns: recentCols, gap: 12, padding: '12px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: onOpenTx ? 'pointer' : 'default', transition: 'background .12s' }}>
-                <div>
-                  <WMonoNum size={12}>{tx.ts.slice(0, 10)}</WMonoNum>
-                  <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(11, 16)}</div>
-                </div>
-                <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount), 0)} AGOLD</WMonoNum>
-                {showDelivery && <WMonoNum size={12} color={WBRAND.ink}>{wfmt(Math.abs(tx.amount) / 1000, 0)} kg</WMonoNum>}
-                {showShipping && <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{tx.paid}</span>}
-                {compactSt
-                  ? <span title={t(done ? 'Completed' : 'Pending')} style={{ justifySelf: 'start', width: 9, height: 9, borderRadius: 5, background: done ? WBRAND.positive : WBRAND.warn }}/>
-                  : <WPill tone={done ? 'positive' : 'warn'} style={{ justifySelf: 'start' }}>{t(tx.status[0].toUpperCase() + tx.status.slice(1))}</WPill>}
-              </div>
-              );
-            })}
+            <div style={{ padding: mobile ? '12px 14px 16px' : '14px 16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {WTXS.filter(tx => tx.type === 'Delivery').slice(0, 5).map((tx) => {
+                const st = DELIVERY_STAGES[tx.stage] || DELIVERY_STAGES.processing;
+                const kg = Math.abs(tx.amount) / 1000;
+                const track = wHasTracking(tx.stage);
+                return (
+                  <div key={tx.id}
+                    onClick={() => onOpenTx && onOpenTx(tx)}
+                    style={{ border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: 14, cursor: onOpenTx ? 'pointer' : 'default', background: WBRAND.white, transition: 'border-color .12s' }}
+                    onMouseEnter={onOpenTx ? (e => e.currentTarget.style.borderColor = WBRAND.line2) : undefined}
+                    onMouseLeave={onOpenTx ? (e => e.currentTarget.style.borderColor = WBRAND.line) : undefined}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{ width: 38, height: 38, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                          <path d="M3 7l9-4 9 4v10l-9 4-9-4V7z" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinejoin="round"/>
+                          <path d="M3 7l9 4 9-4M12 11v10" stroke={WBRAND.ink} strokeWidth="1.6" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{wfmt(kg, 0)} kg {t('gold', 'altın')}</div>
+                        <div style={{ fontFamily: WFONT, fontSize: 11.5, color: WBRAND.muted, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tx.ts.slice(0, 10)} · {tx.paid}</div>
+                      </div>
+                      <WPill tone={st.tone} style={{ flexShrink: 0 }}>{t(st.en, st.tr)}</WPill>
+                    </div>
+                    {track && (
+                      <div onClick={e => e.stopPropagation()} style={{ marginTop: 12, padding: '10px 12px', background: WBRAND.surface, borderRadius: 10 }}>
+                        <div style={{ fontFamily: WFONT, fontSize: 9.5, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t('Tracking number')}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 5 }}>
+                          <WMonoNum size={13} weight={500} style={{ flex: 1, minWidth: 0 }}>{wTracking(tx.id)}</WMonoNum>
+                          <WCopyButton text={wTracking(tx.id)}/>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </WCard>
         </div>
