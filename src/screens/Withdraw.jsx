@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WBALANCES, WMETA, WTXS } from '../lib/index.js';
-import { RequestsCard } from '../components/shared.jsx';
+import { TxHistoryCard } from '../components/shared.jsx';
 import { getAuthChannel } from '../lib/authChannel.js';
 import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
@@ -139,7 +139,7 @@ function WithdrawVerifyModal({ step, setStep, code, setCode, channel, codeFull, 
   );
 }
 
-export function WebWithdraw({ navigate, initialAsset }) {
+export function WebWithdraw({ navigate, initialAsset, onOpenTx }) {
   const mobile = useIsMobile();
   const [gridRef, gw] = useElementWidth();
   const twoCol = !mobile && (gw === 0 || gw >= 900);
@@ -293,8 +293,8 @@ export function WebWithdraw({ navigate, initialAsset }) {
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-          <RequestsCard title={t('My withdrawal requests', 'Çekme taleplerim')} type="Withdraw" navigate={navigate}/>
+        <div style={{ gridColumn: '1 / -1', minWidth: 0 }}>
+          <TxHistoryCard title={t('My withdrawal requests', 'Çekme taleplerim')} subtitle={t('Last 30 days')} types={['Withdraw']} navigate={navigate} onOpenTx={onOpenTx}/>
         </div>
       </div>
 

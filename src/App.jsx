@@ -27,8 +27,8 @@ function Screen({ active, navigate, onLogout, onOpenTx, profileSection, profileK
     case 'physical':  return <WebPhysicalRedeem navigate={navigate} onOpenTx={onOpenTx} />;
     case 'mint':      return <WebMint      navigate={navigate} onOpenTx={onOpenTx} />;
     case 'redeem':    return <WebRedeem    navigate={navigate} onOpenTx={onOpenTx} />;
-    case 'deposit':   return <WebDeposit   navigate={navigate} />;
-    case 'withdraw':  return <WebWithdraw  navigate={navigate} />;
+    case 'deposit':   return <WebDeposit   navigate={navigate} onOpenTx={onOpenTx} />;
+    case 'withdraw':  return <WebWithdraw  navigate={navigate} onOpenTx={onOpenTx} />;
     case 'activity':  return <WebActivity  navigate={navigate} onOpenTx={onOpenTx} />;
     case 'support':   return <WebSupport   key={supportKey} navigate={navigate} prefillTx={supportTx} />;
     case 'profile':   return <WebProfile   key={profileKey} navigate={navigate} onLogout={onLogout} initialSection={profileSection} />;

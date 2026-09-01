@@ -3,7 +3,7 @@ import { WBRAND, WFONT, WMONO } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
-import { SelectField } from '../components/shared.jsx';
+import { SelectField, ProofOfReserveCard } from '../components/shared.jsx';
 import { txMeta } from '../components/TxDetailModal.jsx';
 import { toast } from '../components/Toast.jsx';
 import { t } from '../lib/i18n.js';
@@ -155,6 +155,11 @@ export function WebSupport({ navigate, prefillTx }) {
                   </div>
                 </div>
               </WCard>}
+      </div>
+
+      {/* Proof of Reserve — trust/verification material, moved off the dashboard */}
+      <div style={{ marginTop: mobile ? 14 : 20 }}>
+        <ProofOfReserveCard/>
       </div>
     </div>
   );

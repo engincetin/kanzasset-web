@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import qrcode from 'qrcode-generator';
 import { WBRAND, WFONT, WMONO, wfmt, wdecimals, WTXS } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
+import { useIsMobile } from '../lib/useResponsive.js';
 
 export function WSpinner({ size = 14, color }) {
   const arc = color || WBRAND.red;
@@ -279,39 +280,100 @@ export function WebQR({ value, color = WBRAND.ink }) {
   );
 }
 
-// Recent deposit / withdrawal requests, shown under the Deposit and Withdraw
-// forms with a shortcut to the full transactions list.
-export function RequestsCard({ title, type, navigate }) {
-  const list = WTXS.filter(tx => tx.type === type).slice(0, 5);
-  const icon = type === 'Withdraw' ? WIcon.upload : WIcon.download;
+// Unified transactions card used on the Dashboard, Deposit and Withdraw.
+// `types` limits which transaction types are shown; with more than one type it
+// renders Buy/Sell/Deposit/Withdraw filter tabs, and with a single type it acts
+// as a locked "my requests" list. Rows open the detail modal when `onOpenTx` is
+// given, otherwise they jump to the full transactions list.
+const TX_TYPE_LABEL = { Mint: ['Buy', 'Al'], Redeem: ['Sell', 'Sat'], Deposit: ['Deposit', 'Yatır'], Withdraw: ['Withdraw', 'Çek'] };
+export function TxHistoryCard({ title, subtitle, types, navigate, onOpenTx, limit = 6 }) {
+  const mobile = useIsMobile();
+  const allow = (types && types.length) ? types : ['Mint', 'Redeem', 'Deposit', 'Withdraw'];
+  const showTabs = allow.length > 1;
+  const [sel, setSel] = useState('All');
+  const base = WTXS.filter(tx => allow.includes(tx.type));
+  const list = (sel === 'All' ? base : base.filter(tx => tx.type === sel)).slice(0, limit);
+  const openFn = onOpenTx || (navigate ? (() => navigate('activity')) : undefined);
+  const cols = '40px 1.2fr 1fr 1.2fr 1.2fr 1fr 110px';
   return (
     <WCard padding={0}>
-      <div style={{ padding: '16px 18px 12px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+      <div style={{ padding: '16px 20px 12px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
         <div style={{ minWidth: 0 }}>
-          <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{title}</div>
-          <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
+          <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{title}</div>
+          {subtitle && <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{subtitle}</div>}
         </div>
-        <button onClick={() => navigate && navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
-          {t('All transactions', 'Tüm işlemler')} {WIcon.arrowRight(WBRAND.red)}
+        <button onClick={() => navigate && navigate('activity')} style={{ background: WBRAND.white, border: `1px solid ${WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 9, flexShrink: 0 }}>
+          {t('All transactions', 'Tüm işlemler')} {WIcon.arrowRight(WBRAND.ink)}
         </button>
       </div>
-      {list.length === 0 ? (
-        <div style={{ padding: '28px 18px', textAlign: 'center', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>{t('No requests yet', 'Henüz talep yok')}</div>
-      ) : list.map((tx, i, arr) => (
-        <div key={tx.id} onClick={() => navigate && navigate('activity')}
-          style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, cursor: navigate ? 'pointer' : 'default', transition: 'background .12s' }}
-          onMouseEnter={navigate ? (e => e.currentTarget.style.background = WBRAND.surface2) : undefined}
-          onMouseLeave={navigate ? (e => e.currentTarget.style.background = 'transparent') : undefined}>
-          <div style={{ width: 34, height: 34, borderRadius: 9, background: WBRAND.surface, display: 'grid', placeItems: 'center', flexShrink: 0 }}>{icon(WBRAND.ink)}</div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{wfmt(Math.abs(tx.amount), wdecimals(tx.asset))} {tx.asset}</div>
-            <div style={{ fontFamily: WMONO, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{tx.ts.slice(0, 10)}</div>
-          </div>
-          <WPill tone={tx.status === 'completed' ? 'positive' : tx.status === 'pending' ? 'warn' : 'negative'}>
-            {t(tx.status[0].toUpperCase() + tx.status.slice(1))}
-          </WPill>
+
+      {showTabs && (
+        <div style={{ display: 'flex', gap: 6, padding: '12px 20px', borderBottom: `1px solid ${WBRAND.line}`, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          {[['All', 'All', 'Tümü'], ...allow.map(ty => [ty, TX_TYPE_LABEL[ty][0], TX_TYPE_LABEL[ty][1]])].map(([id, en, tr2]) => {
+            const on = sel === id;
+            return (
+              <button key={id} onClick={() => setSel(id)} style={{
+                padding: '6px 14px', borderRadius: 999, cursor: 'pointer', flexShrink: 0,
+                border: `1px solid ${on ? WBRAND.ink : WBRAND.line2}`,
+                background: on ? WBRAND.ink : WBRAND.white, color: on ? '#fff' : WBRAND.muted,
+                fontFamily: WFONT, fontSize: 12.5, fontWeight: 700, whiteSpace: 'nowrap',
+              }}>{t(en, tr2)}</button>
+            );
+          })}
         </div>
-      ))}
+      )}
+
+      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+        <div style={{ minWidth: mobile ? 720 : 'auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: cols, gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+            {['', 'Type', 'Asset', 'Amount', 'Counterparty', 'Date', 'Status'].map((h, i) => (
+              <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h ? t(h) : h}</div>
+            ))}
+          </div>
+          {list.length === 0
+            ? <div style={{ padding: '32px 22px', textAlign: 'center', fontFamily: WFONT, fontSize: 12.5, color: WBRAND.muted }}>{t('No transactions yet', 'Henüz işlem yok')}</div>
+            : list.map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1} onOpen={openFn}/>)}
+        </div>
+      </div>
+    </WCard>
+  );
+}
+
+// Proof of Reserve strip — moved off the dashboard; shown under Support so it
+// lives with the platform's trust/verification material.
+export function ProofOfReserveCard() {
+  const rows = [
+    { k: t('Tokens in circulation'), v: '142,718.4203 AGOLD' },
+    { k: t('Physical gold reserve'), v: '142.72 kg' },
+    { k: t('Last audit'), v: t('May 28, 2026', '28 May 2026') },
+    { k: t('Reserve ratio'), v: '100.00%' },
+  ];
+  return (
+    <WCard padding={0}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 20, padding: '18px 22px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '1 1 260px', minWidth: 0 }}>
+          <div style={{ width: 34, height: 34, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center', flexShrink: 0 }}>{WIcon.vault()}</div>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Proof of Reserve')}</span>
+              <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
+            </div>
+            <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>Ahlatcı Metal Refinery FZCO · {t('audited by Bureau Veritas')}</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 28 }}>
+          {rows.map((r, i) => (
+            <div key={i}>
+              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{r.k}</div>
+              <WMonoNum size={13} style={{ marginTop: 3, display: 'block' }}>{r.v}</WMonoNum>
+            </div>
+          ))}
+        </div>
+        <button style={{ marginLeft: 'auto', padding: '11px 14px', borderRadius: 8, background: WBRAND.surface, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, flexShrink: 0 }}>
+          <span>{t('View proof-of-reserves report')}</span>
+          {WIcon.external(WBRAND.muted)}
+        </button>
+      </div>
     </WCard>
   );
 }

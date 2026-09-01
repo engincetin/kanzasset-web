@@ -3,11 +3,11 @@ import { WBRAND, WFONT, WMONO, wfmt, wdecimals, WBALANCES, WMETA } from '../lib/
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WSecondary, WEyebrow, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
-import { WebQR, RequestsCard } from '../components/shared.jsx';
+import { WebQR, TxHistoryCard } from '../components/shared.jsx';
 import { t } from '../lib/i18n.js';
 import { useIsMobile, useElementWidth } from '../lib/useResponsive.js';
 
-export function WebDeposit({ navigate, initialAsset }) {
+export function WebDeposit({ navigate, initialAsset, onOpenTx }) {
   const mobile = useIsMobile();
   const [gridRef, gw] = useElementWidth();
   const twoCol = !mobile && (gw === 0 || gw >= 900);
@@ -163,8 +163,8 @@ export function WebDeposit({ navigate, initialAsset }) {
           )}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-          <RequestsCard title={t('My deposit requests', 'Yatırma taleplerim')} type="Deposit" navigate={navigate}/>
+        <div style={{ gridColumn: '1 / -1', minWidth: 0 }}>
+          <TxHistoryCard title={t('My deposit requests', 'Yatırma taleplerim')} subtitle={t('Last 30 days')} types={['Deposit']} navigate={navigate} onOpenTx={onOpenTx}/>
         </div>
       </div>
     </div>
