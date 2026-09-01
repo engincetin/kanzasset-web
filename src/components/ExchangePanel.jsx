@@ -41,6 +41,7 @@ function TokenRow({ s, on, onSelect }) {
 
 // ── Token pill + picker modal (DEX-style, opened from beside the amount) ──
 function WTokenSelect({ value, exclude, onChange }) {
+  const mobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('all');   // all | crypto | fiat
@@ -91,7 +92,7 @@ function WTokenSelect({ value, exclude, onChange }) {
             <div style={{ padding: '12px 16px 10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: WBRAND.surface, border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: '10px 14px' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke={WBRAND.muted} strokeWidth="1.8"/><path d="M20 20l-3-3" stroke={WBRAND.muted} strokeWidth="1.8" strokeLinecap="round"/></svg>
-                <input autoFocus value={q} onChange={e => setQ(e.target.value)} placeholder={t('Search name or symbol', 'İsim veya sembol ara')} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 14, color: WBRAND.ink }}/>
+                <input autoFocus={!mobile} value={q} onChange={e => setQ(e.target.value)} placeholder={t('Search name or symbol', 'İsim veya sembol ara')} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 14, color: WBRAND.ink }}/>
               </div>
               {/* Category tabs */}
               <div style={{ display: 'flex', gap: 6, marginTop: 12 }}>
