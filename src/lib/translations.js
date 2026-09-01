@@ -545,6 +545,8 @@ export const tr = {
   "Track in Activity": "İşlemler’de takip et",
   "Track shipment on Brinks": "Gönderiyi Brinks’te takip et",
   "Tracking number": "Takip numarası",
+  "Carrier": "Taşıyıcı",
+  "Created once shipped": "Kargoya verilince oluşur",
   "transactions": "işlem",
   "Transfer": "Transfer",
   "Two-factor authentication": "İki adımlı doğrulama",

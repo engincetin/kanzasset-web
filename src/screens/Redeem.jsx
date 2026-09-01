@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { AGOLDMark } from '../components/coinicons.jsx';
-import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
+import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
 import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.jsx';
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
 import { AddDestinationModal } from './Profile.jsx';
@@ -443,32 +443,17 @@ function RedeemPhysicalWeb({ navigate }) {
 
 function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
   const mobile = useIsMobile();
-  const STEPS = [
-    { id: 'submitted', title: t('Delivery request received'), sub: () => `${kg} × 1 kg ${t('bar')}${kg > 1 ? t('s') : ''} · ${t('ship to')} ${addr ? addr.label + ', ' + addr.city : t('your address')}` },
-    { id: 'handover',  title: t('Handed to carrier'),         sub: `Brinks Secure Logistics · ${t('insured in transit')}` },
-    { id: 'burning',   title: t('Burning AGOLD'),              sub: () => `${wfmt(kg * 1000, 4)} ${t('AGOLD removed from circulation')}` },
-    { id: 'done',      title: t('Shipped — tracking ready'),  sub: t('Your bars are on the way') },
-  ];
-  const [active, setActive] = useState(0);
-  const [stamps, setStamps] = useState({});
   const orderRef = 'PD-' + Math.floor(100000 + Math.random() * 899999);
-  const tracking = 'BRX' + Math.floor(100000000 + Math.random() * 899999999) + 'AE';
-  const trackUrl = 'brinks.com/track/' + tracking;
-
-  useEffect(() => {
-    const now = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    setStamps(s => ({ ...s, 0: now() }));
-    const delays = [900, 4500, 5800];
-    const timers = delays.map((d, i) =>
-      setTimeout(() => { setActive(i + 1); setStamps(s => ({ ...s, [i + 1]: now() })); }, d)
-    );
-    return () => timers.forEach(clearTimeout);
-  }, []);
-
-  const done = active >= STEPS.length - 1;
-
+  const rows = [
+    { l: t('Request no', 'Talep no'),         v: orderRef, mono: true },
+    { l: t('Amount', 'Miktar'),               v: `${kg} × 1 kg ${t('bar', 'külçe')}` },
+    { l: t('Gold', 'Altın'),                  v: `${wfmt(kg * 1000, 4)} AGOLD` },
+    { l: t('Ship to', 'Teslimat adresi'),     v: addr ? `${addr.label} · ${addr.city}` : '—' },
+    { l: t('Carrier', 'Taşıyıcı'),            v: 'Brinks Secure Logistics' },
+    { l: t('Status', 'Durum'),                v: t('Processing', 'İşleniyor'), pill: true },
+  ];
   return (
-    <div onClick={done ? onClose : undefined} style={{
+    <div onClick={onClose} style={{
       position: 'fixed', inset: 0, zIndex: 100,
       background: 'rgba(10,10,10,0.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
     }}>
@@ -477,79 +462,37 @@ function RedeemPhysicalModal({ kg, addr, onClose, onTrack }) {
         borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
         maxHeight: '88vh', display: 'flex', flexDirection: 'column',
       }}>
-        <div style={{ padding: '22px 24px 18px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <rect x="2.5" y="7" width="13" height="11" rx="1.5" stroke={WBRAND.ink} strokeWidth="1.7"/>
-                  <path d="M15.5 10h3.2c.5 0 .96.27 1.2.7l1.3 2.3c.13.23.2.5.2.76V17a1 1 0 0 1-1 1h-5.9" stroke={WBRAND.ink} strokeWidth="1.7" strokeLinejoin="round"/>
-                  <circle cx="6.5" cy="18.5" r="1.8" stroke={WBRAND.ink} strokeWidth="1.7"/>
-                  <circle cx="17.5" cy="18.5" r="1.8" stroke={WBRAND.ink} strokeWidth="1.7"/>
-                </svg>
-              </div>
-              <div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{done ? t('Order shipped') : t('Processing delivery')}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 18, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em', marginTop: 2 }}>{kg} {t('kg physical gold')}</div>
-              </div>
-            </div>
-            <WMonoNum size={11} color={WBRAND.muted2}>{orderRef}</WMonoNum>
+        <div style={{ padding: '36px 28px 8px', textAlign: 'center', flexShrink: 0 }}>
+          <div style={{ width: 64, height: 64, borderRadius: 32, margin: '0 auto', background: 'rgba(15,122,71,0.10)', display: 'grid', placeItems: 'center' }}>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke={WBRAND.positive} strokeWidth="1.8"/>
+              <path d="M7.5 12.5l3 3 6-6.5" stroke={WBRAND.positive} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <h2 style={{ margin: '20px 0 0', fontFamily: WFONT, fontSize: 20, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t('Delivery request received', 'Teslimat talebiniz alındı')}</h2>
+          <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 8, lineHeight: 1.55, padding: '0 8px' }}>
+            {t('Your request for', 'Talebiniz')} <strong style={{ color: WBRAND.ink }}>{kg} kg</strong> {t('physical gold has been received. We will update the status here and add a tracking number once it ships.', 'fiziksel altın için alındı. Durumu buradan güncelleyeceğiz; kargoya verildiğinde takip numarası eklenecek.')}
           </div>
         </div>
 
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
-          <div style={{ padding: '20px 24px 8px' }}>
-            <WTimeline steps={STEPS} active={active} stamps={stamps} done={done}/>
-          </div>
-
-          {done && (
-            <div style={{ padding: '4px 24px 20px' }}>
-              <div style={{ border: `1px solid ${WBRAND.line}`, borderRadius: 12, overflow: 'hidden' }}>
-                <div style={{ padding: '14px 16px', background: WBRAND.surface2, borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 6, background: WBRAND.panel, display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 10, color: '#fff', letterSpacing: '0.04em' }}>BRX</div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>Brinks Secure Logistics</div>
-                    <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>{t('Fully insured · signature on delivery')}</div>
-                  </div>
-                  <WPill tone="warn">{t('In transit')}</WPill>
+          <div style={{ padding: '18px 24px 4px' }}>
+            <div style={{ background: WBRAND.surface2, border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: '4px 16px' }}>
+              {rows.map((r, i, arr) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500, flexShrink: 0 }}>{r.l}</span>
+                  {r.pill
+                    ? <WPill tone="warn">{r.v}</WPill>
+                    : <span style={{ fontFamily: r.mono ? WMONO : WFONT, fontSize: r.mono ? 12 : 13, fontWeight: 600, color: WBRAND.ink, textAlign: 'right' }}>{r.v}</span>}
                 </div>
-                <div style={{ padding: '14px 16px' }}>
-                  <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t('Tracking number')}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-                    <WMonoNum size={15} weight={500} style={{ flex: 1 }}>{tracking}</WMonoNum>
-                    <WCopyButton text={tracking}/>
-                  </div>
-                  <a href={`https://${trackUrl}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 12, height: 42, borderRadius: 10, background: WBRAND.white, border: `1px solid ${WBRAND.line2}`, textDecoration: 'none', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink }}>
-                    {t('Track shipment on Brinks')}
-                    {WIcon.external(WBRAND.muted)}
-                  </a>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14, paddingTop: 12, borderTop: `1px dashed ${WBRAND.line}` }}>
-                    <div>
-                      <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t('Ships to')}</div>
-                      <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, marginTop: 3 }}>{addr ? `${addr.label} · ${addr.city}` : '—'}</div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t('Est. arrival')}</div>
-                      <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, marginTop: 3 }}>{t('3–5 business days')}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-          )}
+          </div>
         </div>
 
-        <div style={{ padding: '14px 24px 20px', flexShrink: 0, borderTop: done ? `1px solid ${WBRAND.line}` : 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {done ? (
-            <>
-              <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>{t('Track in Activity')}</WPrimary>
-              <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>{t('Done')}</WSecondary>
-            </>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '8px 0', fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>
-              {t('Preparing your shipment — a tracking number will appear here shortly.')}
-            </div>
-          )}
+        <div style={{ padding: '16px 24px 22px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>{t('Track in Activity', 'İşlemlerde gör')}</WPrimary>
+          <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>{t('Done', 'Kapat')}</WSecondary>
         </div>
       </div>
     </div>

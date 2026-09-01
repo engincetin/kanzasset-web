@@ -28,14 +28,25 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
   const hash = '0x' + (tx.id.replace(/\D/g, '') + '8f3b9c2de04a8fbe9ec1a2ee9c2a1d3b7e5c09').slice(0, 40);
   const explorer = 'etherscan.io/tx/' + hash.slice(0, 18);
 
-  const rows = [
-    { l: 'Transaction ID', v: tx.id, mono: true },
-    { l: m.counterLabel, v: tx.paid && tx.paid !== '—' ? tx.paid : m.network },
-    { l: 'Network', v: m.network },
-    { l: 'Date & time', v: `${m.date} · ${m.time}` },
-    { l: 'Network fee', v: tx.type === 'Mint' || tx.type === 'Redeem' ? 'Covered by Kanzasset' : (tx.type === 'Transfer' ? 'Free' : '—') },
-  ];
-  const onChain = m.network.includes('Ethereum');
+  const isDelivery = tx.type === 'Delivery';
+  const tracking = 'BRX' + (tx.id.replace(/\D/g, '') + '000000000').slice(0, 9) + 'AE';
+  const rows = isDelivery
+    ? [
+        { l: 'Transaction ID', v: tx.id, mono: true },
+        { l: 'Amount', v: `${wfmt(Math.abs(tx.amount), wdecimals(tx.asset))} ${tx.asset}` },
+        { l: 'Destination', v: tx.paid && tx.paid !== '—' ? tx.paid : '—' },
+        { l: 'Carrier', v: 'Brinks Secure Logistics' },
+        { l: 'Tracking number', v: tx.status === 'completed' ? tracking : 'Created once shipped', mono: tx.status === 'completed' },
+        { l: 'Date & time', v: `${m.date} · ${m.time}` },
+      ]
+    : [
+        { l: 'Transaction ID', v: tx.id, mono: true },
+        { l: m.counterLabel, v: tx.paid && tx.paid !== '—' ? tx.paid : m.network },
+        { l: 'Network', v: m.network },
+        { l: 'Date & time', v: `${m.date} · ${m.time}` },
+        { l: 'Network fee', v: tx.type === 'Mint' || tx.type === 'Redeem' ? 'Covered by Kanzasset' : (tx.type === 'Transfer' ? 'Free' : '—') },
+      ];
+  const onChain = !isDelivery && m.network.includes('Ethereum');
 
   return (
     <div onClick={onClose} style={{
