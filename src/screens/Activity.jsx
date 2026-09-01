@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
-import { WBRAND, WFONT, wfmt, wdecimals, WRATES, WTXS } from '../lib/index.js';
+import { WBRAND, WFONT, WTXS } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
-import { WCard, WSecondary, WGhost, WEyebrow, WNum } from '../components/primitives.jsx';
+import { WCard, WSecondary, WGhost } from '../components/primitives.jsx';
 import { WRangeTabs } from '../components/charts.jsx';
 import { WTxRow } from '../components/shared.jsx';
 import { t } from '../lib/i18n.js';
@@ -57,6 +57,8 @@ export function WebActivity({ navigate, onOpenTx }) {
   const [assetFilter, setAssetFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
   const [range, setRange] = useState('30D');
+  const [filtersOpen, setFiltersOpen] = useState(false);   // mobile: collapsible filters
+  const activeCount = (typeFilter !== 'All' ? 1 : 0) + (assetFilter !== 'All' ? 1 : 0) + (statusFilter !== 'All' ? 1 : 0);
 
   const filtered = useMemo(() => {
     return WTXS.filter(tx => {
@@ -71,43 +73,55 @@ export function WebActivity({ navigate, onOpenTx }) {
     });
   }, [search, typeFilter, assetFilter, statusFilter]);
 
-  const totalMints    = WTXS.filter(t => t.type === 'Mint').reduce((s, t) => s + t.amount, 0);
-  const totalRedeems  = Math.abs(WTXS.filter(t => t.type === 'Redeem').reduce((s, t) => s + t.amount, 0));
-  const totalDeposits = WTXS.filter(t => t.type === 'Deposit').length;
-  const totalWithdrws = WTXS.filter(t => t.type === 'Withdraw').length;
-
   const hasFilters = typeFilter !== 'All' || assetFilter !== 'All' || statusFilter !== 'All' || search;
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 16, marginBottom: 20 }}>
-        {[
-          { l: 'Total minted',   v: `${wfmt(totalMints, 4)} AGOLD`,   sub: `≈ $${wfmt(totalMints * WRATES.AGOLD)}` },
-          { l: 'Total redeemed', v: `${wfmt(totalRedeems, 4)} AGOLD`, sub: `≈ $${wfmt(totalRedeems * WRATES.AGOLD)}` },
-          { l: 'Deposits',       v: String(totalDeposits),            sub: t('past 30 days') },
-          { l: 'Withdrawals',    v: String(totalWithdrws),            sub: t('past 30 days') },
-        ].map((k, i) => (
-          <WCard key={i} padding={20} style={{ minWidth: 0 }}>
-            <WEyebrow>{t(k.l)}</WEyebrow>
-            <WNum size={26} weight={800} style={{ marginTop: 6, display: 'block', letterSpacing: '-0.025em' }}>{k.v}</WNum>
-            <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, fontWeight: 500 }}>{k.sub}</div>
-          </WCard>
-        ))}
-      </div>
-
       <WCard padding={0}>
-        <div style={{ padding: '14px 22px', borderBottom: `1px solid ${WBRAND.line}` }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <div style={{ height: 36, flex: '1 1 260px', minWidth: 240, maxWidth: 320, background: WBRAND.surface, borderRadius: 8, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
-              {WIcon.search()}
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('Search by ID, asset, counterparty…')} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink }}/>
+        <div style={{ padding: mobile ? '12px 16px' : '14px 22px', borderBottom: `1px solid ${WBRAND.line}` }}>
+          {mobile ? (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ height: 40, flex: 1, minWidth: 0, background: WBRAND.surface, borderRadius: 10, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {WIcon.search()}
+                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('Search', 'Ara…')} style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 14, color: WBRAND.ink }}/>
+                </div>
+                <button onClick={() => setFiltersOpen(o => !o)} style={{
+                  height: 40, padding: '0 14px', borderRadius: 10, flexShrink: 0,
+                  background: (filtersOpen || activeCount) ? WBRAND.ink : WBRAND.white,
+                  color: (filtersOpen || activeCount) ? '#fff' : WBRAND.ink,
+                  border: `1px solid ${(filtersOpen || activeCount) ? WBRAND.ink : WBRAND.line2}`,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
+                  fontFamily: WFONT, fontSize: 13, fontWeight: 700,
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 5h18M6 12h12M10 19h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+                  {t('Filters', 'Filtreler')}
+                  {activeCount > 0 && <span style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, background: 'rgba(255,255,255,0.25)', color: '#fff', fontSize: 11, fontWeight: 800, display: 'grid', placeItems: 'center' }}>{activeCount}</span>}
+                </button>
+              </div>
+              {filtersOpen && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
+                  <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw', 'Delivery']}  onChange={setTypeFilter}/>
+                  <FilterDropdown label="Asset"  value={assetFilter}  options={['All', 'AGOLD', 'USDT', 'USDC', 'AED', 'USD', 'EUR', 'GBP']}   onChange={setAssetFilter}/>
+                  <FilterDropdown label="Status" value={statusFilter} options={['All', 'Completed', 'Pending', 'Failed']}                      onChange={setStatusFilter}/>
+                  <div style={{ width: '100%' }}/>
+                  <WRangeTabs value={range} onChange={setRange} options={['7D', '30D', '90D', '1Y', 'ALL']}/>
+                </div>
+              )}
+            </>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <div style={{ height: 36, flex: '1 1 260px', minWidth: 240, maxWidth: 320, background: WBRAND.surface, borderRadius: 8, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                {WIcon.search()}
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('Search by ID, asset, counterparty…')} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink }}/>
+              </div>
+              <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw', 'Delivery']}  onChange={setTypeFilter}/>
+              <FilterDropdown label="Asset"  value={assetFilter}  options={['All', 'AGOLD', 'USDT', 'USDC', 'AED', 'USD', 'EUR', 'GBP']}   onChange={setAssetFilter}/>
+              <FilterDropdown label="Status" value={statusFilter} options={['All', 'Completed', 'Pending', 'Failed']}                      onChange={setStatusFilter}/>
+              <div style={{ flex: 1 }}/>
+              <WRangeTabs value={range} onChange={setRange} options={['7D', '30D', '90D', '1Y', 'ALL']}/>
             </div>
-            <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw', 'Delivery']}  onChange={setTypeFilter}/>
-            <FilterDropdown label="Asset"  value={assetFilter}  options={['All', 'AGOLD', 'USDT', 'USDC', 'AED', 'USD', 'EUR', 'GBP']}   onChange={setAssetFilter}/>
-            <FilterDropdown label="Status" value={statusFilter} options={['All', 'Completed', 'Pending', 'Failed']}                      onChange={setStatusFilter}/>
-            <div style={{ flex: 1 }}/>
-            <WRangeTabs value={range} onChange={setRange} options={['7D', '30D', '90D', '1Y', 'ALL']}/>
-          </div>
+          )}
 
           {hasFilters && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
@@ -115,21 +129,23 @@ export function WebActivity({ navigate, onOpenTx }) {
               {search && <FilterChip label={`"${search}"`} onClear={() => setSearch('')}/>}
               {typeFilter !== 'All' && <FilterChip label={`${t('Type')}: ${t(typeFilter)}`} onClear={() => setTypeFilter('All')}/>}
               {assetFilter !== 'All' && <FilterChip label={`${t('Asset')}: ${assetFilter}`} onClear={() => setAssetFilter('All')}/>}
-              {statusFilter !== 'All' && <FilterChip label={`${t('Status')}: ${t(statusFilter)}`} onClear={() => setStatusFilter('All')}/>}
+              {statusFilter !== 'All' && <FilterChip label={`${t('Status')}: ${statusFilter}`} onClear={() => setStatusFilter('All')}/>}
               <button onClick={() => { setSearch(''); setTypeFilter('All'); setAssetFilter('All'); setStatusFilter('All'); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.red }}>{t('Clear all')}</button>
             </div>
           )}
         </div>
 
-        <div style={{ padding: '12px 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: WBRAND.surface2, flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 8 : 0 }}>
+        <div style={{ padding: mobile ? '10px 16px' : '12px 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: WBRAND.surface2 }}>
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>
             {t('Showing')} <span style={{ color: WBRAND.ink, fontWeight: 700 }}>{filtered.length}</span> {t('of')} {WTXS.length} {t('transactions')}
           </span>
-          <div style={{ display: 'flex', gap: 4 }}>
-            <WGhost>{t('Newest')}</WGhost>
-            <WGhost active>{t('Date')} ↓</WGhost>
-            <WGhost>{t('Amount')}</WGhost>
-          </div>
+          {!mobile && (
+            <div style={{ display: 'flex', gap: 4 }}>
+              <WGhost>{t('Newest')}</WGhost>
+              <WGhost active>{t('Date')} ↓</WGhost>
+              <WGhost>{t('Amount')}</WGhost>
+            </div>
+          )}
         </div>
 
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
