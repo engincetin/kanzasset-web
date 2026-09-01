@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { WBRAND, subscribeNumberStyle, subscribeTheme } from './lib/index.js';
 import { useIsMobile } from './lib/useResponsive.js';
-import { t, subscribeLang } from './lib/i18n.js';
+import { subscribeLang } from './lib/i18n.js';
 import { WSidebar } from './layout/Sidebar.jsx';
-import { WTopbar } from './layout/Topbar.jsx';
 import { WNotificationsDrawer } from './layout/NotificationsDrawer.jsx';
 import { ToastHost } from './components/Toast.jsx';
 import { WebAuth } from './screens/Login.jsx';
@@ -18,20 +17,6 @@ import { WebActivity } from './screens/Activity.jsx';
 import { WebSupport } from './screens/Support.jsx';
 import { WebProfile } from './screens/Profile.jsx';
 import { WTxDetailModal } from './components/TxDetailModal.jsx';
-
-const titlesFor = () => ({
-  dashboard: { title: t('Trade', 'Al / Sat'), sub: t('Swap between any asset', 'Herhangi iki varlık arasında takas') },
-  wallet:    { title: t('Wallet', 'Cüzdan'),            sub: t('Balances & holdings', 'Bakiyeler ve varlıklar') },
-  mint:      { title: t('Mint AGOLD', 'AGOLD Üret'),      sub: t('Live rate · refreshed every 10s', 'Canlı kur · her 10 sn’de yenilenir') },
-  redeem:    { title: t('Redeem AGOLD', 'AGOLD Boz'),     sub: t('Live rate · refreshed every 10s', 'Canlı kur · her 10 sn’de yenilenir') },
-  trade:     { title: t('Buy / Sell'),                  sub: t('Live rate · refreshed every 10s', 'Canlı kur · her 10 sn’de yenilenir') },
-  physical:  { title: t('Physical delivery'),           sub: t('Gold bars · 3–5 days') },
-  deposit:   { title: t('Deposit', 'Para Yatır'),       sub: t('Add crypto or fiat', 'Kripto veya fiat ekle') },
-  withdraw:  { title: t('Withdraw', 'Para Çek'),         sub: t('Send to whitelisted destination', 'Onaylı adrese gönder') },
-  activity:  { title: t('Activity', 'İşlemler'),         sub: t('All transaction history', 'Tüm işlem geçmişi') },
-  support:   { title: t('Support', 'Destek'),            sub: t('Help & tickets', 'Yardım ve talepler') },
-  profile:   { title: t('Account settings', 'Hesap ayarları'), sub: t('Tier 3 · institutional', 'Kademe 3 · kurumsal') },
-});
 
 function Screen({ active, navigate, onLogout, onOpenTx, profileSection, profileKey, supportTx, supportKey, tradeSide, tradeKey }) {
   switch (active) {
@@ -63,9 +48,6 @@ function AppShell({ onLogout }) {
   const [supportKey, setSupportKey] = useState(0);
   const [tradeSide, setTradeSide] = useState('buy');
   const [tradeKey, setTradeKey] = useState(0);
-
-  const TITLES = titlesFor();
-  const { title, sub } = TITLES[active] ?? TITLES.dashboard;
 
   const navigate = (screen, section) => {
     setActive(screen);
@@ -104,33 +86,38 @@ function AppShell({ onLogout }) {
         mobile={isMobile}
         mobileOpen={mobileNavOpen}
         onClose={() => setMobileNavOpen(false)}
+        onNotifs={() => setNotifsOpen(o => !o)}
+        onLogout={onLogout}
       />
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', minWidth: 0 }}>
-        <WTopbar
-          title={title}
-          sub={sub}
-          mobile={isMobile}
-          onMenu={isMobile ? () => setMobileNavOpen(true) : undefined}
-          onNotifs={() => setNotifsOpen(o => !o)}
-          onNavigate={navigate}
+      {/* Full-page content — no top bar */}
+      <main style={{ flex: 1, minWidth: 0, height: '100%', overflow: 'hidden', background: WBRAND.surface, paddingTop: isMobile ? 56 : 0, boxSizing: 'border-box' }}>
+        <Screen
+          active={active}
+          navigate={navigate}
           onLogout={onLogout}
+          onOpenTx={setDetailTx}
+          profileSection={profileSection}
+          profileKey={profileKey}
+          supportTx={supportTx}
+          supportKey={supportKey}
+          tradeSide={tradeSide}
+          tradeKey={tradeKey}
         />
-        <main style={{ flex: 1, minHeight: 0, overflow: 'hidden', background: WBRAND.surface }}>
-          <Screen
-            active={active}
-            navigate={navigate}
-            onLogout={onLogout}
-            onOpenTx={setDetailTx}
-            profileSection={profileSection}
-            profileKey={profileKey}
-            supportTx={supportTx}
-            supportKey={supportKey}
-            tradeSide={tradeSide}
-            tradeKey={tradeKey}
-          />
-        </main>
-      </div>
+      </main>
+
+      {/* Mobile: floating menu button replaces the top bar */}
+      {isMobile && !mobileNavOpen && (
+        <button onClick={() => setMobileNavOpen(true)} aria-label="Menu" style={{
+          position: 'fixed', top: 10, left: 12, zIndex: 45,
+          width: 42, height: 42, borderRadius: 12,
+          background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
+          display: 'grid', placeItems: 'center', cursor: 'pointer',
+          boxShadow: '0 4px 14px rgba(0,0,0,0.12)',
+        }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke={WBRAND.ink} strokeWidth="1.8" strokeLinecap="round"/></svg>
+        </button>
+      )}
 
       <WNotificationsDrawer open={notifsOpen} onClose={() => setNotifsOpen(false)} />
 

@@ -1,5 +1,8 @@
-import { WBRAND, WFONT, WMONO } from '../lib/index.js';
+import { useState } from 'react';
+import { WBRAND, WFONT, WMONO, getTheme, applyTheme } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
+import { WIcon } from '../components/icons.jsx';
+import { WPill } from '../components/primitives.jsx';
 import { WMark, WLogotype, AGOLDMark } from '../components/coinicons.jsx';
 
 const NAV_TR = {
@@ -97,13 +100,15 @@ export const NAV_GROUPS = [
 
 export const NAV_ITEMS = NAV_GROUPS.flatMap(g => g.items);
 
-export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false, onToggleCollapse, mobile = false, mobileOpen = false, onClose }) {
+export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false, onToggleCollapse, mobile = false, mobileOpen = false, onClose, onNotifs, onLogout }) {
+  const [acctOpen, setAcctOpen] = useState(false);
   // On mobile the sidebar is a full-width drawer — never the collapsed rail.
   const collapsed = mobile ? false : collapsedProp;
   const width = collapsed ? 64 : 240;
 
   // Navigating from the drawer should also close it.
-  const go = (id) => { onNavigate(id); if (mobile && onClose) onClose(); };
+  const go = (id, section) => { onNavigate(id, section); if (mobile && onClose) onClose(); };
+  const menuItem = { width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: 8, border: 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left', fontFamily: WFONT, fontSize: 13, fontWeight: 500, color: WBRAND.ink, letterSpacing: '-0.005em' };
 
   const aside = (
     <aside style={{
@@ -216,6 +221,26 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
                 ? <div style={{ height: 8 }}/>
                 : <div style={{ width: 20, height: 1, background: WBRAND.line, margin: '0 auto 8px' }}/>}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* Notifications — a text row, above Support */}
+                <button onClick={() => { onNotifs && onNotifs(); if (mobile && onClose) onClose(); }} className="kz-nav"
+                  title={collapsed ? t('Notifications', 'Bildirimler') : undefined}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: collapsed ? 0 : 12,
+                    padding: collapsed ? '10px 0' : '9px 12px',
+                    justifyContent: collapsed ? 'center' : 'flex-start',
+                    borderRadius: 8, background: 'transparent', color: WBRAND.ink,
+                    border: 'none', cursor: 'pointer', textAlign: 'left',
+                    fontFamily: WFONT, fontWeight: 500, fontSize: 13, letterSpacing: '-0.005em', position: 'relative',
+                  }}>
+                  <span style={{ position: 'relative', display: 'inline-grid', placeItems: 'center', flexShrink: 0 }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke={WBRAND.muted} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <span style={{ position: 'absolute', top: -1, right: -1, width: 7, height: 7, borderRadius: 4, background: WBRAND.red, border: `2px solid ${WBRAND.white}` }}/>
+                  </span>
+                  {!collapsed && <span style={{ flex: 1 }}>{t('Notifications', 'Bildirimler')}</span>}
+                  {!collapsed && (
+                    <span style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 800, color: WBRAND.red, background: WBRAND.redSoft, padding: '2px 7px', borderRadius: 999 }}>3</span>
+                  )}
+                </button>
                 {g.items.map(it => {
                   const on = it.id === active;
                   return (
@@ -262,26 +287,80 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
           </div>
         )}
 
-        {/* Account — pinned at the very bottom (Claude-style) */}
-        <button onClick={() => go('profile')} title={collapsed ? 'Ahmet Yılmaz' : undefined} style={{
-          display: 'flex', alignItems: 'center', gap: collapsed ? 0 : 10,
-          padding: collapsed ? '8px 0' : '8px 10px', borderRadius: 10,
-          justifyContent: collapsed ? 'center' : 'flex-start',
-          background: active === 'profile' ? WBRAND.selBg : WBRAND.surface,
-          border: `1px solid ${active === 'profile' ? WBRAND.line2 : WBRAND.line}`,
-          cursor: 'pointer', width: '100%',
-        }}>
-          <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: 'linear-gradient(135deg, #1F1F1F, #4a4a4a)', color: '#fff', display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 700, fontSize: 12 }}>AY</div>
-          {!collapsed && (
-            <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
-              <div style={{ fontFamily: WFONT, fontSize: 12.5, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Ahmet Yılmaz</div>
-              <div style={{ fontFamily: WFONT, fontSize: 10.5, color: WBRAND.muted, marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('Verified · Tier 3', 'Doğrulanmış · Kademe 3')}</div>
-            </div>
+        {/* Account (opens a menu) — pinned at the very bottom */}
+        <div style={{ position: 'relative' }}>
+          <button onClick={() => setAcctOpen(o => !o)} title={collapsed ? 'Ahmet Yılmaz' : undefined} style={{
+            width: '100%', minWidth: 0,
+            display: 'flex', alignItems: 'center', gap: collapsed ? 0 : 10,
+            padding: collapsed ? '8px 0' : '8px 10px', borderRadius: 10,
+            justifyContent: collapsed ? 'center' : 'flex-start',
+            background: acctOpen ? WBRAND.selBg : WBRAND.surface,
+            border: `1px solid ${acctOpen ? WBRAND.line2 : WBRAND.line}`,
+            cursor: 'pointer',
+          }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: 'linear-gradient(135deg, #1F1F1F, #4a4a4a)', color: '#fff', display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 700, fontSize: 12 }}>AY</div>
+            {!collapsed && (
+              <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
+                <div style={{ fontFamily: WFONT, fontSize: 12.5, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Ahmet Yılmaz</div>
+                <div style={{ fontFamily: WFONT, fontSize: 10.5, color: WBRAND.muted, marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('Verified · Tier 3', 'Doğrulanmış · Kademe 3')}</div>
+              </div>
+            )}
+            {!collapsed && <span style={{ transform: acctOpen ? 'rotate(180deg)' : 'none', transition: 'transform .15s ease', display: 'inline-grid', placeItems: 'center', flexShrink: 0 }}>{WIcon.arrowDown(WBRAND.muted)}</span>}
+          </button>
+
+          {acctOpen && (
+            <>
+              <div onClick={() => setAcctOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 60 }}/>
+              <div style={{
+                position: 'absolute', zIndex: 61, width: 262, maxWidth: '80vw',
+                ...(collapsed ? { left: 'calc(100% + 10px)', bottom: 0 } : { left: 0, bottom: 'calc(100% + 10px)' }),
+                background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 14,
+                boxShadow: '0 16px 40px rgba(0,0,0,0.16)', overflow: 'hidden',
+              }}>
+                <div style={{ padding: '14px 16px', background: WBRAND.surface2, borderBottom: `1px solid ${WBRAND.line}` }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: 'linear-gradient(135deg, #1F1F1F, #4a4a4a)', color: '#fff', display: 'grid', placeItems: 'center', fontFamily: WFONT, fontWeight: 800, fontSize: 13 }}>AY</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 800, color: WBRAND.ink }}>Ahmet Yılmaz</div>
+                      <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>ahmet@kanzasset.com</div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
+                    <WPill tone="positive" style={{ fontSize: 10, padding: '3px 8px' }}>{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
+                    <WPill tone="accent" style={{ fontSize: 10, padding: '3px 8px' }}>{t('Tier 3')}</WPill>
+                  </div>
+                </div>
+
+                <div style={{ padding: 6 }}>
+                  {[
+                    { id: 'account',  label: t('Account settings', 'Hesap ayarları') },
+                    { id: 'security', label: t('Security & 2FA', 'Güvenlik ve 2FA') },
+                    { id: 'prefs',    label: t('Preferences', 'Tercihler') },
+                  ].map(it => (
+                    <button key={it.id} onClick={() => { setAcctOpen(false); go('profile', it.id); }} style={menuItem}>{it.label}</button>
+                  ))}
+                </div>
+
+                <div style={{ padding: '2px 12px 10px', borderTop: `1px solid ${WBRAND.line}` }}>
+                  <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '10px 0 8px' }}>{t('Appearance', 'Görünüm')}</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4, padding: 3, background: WBRAND.surface, borderRadius: 8 }}>
+                    {['Light', 'Dark', 'System'].map(m => {
+                      const on = getTheme() === m.toLowerCase();
+                      return <button key={m} onClick={() => applyTheme(m.toLowerCase())} style={{ padding: '6px 0', border: 'none', cursor: 'pointer', background: on ? WBRAND.white : 'transparent', color: on ? WBRAND.ink : WBRAND.muted, borderRadius: 6, fontFamily: WFONT, fontWeight: 700, fontSize: 11, boxShadow: on ? '0 1px 2px rgba(0,0,0,0.06)' : 'none' }}>{t(m, m === 'Light' ? 'Açık' : m === 'Dark' ? 'Koyu' : 'Sistem')}</button>;
+                    })}
+                  </div>
+                </div>
+
+                <div style={{ padding: 6, borderTop: `1px solid ${WBRAND.line}` }}>
+                  <button onClick={() => { setAcctOpen(false); onLogout && onLogout(); }} style={{ ...menuItem, color: WBRAND.red, fontWeight: 700 }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 12H4M4 12l4-4M4 12l4 4" stroke={WBRAND.red} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/><path d="M9 4h9a2 2 0 012 2v12a2 2 0 01-2 2H9" stroke={WBRAND.red} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <span style={{ flex: 1 }}>{t('Sign out', 'Çıkış yap')}</span>
+                  </button>
+                </div>
+              </div>
+            </>
           )}
-          {!collapsed && (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}><path d="M9 6l6 6-6 6" stroke={WBRAND.muted} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          )}
-        </button>
+        </div>
       </div>
     </aside>
   );
