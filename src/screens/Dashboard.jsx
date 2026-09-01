@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wTotalIn, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData, isDark } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wTotalIn, WRATES, WBALANCES, WMETA, WTXS, isDark } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill, WSectionTitle, useCountUp } from '../components/primitives.jsx';
-import { WPriceChart, WRangeTabs } from '../components/charts.jsx';
+import { WExchangePanel } from '../components/ExchangePanel.jsx';
 import { WTxRow, AssetActionBtn } from '../components/shared.jsx';
-import { useIsMobile, useIsTablet, useElementWidth } from '../lib/useResponsive.js';
+import { useIsMobile, useElementWidth } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
 function AllocBar({ label, value, total, color }) {
@@ -31,39 +31,24 @@ function AllocBar({ label, value, total, color }) {
 
 export function WebPortfolio({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
-  const tablet = useIsTablet();
-  // Measure the bottom row's real width (grows when the sidebar is collapsed):
-  // keep the right column beside as long as the table still fits, drop the
-  // Allocation column before stacking, and only stack the right column below
-  // when the table can no longer fit beside it.
+  // The wallet/balances card now spans the full width; measure it so the table
+  // degrades gracefully: drop the Allocation column first, then compact the
+  // action buttons to icons before anything overflows.
   const [rowRef, gw] = useElementWidth();
-  const stack = mobile || (gw > 0 && gw < 940);
-  const tableW = gw === 0 ? 9999 : (stack ? gw : gw - 400);
-  // Degrade gracefully as space tightens so the right column (Proof of
-  // Reserve / Notifications) can stay beside the table without the
-  // Deposit/Withdraw buttons overflowing: first drop the Allocation column,
-  // then compact the action buttons to icons.
+  const tableW = gw === 0 ? 9999 : gw;
+  // Proof-of-reserve strip: horizontal when wide, stacked rows + full-width
+  // button when narrow.
+  const [resRef, resW] = useElementWidth();
+  const resNarrow = mobile || (resW > 0 && resW < 760);
   const hideAlloc  = !mobile && tableW < 800;
   const compactBtn = !mobile && tableW < 640;
   // Fixed Actions width (not `auto`) so the header grid and each row grid agree
   // on the column — otherwise they size independently and misalign.
   const actW = compactBtn ? '72px' : '180px';
   const balCols = hideAlloc ? `2.4fr 1.3fr 1.3fr ${actW}` : `2.2fr 1.3fr 1.3fr 1.3fr ${actW}`;
-  // Hero row: stack the two big cards at the same width the bottom row stacks
-  // (the figures/Buy-Sell buttons still fit down to here), so the two rows fold
-  // together rather than the hero folding much earlier.
-  const [heroRef, hw] = useElementWidth();
-  const heroStack = mobile || (hw > 0 && hw < 940);
-  const [currency, setCurrency] = useState('USDT');
-  const [currencyOpen, setCurrencyOpen] = useState(false);
-  const [range, setRange] = useState('3M');
-  const [quote, setQuote] = useState('USDT');
-  const [quoteOpen, setQuoteOpen] = useState(false);
-
-  const total = wTotalIn(currency);
+  const total = wTotalIn('USDT');
   const totalAed = wTotalIn('AED');
   const animTotal = useCountUp(total);
-  const animAhlg  = useCountUp(WBALANCES.AGOLD);
 
   const assets = Object.keys(WBALANCES).map(s => {
     const bal = WBALANCES[s];
@@ -78,260 +63,36 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   const sumUSDT = assets.reduce((a, c) => a + c.valUSDT, 0);
   assets.forEach(a => { a.alloc = (a.valUSDT / sumUSDT) * 100; });
 
-  const priceData = wMakePriceData(90);
-  const quoteRate = WRATES[quote] || 1;
-  const quotedPriceData = priceData.map(d => ({ t: d.t, v: d.v / quoteRate }));
-  const quotedSpot = WRATES.AGOLD / quoteRate;
-  const quotedFirst = quotedPriceData[0].v;
-  const quotedDiff = quotedSpot - quotedFirst;
-  const quotedPct = (quotedDiff / quotedFirst) * 100;
-
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', minHeight: '100%', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
-      {/* Hero row */}
-      <div ref={heroRef} style={{ display: 'grid', gridTemplateColumns: heroStack ? '1fr' : '1.4fr 1fr', gap: mobile ? 14 : 20, marginBottom: mobile ? 14 : 20 }}>
+      {/* Exchange — swap-first hero */}
+      <WExchangePanel/>
 
-        {/* Total portfolio */}
-        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-          <div style={{ padding: mobile ? '18px 16px' : '24px 28px 24px', flex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 10 }}>
-              <WEyebrow>{t('Total portfolio value')}</WEyebrow>
-              <div style={{ position: 'relative' }}>
-                <button onClick={() => setCurrencyOpen(!currencyOpen)} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 4,
-                  background: WBRAND.surface, border: 'none', padding: '4px 10px', borderRadius: 6,
-                  fontFamily: WFONT, fontWeight: 700, fontSize: 12, color: WBRAND.ink,
-                  cursor: 'pointer', letterSpacing: '0.02em',
-                }}>
-                  {currency}
-                  {WIcon.arrowDown(WBRAND.muted)}
-                </button>
-                {currencyOpen && (
-                  <>
-                    <div onClick={() => setCurrencyOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 40 }}/>
-                    <div style={{
-                      position: 'absolute', top: 'calc(100% + 6px)', right: 0,
-                      background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
-                      borderRadius: 10, padding: 6, minWidth: 220, zIndex: 50,
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-                    }}>
-                      {[
-                        { label: 'Crypto', items: ['USDT', 'USDC', 'AGOLD'] },
-                        { label: 'Fiat', items: ['USD', 'AED', 'EUR', 'GBP'] },
-                      ].map((grp, gi) => (
-                        <div key={grp.label} style={{ marginTop: gi > 0 ? 4 : 0, paddingTop: gi > 0 ? 4 : 0, borderTop: gi > 0 ? `1px solid ${WBRAND.line}` : 'none' }}>
-                          <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px 4px' }}>{t(grp.label)}</div>
-                          {grp.items.map(c => {
-                            const on = c === currency;
-                            const v = wTotalIn(c);
-                            return (
-                              <button key={c} onClick={() => { setCurrency(c); setCurrencyOpen(false); }} style={{
-                                width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-                                padding: '8px 10px', borderRadius: 6, border: 'none',
-                                background: on ? WBRAND.surface : 'transparent', cursor: 'pointer', textAlign: 'left',
-                              }}>
-                                <span style={{ flex: 1, fontFamily: WFONT, fontSize: 12, fontWeight: on ? 700 : 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{c}</span>
-                                <WMonoNum size={11} color={on ? WBRAND.ink : WBRAND.muted}>{wfmt(v, wdecimals(c))}</WMonoNum>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
+      {/* Wallet — portfolio summary + balances in one block */}
+      <WCard padding={0} style={{ minWidth: 0, marginBottom: mobile ? 14 : 20 }}>
+        <div ref={rowRef}>
+        {/* Account summary — one calm headline */}
+        <div style={{ background: WBRAND.surface2, borderBottom: `1px solid ${WBRAND.line}`, padding: mobile ? '18px 18px' : '22px 24px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{t('Total portfolio value')}</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8, flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 28 : 34, color: WBRAND.ink, letterSpacing: '-0.035em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(animTotal, 2)}</span>
+              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14, color: WBRAND.muted }}>USDT</span>
+              <WPill tone="positive" style={{ fontSize: 11 }}>▲ +2.81%</WPill>
             </div>
-
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginTop: 14 }}>
-              <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: WBRAND.ink, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(animTotal, wdecimals(currency))}</span>
-              <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: mobile ? 14 : 18, color: WBRAND.muted, letterSpacing: '-0.01em' }}>{currency}</span>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, flexWrap: mobile ? 'wrap' : 'nowrap' }}>
-              <WPill tone="positive" style={{ fontSize: 12, padding: '5px 10px' }}>
-                <span style={{ fontVariantNumeric: 'tabular-nums' }}>▲ +2.81%</span>
-              </WPill>
-              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.positive, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-                +{wfmt(total * 0.0281, wdecimals(currency))} {currency}
-              </span>
-              {currency !== 'AED' && (
-                <>
-                  <span style={{ width: 1, height: 12, background: WBRAND.line }}/>
-                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontVariantNumeric: 'tabular-nums' }}>≈ AED {wfmt(totalAed)}</span>
-                </>
-              )}
-            </div>
+            <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8 }}>≈ AED {wfmt(totalAed)}</div>
           </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}`, height: mobile ? 'auto' : 80, flexShrink: 0 }}>
-            {[
-              { l: t('24 hours'), v: '+0.24%', abs: '+1,130 USDT' },
-              { l: t('7 days'),   v: '+1.92%', abs: '+8,856 USDT' },
-              { l: t('30 days'),  v: '+4.41%', abs: '+19,892 USDT' },
-              { l: t('All-time'), v: '+18.32%', abs: '+72,948 USDT' },
-            ].map((k, i) => (
-              <div key={i} style={{ padding: '12px 18px', borderRight: (mobile ? i % 2 === 0 : i < 3) ? `1px solid ${WBRAND.line}` : 'none', borderTop: mobile && i >= 2 ? `1px solid ${WBRAND.line}` : 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{k.l}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 16, fontWeight: 800, color: WBRAND.positive, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.015em', marginTop: 4 }}>{k.v}</div>
-                <div style={{ fontFamily: WMONO, fontSize: 10, color: WBRAND.muted, fontWeight: 500, marginTop: 2 }}>{k.abs}</div>
-              </div>
-            ))}
-          </div>
-        </WCard>
-
-        {/* AGOLD holdings */}
-        <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
-          {(() => {
-            const dark = isDark();
-            const heroBg    = dark ? WBRAND.heroBg : WBRAND.white;
-            const heroText  = dark ? '#fff' : WBRAND.ink;
-            const heroLabel = dark ? 'rgba(255,255,255,0.55)' : WBRAND.muted;
-            const heroPillBg   = dark ? 'rgba(255,255,255,0.14)' : WBRAND.surface;
-            const heroPillText = dark ? '#fff' : WBRAND.ink;
-            const dotColor  = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.05)';
-            return (
-              <div style={{ padding: mobile ? '18px 16px' : '24px 28px 24px', flex: 1, background: heroBg, color: heroText, borderBottom: `1px solid ${WBRAND.line}`, position: 'relative', overflow: 'hidden' }}>
-                <style>{`@keyframes kzDotDrift{from{background-position:0 0}to{background-position:40px 40px}}`}</style>
-                <div style={{
-                  position: 'absolute', inset: 0, pointerEvents: 'none',
-                  backgroundImage: `radial-gradient(circle, ${dotColor} 1px, transparent 1.5px)`,
-                  backgroundSize: '20px 20px',
-                  animation: 'kzDotDrift 16s linear infinite',
-                  WebkitMaskImage: 'radial-gradient(130% 110% at 100% 0%, #000 25%, transparent 72%)',
-                  maskImage: 'radial-gradient(130% 110% at 100% 0%, #000 25%, transparent 72%)',
-                }}/>
-                <div style={{ position: 'absolute', top: -80, right: -80, width: 240, height: 240, borderRadius: 120, background: WBRAND.red, opacity: dark ? 0.18 : 0.16, filter: 'blur(50px)' }}/>
-                <div style={{ position: 'relative' }}>
-                  <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: heroLabel }}>{t('AGOLD Holdings')}</div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 14, position: 'relative' }}>
-                  <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: mobile ? 34 : 52, color: heroText, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{wfmt(animAhlg, 0)}</span>
-                  <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: mobile ? 14 : 18, color: heroLabel, letterSpacing: '-0.01em' }}>AGOLD</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, position: 'relative', flexWrap: mobile ? 'wrap' : 'nowrap' }}>
-                  <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, padding: '5px 10px', borderRadius: 6, background: heroPillBg, color: heroPillText, fontVariantNumeric: 'tabular-nums' }}>{(WBALANCES.AGOLD / 1000).toFixed(1)} {t('kg in vault')}</span>
-                  <span style={{ fontFamily: WFONT, fontSize: 12, color: heroLabel, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>≈ ${wfmt(WBALANCES.AGOLD * WRATES.AGOLD)}</span>
-                </div>
-              </div>
-            );
-          })()}
-
-          <div style={{ height: 80, flexShrink: 0, padding: mobile ? '0 16px' : '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-            <div>
-              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{t('AGOLD price')}</div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 4 }}>
-                <WNum size={18} weight={800} style={{ letterSpacing: '-0.02em' }}>$135.82</WNum>
-                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.positive, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>+0.24%</span>
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              <WSecondary size="md" onClick={() => navigate('trade', 'buy')} style={{ width: '100%', justifyContent: 'center', height: 44, background: WBRAND.selBg, borderColor: WBRAND.line2 }}
-                icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 19V5m0 0l-6 6m6-6l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-                {t('Buy')}
-              </WSecondary>
-              <WSecondary size="md" onClick={() => navigate('trade', 'sell')} style={{ width: '100%', justifyContent: 'center', height: 44 }}
-                icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14m0 0l-6-6m6 6l6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}>
-                {t('Sell')}
-              </WSecondary>
-            </div>
-          </div>
-        </WCard>
-      </div>
-
-      {/* Price chart */}
-      <WCard padding={0} style={{ marginBottom: 20 }}>
-        <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: mobile ? 'wrap' : 'nowrap', gap: mobile ? 10 : 0 }}>
-          <div>
-            <div style={{ position: 'relative', display: 'inline-block' }}>
-              <button onClick={() => setQuoteOpen(!quoteOpen)} style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-                background: WBRAND.surface, border: 'none', padding: '6px 12px', borderRadius: 6,
-                cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em',
-              }}>
-                <span>AGOLD / {quote}</span>
-                {WIcon.arrowDown(WBRAND.muted)}
-              </button>
-              {quoteOpen && (
-                <>
-                  <div onClick={() => setQuoteOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 40 }}/>
-                  <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: 0, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 10, padding: 6, minWidth: 220, zIndex: 50, boxShadow: '0 8px 24px rgba(0,0,0,0.08)' }}>
-                    {[
-                      { label: 'Crypto', items: ['USDT', 'USDC'] },
-                      { label: 'Fiat', items: ['USD', 'AED', 'EUR', 'GBP'] },
-                    ].map((grp, gi) => (
-                      <div key={grp.label} style={{ marginTop: gi > 0 ? 4 : 0, paddingTop: gi > 0 ? 4 : 0, borderTop: gi > 0 ? `1px solid ${WBRAND.line}` : 'none' }}>
-                        <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '6px 10px 4px' }}>{t(grp.label)}</div>
-                        {grp.items.map(q => {
-                          const on = q === quote;
-                          const r = WRATES.AGOLD / (WRATES[q] || 1);
-                          return (
-                            <button key={q} onClick={() => { setQuote(q); setQuoteOpen(false); }} style={{
-                              width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-                              padding: '8px 10px', borderRadius: 6, border: 'none',
-                              background: on ? WBRAND.surface : 'transparent', cursor: 'pointer', textAlign: 'left',
-                            }}>
-                              <span style={{ flex: 1, fontFamily: WFONT, fontSize: 12, fontWeight: on ? 700 : 600, color: WBRAND.ink, letterSpacing: '-0.005em' }}>AGOLD / {q}</span>
-                              <WMonoNum size={11} color={on ? WBRAND.ink : WBRAND.muted}>{wfmt(r, 2)}</WMonoNum>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
-              <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>
-                {['USDT', 'USDC', 'USD'].includes(quote) ? '$' : ''}{wfmt(quotedSpot, 2)}
-              </WNum>
-              <span style={{ fontFamily: WFONT, fontSize: 13, color: quotedPct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-                {quotedPct >= 0 ? '+' : ''}{wfmt(quotedDiff, 2)} ({quotedPct >= 0 ? '+' : ''}{wfmt(quotedPct, 2)}%)
-              </span>
-            </div>
-          </div>
-          <WRangeTabs value={range} onChange={setRange}/>
+          <button onClick={() => navigate('wallet')} style={{ alignSelf: 'center', background: WBRAND.white, border: `1px solid ${WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 9 }}>
+            {t('Wallet', 'Cüzdan')} {WIcon.arrowRight(WBRAND.ink)}
+          </button>
         </div>
-        <div style={{ padding: '12px 16px 18px' }}>
-          <WPriceChart data={quotedPriceData} height={280} color={WBRAND.red}/>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
-          {(() => {
-            const vals = quotedPriceData.map(d => d.v);
-            const open = vals[0];
-            const high = Math.max(...vals);
-            const low = Math.min(...vals);
-            const prefix = ['USDT', 'USDC', 'USD'].includes(quote) ? '$' : '';
-            return [
-              { l: t('Open', 'Açılış'), v: `${prefix}${wfmt(open, 2)}` },
-              { l: t('High'), v: `${prefix}${wfmt(high, 2)}` },
-              { l: t('Low'),  v: `${prefix}${wfmt(low, 2)}` },
-              { l: t('Volume 24h'), v: '$8.41M' },
-              { l: t('Market cap'), v: '$21.6M' },
-            ];
-          })().map((k, i) => (
-            <div key={i} style={{ padding: '14px 20px', borderRight: (mobile ? i % 2 === 0 : i < 4) ? `1px solid ${WBRAND.line}` : 'none', borderTop: mobile && i >= 2 ? `1px solid ${WBRAND.line}` : 'none' }}>
-              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{k.l}</div>
-              <WMonoNum size={14} style={{ marginTop: 4, display: 'block' }}>{k.v}</WMonoNum>
-            </div>
-          ))}
-        </div>
-      </WCard>
 
-      {/* Bottom row */}
-      <div ref={rowRef} style={{ display: 'grid', gridTemplateColumns: stack ? '1fr' : '1fr 380px', gap: mobile ? 14 : 20 }}>
-
-        {/* Balances table */}
-        <WCard padding={0} style={{ minWidth: 0 }}>
-          <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <WSectionTitle title={t('Balances')} sub={`${assets.length} ${t('assets · sorted by value')}`} style={{ marginBottom: 0 }}/>
-            <button onClick={() => navigate('wallet')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>
-              {t('View full wallet')} {WIcon.arrowRight(WBRAND.red)}
-            </button>
-          </div>
+        {/* Balances — slim label */}
+        <div style={{ padding: mobile ? '14px 18px 10px' : '16px 24px 10px' }}>
+          <span style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Balances')}</span>
+          <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginLeft: 8 }}>{assets.length} {t('assets · sorted by value')}</span>
+        </div>
 
           <div style={{ overflowX: (mobile || tableW < 520) ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
           <div style={{ minWidth: mobile ? 820 : (tableW < 520 ? 520 : 'auto') }}>
@@ -374,69 +135,72 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           })}
           </div>
           </div>
-        </WCard>
+        </div>
+      </WCard>
 
-        {/* Right column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
-
-          {/* Proof of Reserve */}
-          <WCard padding={20}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center' }}>{WIcon.vault()}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Proof of Reserve')}</div>
-                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 1 }}>Ahlatcı Metal Refinery FZCO<br/>{t('audited by Bureau Veritas')}</div>
-              </div>
-              <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
-            </div>
-            <div style={{ borderTop: `1px solid ${WBRAND.line}`, paddingTop: 12 }}>
-              {[
-                { k: t('Tokens in circulation'), v: '142,718.4203 AGOLD' },
-                { k: t('Physical gold reserve'), v: '142.72 kg' },
-                { k: t('Last audit'),            v: t('May 28, 2026', '28 May 2026') },
-                { k: t('Reserve ratio'),         v: '100.00%' },
-              ].map((r, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: i === 3 ? 'none' : `1px dashed ${WBRAND.line}` }}>
-                  <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.k}</span>
-                  <WMonoNum size={12}>{r.v}</WMonoNum>
+      {/* Proof of Reserve — full-width strip */}
+      <WCard padding={0} style={{ marginBottom: mobile ? 14 : 20 }}>
+        {(() => {
+          const rows = [
+            { k: t('Tokens in circulation'), v: '142,718.4203 AGOLD' },
+            { k: t('Physical gold reserve'), v: '142.72 kg' },
+            { k: t('Last audit'), v: t('May 28, 2026', '28 May 2026') },
+            { k: t('Reserve ratio'), v: '100.00%' },
+          ];
+          const header = (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: '1 1 260px', minWidth: 0 }}>
+              <div style={{ width: 34, height: 34, borderRadius: 8, background: WBRAND.surface, display: 'grid', placeItems: 'center', flexShrink: 0 }}>{WIcon.vault()}</div>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Proof of Reserve')}</span>
+                  <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
                 </div>
-              ))}
+                <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>Ahlatcı Metal Refinery FZCO · {t('audited by Bureau Veritas')}</div>
+              </div>
             </div>
-            <button style={{ width: '100%', marginTop: 12, padding: '10px 12px', borderRadius: 8, background: WBRAND.surface, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink }}>
+          );
+          const reportBtn = (full) => (
+            <button style={{ width: full ? '100%' : 'auto', marginLeft: full ? 0 : 'auto', padding: '11px 14px', borderRadius: 8, background: WBRAND.surface, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: full ? 'center' : 'flex-start', gap: 8, fontFamily: WFONT, fontSize: 12, fontWeight: 600, color: WBRAND.ink, flexShrink: 0 }}>
               <span>{t('View proof-of-reserves report')}</span>
               {WIcon.external(WBRAND.muted)}
             </button>
-          </WCard>
+          );
 
-          {/* Notifications preview */}
-          <WCard padding={0}>
-            <div style={{ padding: '14px 18px 12px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Notifications')}</span>
-                <WPill tone="accent">{t('3 new')}</WPill>
-              </div>
-              <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 11, fontWeight: 600, color: WBRAND.muted }}>{t('Mark all read')}</button>
-            </div>
-            {[
-              { tone: 'pos',  title: t('Mint completed'),        sub: `1.2000 AGOLD · ${t('12 min ago')}`,               unread: true  },
-              { tone: 'warn', title: t('New whitelist pending'),  sub: `USDC ${t('address · 24h review · 8h left')}`,    unread: true  },
-              { tone: 'neu',  title: t('Vault audit published'),  sub: t('April attestation available'),            unread: true  },
-              { tone: 'neu',  title: t('Price alert'),            sub: t('AGOLD crossed $135 threshold'),            unread: false },
-            ].map((n, i, arr) => {
-              const dotColor = n.tone === 'pos' ? WBRAND.positive : n.tone === 'warn' ? WBRAND.warn : WBRAND.muted;
-              return (
-                <div key={i} style={{ padding: '12px 18px', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'flex-start', gap: 10, background: n.unread ? WBRAND.surface2 : 'transparent' }}>
-                  <span style={{ width: 6, height: 6, borderRadius: 3, background: dotColor, marginTop: 6, flexShrink: 0 }}/>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{n.title}</div>
-                    <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{n.sub}</div>
-                  </div>
+          if (resNarrow) {
+            // Stacked: header, then label/value rows, then full-width button.
+            return (
+              <div ref={resRef} style={{ padding: mobile ? '16px 18px' : '18px 22px' }}>
+                {header}
+                <div style={{ marginTop: 14, borderTop: `1px solid ${WBRAND.line}` }}>
+                  {rows.map((r, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '9px 0', borderBottom: i === rows.length - 1 ? 'none' : `1px dashed ${WBRAND.line}` }}>
+                      <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>{r.k}</span>
+                      <WMonoNum size={12.5}>{r.v}</WMonoNum>
+                    </div>
+                  ))}
                 </div>
-              );
-            })}
-          </WCard>
-        </div>
-      </div>
+                <div style={{ marginTop: 12 }}>{reportBtn(true)}</div>
+              </div>
+            );
+          }
+          // Wide: horizontal strip.
+          return (
+            <div ref={resRef} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 20, padding: '18px 22px' }}>
+              {header}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 28 }}>
+                {rows.map((r, i) => (
+                  <div key={i}>
+                    <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{r.k}</div>
+                    <WMonoNum size={13} style={{ marginTop: 3, display: 'block' }}>{r.v}</WMonoNum>
+                  </div>
+                ))}
+              </div>
+              {reportBtn(false)}
+            </div>
+          );
+        })()}
+      </WCard>
+
 
       {/* Recent activity */}
       <div style={{ marginTop: 20 }}>

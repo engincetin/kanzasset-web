@@ -132,10 +132,69 @@ export function CoinUSDC({ size }) {
   );
 }
 
+// ─── Crypto coin marks ────────────────────────────────────────
+export function CoinBTC({ size }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" style={{ display: 'block' }}>
+      <circle cx="16" cy="16" r="16" fill="#F7931A"/>
+      <path fill="#fff" d="M23.19 14.02c.31-2.1-1.28-3.22-3.47-3.98l.71-2.84-1.73-.43-.69 2.76c-.45-.11-.92-.22-1.38-.32l.69-2.78-1.73-.43-.71 2.84c-.38-.09-.75-.17-1.1-.26v-.01l-2.39-.6-.46 1.85s1.28.29 1.26.31c.7.17.83.64.8 1.01l-.8 3.23c.05.01.11.03.18.06l-.18-.05-1.13 4.53c-.09.21-.3.53-.79.41.02.03-1.26-.31-1.26-.31l-.86 1.98 2.25.56c.42.11.83.22 1.23.32l-.72 2.87 1.73.43.71-2.84c.47.13.93.24 1.38.36l-.71 2.83 1.73.43.72-2.87c2.95.56 5.16.33 6.1-2.33.75-2.15-.04-3.39-1.59-4.19 1.13-.26 1.98-1 2.21-2.54zm-3.95 5.54c-.53 2.15-4.15.99-5.32.7l.95-3.81c1.17.29 4.93.87 4.37 3.11zm.54-5.57c-.49 1.95-3.5.96-4.47.72l.86-3.45c.98.24 4.12.7 3.61 2.73z"/>
+    </svg>
+  );
+}
+
+export function CoinETH({ size }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" style={{ display: 'block' }}>
+      <circle cx="16" cy="16" r="16" fill="#627EEA"/>
+      <g fill="#fff">
+        <path fillOpacity=".6" d="M16.5 4v8.87l7.5 3.35z"/>
+        <path d="M16.5 4L9 16.22l7.5-3.35z"/>
+        <path fillOpacity=".6" d="M16.5 21.97v6.03L24 17.62z"/>
+        <path d="M16.5 28v-6.03L9 17.62z"/>
+        <path fillOpacity=".2" d="M16.5 20.57l7.5-4.35-7.5-3.35z"/>
+        <path fillOpacity=".6" d="M9 16.22l7.5 4.35v-7.7z"/>
+      </g>
+    </svg>
+  );
+}
+
+export function CoinBNB({ size }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" style={{ display: 'block' }}>
+      <circle cx="16" cy="16" r="16" fill="#F3BA2F"/>
+      <path fill="#fff" d="M12.12 14.4L16 10.52l3.89 3.89 2.26-2.26L16 6l-6.14 6.14 2.26 2.26zM6 16l2.26-2.26L10.52 16l-2.26 2.26L6 16zm6.12 1.6L16 21.48l3.89-3.89 2.26 2.26L16 26l-6.14-6.14 2.26-2.26zM21.48 16l2.26-2.26L26 16l-2.26 2.26L21.48 16zm-3.19 0L16 18.29l-2.29-2.29.4-.4.2-.2L16 13.71 18.29 16z"/>
+    </svg>
+  );
+}
+
+export function CoinSOL({ size }) {
+  const g = `solg-${size}`;
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" style={{ display: 'block' }}>
+      <defs>
+        <linearGradient id={g} x1="4" y1="24" x2="26" y2="8" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#9945FF"/>
+          <stop offset="1" stopColor="#14F195"/>
+        </linearGradient>
+      </defs>
+      <circle cx="16" cy="16" r="16" fill="#131316"/>
+      <g fill={`url(#${g})`}>
+        <path d="M10.2 20.6c.14-.14.33-.22.53-.22h13.1c.34 0 .5.4.27.64l-2.6 2.6a.75.75 0 0 1-.53.22H7.87a.37.37 0 0 1-.27-.64z"/>
+        <path d="M10.2 8.56c.15-.14.34-.22.53-.22h13.1c.34 0 .5.41.27.64l-2.6 2.6a.75.75 0 0 1-.53.22H7.87a.37.37 0 0 1-.27-.64z"/>
+        <path d="M21.8 14.54a.75.75 0 0 0-.53-.22H8.17c-.34 0-.5.41-.27.64l2.6 2.6c.14.14.33.22.53.22h13.1c.34 0 .5-.4.27-.64z"/>
+      </g>
+    </svg>
+  );
+}
+
 // ─── Coin dot (financial icon component) ─────────────────────
 const COIN_ICONS = {
   USDT: { kind: 'flag', comp: CoinUSDT },
   USDC: { kind: 'flag', comp: CoinUSDC },
+  BTC:  { kind: 'flag', comp: CoinBTC },
+  ETH:  { kind: 'flag', comp: CoinETH },
+  BNB:  { kind: 'flag', comp: CoinBNB },
+  SOL:  { kind: 'flag', comp: CoinSOL },
   USD:  { kind: 'flag', comp: FlagUS },
   AED:  { kind: 'flag', comp: FlagAE },
   EUR:  { kind: 'flag', comp: FlagEU },

@@ -20,7 +20,7 @@ import { WebProfile } from './screens/Profile.jsx';
 import { WTxDetailModal } from './components/TxDetailModal.jsx';
 
 const titlesFor = () => ({
-  dashboard: { title: t('Welcome back'), sub: null },
+  dashboard: { title: t('Trade', 'Al / Sat'), sub: t('Swap between any asset', 'Herhangi iki varlık arasında takas') },
   wallet:    { title: t('Wallet', 'Cüzdan'),            sub: t('Balances & holdings', 'Bakiyeler ve varlıklar') },
   mint:      { title: t('Mint AGOLD', 'AGOLD Üret'),      sub: t('Live rate · refreshed every 10s', 'Canlı kur · her 10 sn’de yenilenir') },
   redeem:    { title: t('Redeem AGOLD', 'AGOLD Boz'),     sub: t('Live rate · refreshed every 10s', 'Canlı kur · her 10 sn’de yenilenir') },

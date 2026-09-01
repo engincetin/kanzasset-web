@@ -48,3 +48,23 @@ export function useElementWidth() {
 
   return [ref, width];
 }
+
+// Like useElementWidth but tracks the element's rendered height — used to let a
+// chart fill a flexible container while headers/footers stay pinned.
+export function useElementHeight() {
+  const ref = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(entries => {
+      for (const e of entries) setHeight(e.contentRect.height);
+    });
+    ro.observe(el);
+    setHeight(el.getBoundingClientRect().height);
+    return () => ro.disconnect();
+  }, []);
+
+  return [ref, height];
+}

@@ -215,11 +215,13 @@ export function wregroup(typed) {
 // ─── Account model ────────────────────────────────────────────
 export const WRATES = {
   AGOLD: 135.82, USDT: 1, USDC: 1, USD: 1,
+  BTC: 64850, ETH: 3420, BNB: 585, SOL: 172,
   AED: 0.27225, EUR: 1.08, GBP: 1.27,
 };
 
 export const WBALANCES = {
   AGOLD: 7500, USDT: 10000, USDC: 5000,
+  BTC: 0.42, ETH: 3.5, BNB: 0, SOL: 0,
   AED: 100000, USD: 50000, EUR: 0, GBP: 0,
 };
 
@@ -227,13 +229,34 @@ export const WMETA = {
   AGOLD: { name: 'AGOLD',       kind: 'crypto' },
   USDT: { name: 'Tether',         kind: 'crypto' },
   USDC: { name: 'USD Coin',       kind: 'crypto' },
+  BTC:  { name: 'Bitcoin',        kind: 'crypto' },
+  ETH:  { name: 'Ethereum',       kind: 'crypto' },
+  BNB:  { name: 'BNB',            kind: 'crypto' },
+  SOL:  { name: 'Solana',         kind: 'crypto' },
   AED:  { name: 'UAE Dirham',     kind: 'fiat'   },
   USD:  { name: 'US Dollar',      kind: 'fiat'   },
   EUR:  { name: 'Euro',           kind: 'fiat'   },
   GBP:  { name: 'Pound Sterling', kind: 'fiat'   },
 };
 
-export function wdecimals(s) { return s === 'AGOLD' ? 4 : 2; }
+// 24h change per symbol (mock) — drives the markets/quote colouring.
+export const WCHANGE24 = {
+  AGOLD: 0.24, USDT: 0.00, USDC: -0.01,
+  BTC: 1.82, ETH: 2.34, BNB: -0.76, SOL: 4.11,
+};
+
+export function wdecimals(s) {
+  if (s === 'AGOLD') return 4;
+  if (s === 'BTC') return 6;
+  if (s === 'ETH' || s === 'BNB' || s === 'SOL') return 4;
+  return 2;
+}
+
+// Symbols that can be traded against each other on the exchange (excludes pure fiat).
+export const wTradeable = () => Object.keys(WRATES).filter(s => WMETA[s]?.kind === 'crypto');
+
+// Price of 1 `base` expressed in `quote` (both quoted in USDT internally).
+export function wPairRate(base, quote) { return (WRATES[base] ?? 0) / (WRATES[quote] ?? 1); }
 
 export function wTotalUSDT() {
   let s = 0;

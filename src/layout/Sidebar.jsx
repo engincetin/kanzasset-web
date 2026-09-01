@@ -4,7 +4,7 @@ import { WMark, WLogotype, AGOLDMark } from '../components/coinicons.jsx';
 
 const NAV_TR = {
   Overview: 'Genel', Funds: 'Fonlar', 'AGOLD': 'AHL Altın', Account: 'Hesap',
-  Dashboard: 'Panel', Wallet: 'Cüzdan', Deposit: 'Para Yatır', Withdraw: 'Para Çek',
+  Dashboard: 'Al / Sat', Wallet: 'Cüzdan', Deposit: 'Para Yatır', Withdraw: 'Para Çek',
   Mint: 'Üret', Redeem: 'Boz', Activity: 'İşlemler', Support: 'Destek', Profile: 'Profil',
 };
 // NAV_TR overrides win; anything not listed falls back to the shared dictionary
@@ -65,12 +65,6 @@ export const NAV_GROUPS = [
     id: 'ahlg',
     label: 'AGOLD Token',
     items: [
-      {
-        id: 'trade', label: 'Buy / Sell',
-        icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M7 4v13m0 0l-3-3m3 3l3-3M17 20V7m0 0l-3 3m3-3l3 3" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>,
-      },
       {
         id: 'physical', label: 'Physical delivery', badge: 'NEW',
         icon: (c) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
