@@ -113,7 +113,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
             ))}
           </div>
 
-          {WTXS.slice(0, 6).map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1} onOpen={onOpenTx}/>)}
+          {WTXS.filter(tx => tx.type !== 'Delivery').slice(0, 6).map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1} onOpen={onOpenTx}/>)}
           </div>
           </div>
         </WCard>

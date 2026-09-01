@@ -60,8 +60,11 @@ export function WebActivity({ navigate, onOpenTx }) {
   const [filtersOpen, setFiltersOpen] = useState(false);   // mobile: collapsible filters
   const activeCount = (typeFilter !== 'All' ? 1 : 0) + (assetFilter !== 'All' ? 1 : 0) + (statusFilter !== 'All' ? 1 : 0);
 
+  // Physical deliveries live only in the Physical Delivery section, not here.
+  const BASE_TXS = WTXS.filter(tx => tx.type !== 'Delivery');
+
   const filtered = useMemo(() => {
-    return WTXS.filter(tx => {
+    return BASE_TXS.filter(tx => {
       if (typeFilter !== 'All' && tx.type !== typeFilter) return false;
       if (assetFilter !== 'All' && tx.asset !== assetFilter) return false;
       if (statusFilter !== 'All' && tx.status !== statusFilter.toLowerCase()) return false;
@@ -101,7 +104,7 @@ export function WebActivity({ navigate, onOpenTx }) {
               </div>
               {filtersOpen && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
-                  <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw', 'Delivery']}  onChange={setTypeFilter}/>
+                  <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw']}  onChange={setTypeFilter}/>
                   <FilterDropdown label="Asset"  value={assetFilter}  options={['All', 'AGOLD', 'USDT', 'USDC', 'AED', 'USD', 'EUR', 'GBP']}   onChange={setAssetFilter}/>
                   <FilterDropdown label="Status" value={statusFilter} options={['All', 'Completed', 'Pending', 'Failed']}                      onChange={setStatusFilter}/>
                   <div style={{ width: '100%' }}/>
@@ -115,7 +118,7 @@ export function WebActivity({ navigate, onOpenTx }) {
                 {WIcon.search()}
                 <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('Search by ID, asset, counterparty…')} style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontSize: 13, color: WBRAND.ink }}/>
               </div>
-              <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw', 'Delivery']}  onChange={setTypeFilter}/>
+              <FilterDropdown label="Type"   value={typeFilter}   options={['All', 'Mint', 'Redeem', 'Deposit', 'Withdraw']}  onChange={setTypeFilter}/>
               <FilterDropdown label="Asset"  value={assetFilter}  options={['All', 'AGOLD', 'USDT', 'USDC', 'AED', 'USD', 'EUR', 'GBP']}   onChange={setAssetFilter}/>
               <FilterDropdown label="Status" value={statusFilter} options={['All', 'Completed', 'Pending', 'Failed']}                      onChange={setStatusFilter}/>
               <div style={{ flex: 1 }}/>
@@ -137,7 +140,7 @@ export function WebActivity({ navigate, onOpenTx }) {
 
         <div style={{ padding: mobile ? '10px 16px' : '12px 22px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: WBRAND.surface2 }}>
           <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500 }}>
-            {t('Showing')} <span style={{ color: WBRAND.ink, fontWeight: 700 }}>{filtered.length}</span> {t('of')} {WTXS.length} {t('transactions')}
+            {t('Showing')} <span style={{ color: WBRAND.ink, fontWeight: 700 }}>{filtered.length}</span> {t('of')} {BASE_TXS.length} {t('transactions')}
           </span>
           {!mobile && (
             <div style={{ display: 'flex', gap: 4 }}>

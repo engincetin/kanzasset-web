@@ -8,7 +8,7 @@ import { WMark, WLogotype, AGOLDMark } from '../components/coinicons.jsx';
 const NAV_TR = {
   Overview: 'Genel', Funds: 'Fonlar', 'AGOLD': 'AHL Altın', Account: 'Hesap',
   Dashboard: 'Al / Sat', Wallet: 'Cüzdan', Deposit: 'Para Yatır', Withdraw: 'Para Çek',
-  Mint: 'Üret', Redeem: 'Boz', Activity: 'İşlemler', Support: 'Destek', Profile: 'Profil',
+  Mint: 'Üret', Redeem: 'Boz', Activity: 'Tüm işlemler', Support: 'Destek', Profile: 'Profil',
 };
 // NAV_TR overrides win; anything not listed falls back to the shared dictionary
 // (don't pass the English string as the 2nd arg — it would override the dict).
