@@ -145,9 +145,17 @@ function AppShell({ onLogout }) {
   );
 }
 
+// Persist the signed-in flag so a page/dev-server reload doesn't bounce you
+// back to the login screen mid-session.
+const AUTH_KEY = 'kz-auth';
+const readAuth = () => { try { return localStorage.getItem(AUTH_KEY) === '1'; } catch { return false; } };
+
 export default function App() {
-  const [authed, setAuthed] = useState(false);
+  const [authed, setAuthed] = useState(readAuth);
   const [, force] = useState(0);
+
+  const signIn  = () => { try { localStorage.setItem(AUTH_KEY, '1'); } catch { /* noop */ } setAuthed(true); };
+  const signOut = () => { try { localStorage.removeItem(AUTH_KEY); } catch { /* noop */ } setAuthed(false); };
 
   // Re-render the whole app when the number-format or language preference changes
   useEffect(() => subscribeNumberStyle(() => force(n => n + 1)), []);
@@ -157,8 +165,8 @@ export default function App() {
   return (
     <>
       {authed
-        ? <AppShell onLogout={() => setAuthed(false)} />
-        : <WebAuth onAuthed={() => setAuthed(true)} />}
+        ? <AppShell onLogout={signOut} />
+        : <WebAuth onAuthed={signIn} />}
       <ToastHost />
     </>
   );
