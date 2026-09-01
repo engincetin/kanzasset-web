@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WBALANCES, WMETA } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WBALANCES, WMETA, WTXS } from '../lib/index.js';
+import { RequestsCard } from '../components/shared.jsx';
 import { getAuthChannel } from '../lib/authChannel.js';
 import { t } from '../lib/i18n.js';
 import { WIcon } from '../components/icons.jsx';
@@ -290,6 +291,10 @@ export function WebWithdraw({ navigate, initialAsset }) {
               {t("You'll be asked to approve this withdrawal with your hardware key.")} {kind === 'crypto' ? t('Crypto withdrawals are irreversible — double-check the destination address.') : t("Bank transfers can take 1–2 business days to settle and are subject to your bank's cut-off times.")}
             </div>
           </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
+          <RequestsCard title={t('My withdrawal requests', 'Çekme taleplerim')} type="Withdraw" navigate={navigate}/>
         </div>
       </div>
 

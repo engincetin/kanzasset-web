@@ -3,7 +3,7 @@ import { WBRAND, WFONT, WMONO, wfmt, wdecimals, WBALANCES, WMETA } from '../lib/
 import { WIcon } from '../components/icons.jsx';
 import { WCoinDot } from '../components/coinicons.jsx';
 import { WCard, WSecondary, WEyebrow, WMonoNum, WPill, WCopyButton } from '../components/primitives.jsx';
-import { WebQR } from '../components/shared.jsx';
+import { WebQR, RequestsCard } from '../components/shared.jsx';
 import { t } from '../lib/i18n.js';
 import { useIsMobile, useElementWidth } from '../lib/useResponsive.js';
 
@@ -161,6 +161,10 @@ export function WebDeposit({ navigate, initialAsset }) {
               </div>
             </>
           )}
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
+          <RequestsCard title={t('My deposit requests', 'Yatırma taleplerim')} type="Deposit" navigate={navigate}/>
         </div>
       </div>
     </div>
