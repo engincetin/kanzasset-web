@@ -318,10 +318,12 @@ export function WExchangePanel() {
   const vals = chartData.map(d => d.v);
   const openV = vals[0], high = Math.max(...vals), low = Math.min(...vals);
 
-  // Side-by-side: let the chart flex to fill the card height (header pinned top,
-  // OHLC pinned bottom). Stacked/mobile: keep a fixed, comfortable height.
+  // Side-by-side: the chart plot is absolutely positioned inside a flex:1 area,
+  // so its size never feeds back into layout — the SWAP card alone drives the
+  // shared height and the chart just fills it (header top, OHLC bottom). The
+  // -30 accounts for the plot inset. Stacked/mobile: fixed, comfortable height.
   const [chartRef, chartH] = useElementHeight();
-  const chartHeight = twoCol ? Math.max(200, chartH || 0) : (mobile ? 220 : 300);
+  const chartHeight = twoCol ? Math.max(180, (chartH || 0) - 30) : (mobile ? 220 : 300);
 
   const submit = () => {
     if (!canSubmit) return;
@@ -412,8 +414,10 @@ export function WExchangePanel() {
           </div>
           <WRangeTabs value={range} onChange={setRange}/>
         </div>
-        <div ref={chartRef} style={{ padding: '12px 16px 18px', ...(twoCol ? { flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' } : {}) }}>
-          <WPriceChart data={chartData} height={chartHeight} color={WBRAND.red}/>
+        <div ref={chartRef} style={{ position: 'relative', ...(twoCol ? { flex: 1, minHeight: 0 } : { padding: '12px 16px 18px' }) }}>
+          <div style={twoCol ? { position: 'absolute', top: 12, left: 16, right: 16, bottom: 18 } : undefined}>
+            <WPriceChart data={chartData} height={chartHeight} color={WBRAND.red}/>
+          </div>
         </div>
         <div style={{ flexShrink: 0, display: 'grid', gridTemplateColumns: ohlc2 ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>
           {[
