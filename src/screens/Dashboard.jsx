@@ -93,7 +93,7 @@ export function WebPortfolio({ navigate, onOpenTx }) {
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', minHeight: '100%', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
       {/* Exchange — swap-first hero */}
-      <WExchangePanel/>
+      <WExchangePanel navigate={navigate}/>
 
       {/* Recent activity */}
       <div style={{ marginTop: mobile ? 14 : 20 }}>

@@ -4,9 +4,8 @@ import {
   WRATES, WBALANCES, WMETA, wMakePriceData, wPriceDecimals,
 } from '../lib/index.js';
 import { WCoinDot } from './coinicons.jsx';
-import { WCard, WNum, WMonoNum, WPrimary, WSecondary } from './primitives.jsx';
+import { WCard, WNum, WMonoNum, WPrimary, WSecondary, WPill } from './primitives.jsx';
 import { WPriceChart, WRangeTabs } from './charts.jsx';
-import { toast } from './Toast.jsx';
 import { useIsMobile, useElementWidth, useElementHeight } from '../lib/useResponsive.js';
 import { t } from '../lib/i18n.js';
 
@@ -267,7 +266,62 @@ function SlippageModal({ value, onClose, onSave }) {
 }
 
 // Generalised DEX-style swap: pick any token on either side, amount beside each.
-export function WExchangePanel() {
+// Detailed "trade completed" modal shown after a swap — mirrors the withdrawal
+// success screen (check → summary → detail rows → track/close).
+function TradeDoneModal({ trade, onClose, onTrack }) {
+  const mobile = useIsMobile();
+  const { from, to, paid, received, rate, ref } = trade;
+  const rows = [
+    { l: t('You paid', 'Ödediğin'),      v: `${wfmt(paid, wdecimals(from))} ${from}` },
+    { l: t('You received', 'Aldığın'),   v: `${wfmt(received, wdecimals(to))} ${to}` },
+    { l: t('Rate', 'Fiyat'),             v: `1 ${to} = ${wfmt(rate, wPriceDecimals(rate))} ${from}` },
+    { l: t('Reference', 'İşlem no'),     v: ref },
+    { l: t('Status', 'Durum'),           v: t('Completed', 'Tamamlandı'), pill: true },
+  ];
+  return (
+    <div onClick={onClose} style={{
+      position: 'fixed', inset: 0, zIndex: 130,
+      background: 'rgba(10,10,10,0.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24,
+    }}>
+      <div onClick={e => e.stopPropagation()} className="kz-pop" style={{
+        width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white,
+        borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden',
+      }}>
+        <div style={{ padding: '36px 28px 8px', textAlign: 'center' }}>
+          <div style={{ width: 64, height: 64, borderRadius: 32, margin: '0 auto', background: 'rgba(15,122,71,0.10)', display: 'grid', placeItems: 'center' }}>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke={WBRAND.positive} strokeWidth="1.8"/>
+              <path d="M7.5 12.5l3 3 6-6.5" stroke={WBRAND.positive} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <h2 style={{ margin: '20px 0 0', fontFamily: WFONT, fontSize: 20, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t('Trade completed', 'İşlem gerçekleşti')}</h2>
+          <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 8, lineHeight: 1.55, padding: '0 8px' }}>
+            {t('You received', 'Aldığın')} <strong style={{ color: WBRAND.ink }}>{wfmt(received, wdecimals(to))} {to}</strong> {t('for', 'karşılığında')} <strong style={{ color: WBRAND.ink }}>{wfmt(paid, wdecimals(from))} {from}</strong>{t('.', '')}
+          </div>
+        </div>
+
+        <div style={{ padding: '18px 24px 0' }}>
+          <div style={{ background: WBRAND.surface2, border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: '4px 16px' }}>
+            {rows.map((r, i, arr) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
+                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500, flexShrink: 0 }}>{r.l}</span>
+                {r.pill ? <WPill tone="positive">{r.v}</WPill> : <WMonoNum size={12} style={{ textAlign: 'right' }}>{r.v}</WMonoNum>}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ padding: '18px 24px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <WPrimary size="lg" onClick={onTrack} style={{ width: '100%', justifyContent: 'center' }}>{t('Track in Activity', 'İşlemlerde gör')}</WPrimary>
+          <WSecondary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center', height: 52 }}>{t('Done', 'Kapat')}</WSecondary>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function WExchangePanel({ navigate }) {
   const mobile = useIsMobile();
   const [gridRef, gw] = useElementWidth();
   // Side-by-side only when the chart would still get a usable width; otherwise
@@ -282,6 +336,7 @@ export function WExchangePanel() {
   const [range, setRange] = useState('3M');
   const [slippage, setSlippage] = useState('0.5');   // % max slippage
   const [slipOpen, setSlipOpen] = useState(false);
+  const [done, setDone] = useState(null);            // completed-trade receipt
 
   const pickFrom = (s) => { if (s === to) setTo(from); setFrom(s); };
   const pickTo   = (s) => { if (s === from) setFrom(to); setTo(s); };
@@ -327,7 +382,10 @@ export function WExchangePanel() {
 
   const submit = () => {
     if (!canSubmit) return;
-    toast(`${wfmt(out, wdecimals(to))} ${to}`, { title: `${t('Buy', 'Al')} · ${from} → ${to}`, tone: 'success' });
+    setDone({
+      from, to, paid: amt, received: out, rate: WRATES[to] / WRATES[from],
+      ref: 'TX-' + Math.floor(1000 + Math.random() * 8999),
+    });
     setAmount('');
   };
 
@@ -435,6 +493,7 @@ export function WExchangePanel() {
       </WCard>
 
       {slipOpen && <SlippageModal value={slippage} onClose={() => setSlipOpen(false)} onSave={setSlippage}/>}
+      {done && <TradeDoneModal trade={done} onClose={() => setDone(null)} onTrack={() => { setDone(null); navigate && navigate('activity'); }}/>}
     </div>
   );
 }
