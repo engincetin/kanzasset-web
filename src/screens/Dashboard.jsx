@@ -29,6 +29,17 @@ function AllocBar({ label, value, total, color }) {
   );
 }
 
+// Sort direction indicator for the balances table headers.
+function SortCaret({ active, dir }) {
+  return (
+    <span style={{ display: 'inline-grid', placeItems: 'center', width: 9, height: 9, opacity: active ? 1 : 0.3 }}>
+      <svg width="9" height="9" viewBox="0 0 12 12" fill="none" style={{ transform: active && dir === 'asc' ? 'rotate(180deg)' : 'none' }}>
+        <path d="M3 4.5L6 7.5L9 4.5" stroke={active ? WBRAND.red : WBRAND.muted2} strokeWidth={active ? 2 : 1.6} strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </span>
+  );
+}
+
 export function WebPortfolio({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
   // The wallet/balances card now spans the full width; measure it so the table
@@ -50,6 +61,14 @@ export function WebPortfolio({ navigate, onOpenTx }) {
   const totalAed = wTotalIn('AED');
   const animTotal = useCountUp(total);
 
+  // Sortable balances table.
+  const [sortKey, setSortKey] = useState('value');   // name | balance | value | alloc
+  const [sortDir, setSortDir] = useState('desc');
+  const toggleSort = (key) => {
+    if (key === sortKey) setSortDir(d => (d === 'asc' ? 'desc' : 'asc'));
+    else { setSortKey(key); setSortDir(key === 'name' ? 'asc' : 'desc'); }
+  };
+
   const assets = Object.keys(WBALANCES).map(s => {
     const bal = WBALANCES[s];
     const valUSDT = bal * WRATES[s];
@@ -59,9 +78,16 @@ export function WebPortfolio({ navigate, onOpenTx }) {
       pct24h: s === 'AGOLD' ? 0.24 : s === 'USDT' ? 0.00 : s === 'USDC' ? -0.01 : 0.08,
       alloc: 0,
     };
-  }).sort((a, b) => b.valUSDT - a.valUSDT);
+  });
   const sumUSDT = assets.reduce((a, c) => a + c.valUSDT, 0);
-  assets.forEach(a => { a.alloc = (a.valUSDT / sumUSDT) * 100; });
+  assets.forEach(a => { a.alloc = sumUSDT ? (a.valUSDT / sumUSDT) * 100 : 0; });
+  const sortedAssets = [...assets].sort((a, b) => {
+    const dir = sortDir === 'asc' ? 1 : -1;
+    if (sortKey === 'name') return dir * t(a.name).localeCompare(t(b.name), 'tr');
+    const av = sortKey === 'balance' ? a.balance : sortKey === 'alloc' ? a.alloc : a.valUSDT;
+    const bv = sortKey === 'balance' ? b.balance : sortKey === 'alloc' ? b.alloc : b.valUSDT;
+    return dir * (av - bv);
+  });
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', minHeight: '100%', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
@@ -91,18 +117,30 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         {/* Balances — slim label */}
         <div style={{ padding: mobile ? '14px 18px 10px' : '16px 24px 10px' }}>
           <span style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Balances')}</span>
-          <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginLeft: 8 }}>{assets.length} {t('assets · sorted by value')}</span>
+          <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginLeft: 8 }}>{assets.length} {t('assets', 'varlık')}</span>
         </div>
 
           <div style={{ overflowX: (mobile || tableW < 520) ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
           <div style={{ minWidth: mobile ? 820 : (tableW < 520 ? 520 : 'auto') }}>
           <div style={{ display: 'grid', gridTemplateColumns: balCols, gap: 16, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-            {(hideAlloc ? ['Asset', 'Balance', 'Value', 'Actions'] : ['Asset', 'Balance', 'Value', 'Allocation', 'Actions']).map((h, i) => (
-              <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: i === 0 ? 'left' : 'right' }}>{t(h)}</div>
-            ))}
+            {(hideAlloc
+              ? [['Asset', 'name'], ['Balance', 'balance'], ['Value', 'value'], ['Actions', null]]
+              : [['Asset', 'name'], ['Balance', 'balance'], ['Value', 'value'], ['Allocation', 'alloc'], ['Actions', null]]
+            ).map(([h, k], i) => {
+              const active = k && sortKey === k;
+              const base = { fontFamily: WFONT, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: active ? WBRAND.ink : WBRAND.muted, display: 'flex', alignItems: 'center', gap: 4, justifyContent: i === 0 ? 'flex-start' : 'flex-end' };
+              if (!k) return <div key={i} style={base}>{t(h)}</div>;
+              return (
+                <button key={i} onClick={() => toggleSort(k)} style={{ ...base, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
+                  {i !== 0 && <SortCaret active={active} dir={sortDir}/>}
+                  {t(h)}
+                  {i === 0 && <SortCaret active={active} dir={sortDir}/>}
+                </button>
+              );
+            })}
           </div>
 
-          {assets.map((a, i, arr) => {
+          {sortedAssets.map((a, i, arr) => {
             const zero = a.balance === 0;
             return (
               <div key={a.symbol} style={{ display: 'grid', gridTemplateColumns: balCols, gap: 16, padding: '14px 22px', alignItems: 'center', borderBottom: i === arr.length - 1 ? 'none' : `1px solid ${WBRAND.line}` }}>
@@ -207,8 +245,8 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         <WCard padding={0}>
           <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <WSectionTitle title={t('Recent activity')} sub={t('Last 7 days')} style={{ marginBottom: 0 }}/>
-            <button onClick={() => navigate('activity')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red, display: 'flex', alignItems: 'center', gap: 4 }}>
-              {t('View all activity')} {WIcon.arrowRight(WBRAND.red)}
+            <button onClick={() => navigate('activity')} style={{ background: WBRAND.white, border: `1px solid ${WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 9 }}>
+              {t('Activity', 'Tüm işlemler')} {WIcon.arrowRight(WBRAND.ink)}
             </button>
           </div>
 
