@@ -127,7 +127,7 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
         : { position: 'relative' }),
     }}>
       {!mobile && <button onClick={onToggleCollapse} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} style={{
-        position: 'absolute', top: 36, right: -12,
+        position: 'absolute', top: 25, right: -12,
         width: 22, height: 22, borderRadius: 11,
         background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
         cursor: 'pointer', display: 'grid', placeItems: 'center',
@@ -142,13 +142,14 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
         </svg>
       </button>}
 
-      <div style={{
+      <button onClick={() => go('dashboard')} title="Kanzasset — Al / Sat" style={{
         height: 72, flexShrink: 0, marginBottom: collapsed ? 18 : 16,
-        padding: collapsed ? 0 : '0 8px',
+        padding: collapsed ? 0 : '0 8px', width: '100%',
+        background: 'transparent', border: 'none', cursor: 'pointer',
         display: 'flex', alignItems: 'center', justifyContent: collapsed ? 'center' : 'flex-start',
       }}>
         {collapsed ? <WMark size={32}/> : <WLogotype mark={32} type={22}/>}
-      </div>
+      </button>
 
       <nav style={{ display: 'flex', flexDirection: 'column' }}>
         {NAV_GROUPS.slice(0, -1).map((g, gi) => (

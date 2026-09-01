@@ -19,9 +19,9 @@ import { WebSupport } from './screens/Support.jsx';
 import { WebProfile } from './screens/Profile.jsx';
 import { WTxDetailModal } from './components/TxDetailModal.jsx';
 
-function Screen({ active, navigate, onLogout, onOpenTx, profileSection, profileKey, supportTx, supportKey, tradeSide, tradeKey }) {
+function Screen({ active, navigate, onLogout, onOpenTx, profileSection, profileKey, supportTx, supportKey, tradeSide, tradeKey, dashboardKey }) {
   switch (active) {
-    case 'dashboard': return <WebPortfolio navigate={navigate} onOpenTx={onOpenTx} />;
+    case 'dashboard': return <WebPortfolio key={dashboardKey} navigate={navigate} onOpenTx={onOpenTx} />;
     case 'wallet':    return <WebWallet    navigate={navigate} />;
     case 'trade':     return <WebTrade     key={tradeKey} navigate={navigate} onOpenTx={onOpenTx} initialSide={tradeSide} />;
     case 'physical':  return <WebPhysicalRedeem navigate={navigate} onOpenTx={onOpenTx} />;
@@ -32,7 +32,7 @@ function Screen({ active, navigate, onLogout, onOpenTx, profileSection, profileK
     case 'activity':  return <WebActivity  navigate={navigate} onOpenTx={onOpenTx} />;
     case 'support':   return <WebSupport   key={supportKey} navigate={navigate} prefillTx={supportTx} />;
     case 'profile':   return <WebProfile   key={profileKey} navigate={navigate} onLogout={onLogout} initialSection={profileSection} />;
-    default:          return <WebPortfolio navigate={navigate} onOpenTx={onOpenTx} />;
+    default:          return <WebPortfolio key={dashboardKey} navigate={navigate} onOpenTx={onOpenTx} />;
   }
 }
 
@@ -49,6 +49,7 @@ function AppShell({ onLogout }) {
   const [supportKey, setSupportKey] = useState(0);
   const [tradeSide, setTradeSide] = useState('buy');
   const [tradeKey, setTradeKey] = useState(0);
+  const [dashboardKey, setDashboardKey] = useState(0);   // bump to remount → scroll to top
 
   const navigate = (screen, section) => {
     setActive(screen);
@@ -67,6 +68,8 @@ function AppShell({ onLogout }) {
       setTradeSide(section === 'sell' ? 'sell' : 'buy');
       setTradeKey(k => k + 1);
     }
+    // Dashboard (Al/Sat home): remount so it lands back at the top
+    if (screen === 'dashboard') setDashboardKey(k => k + 1);
   };
 
   // "Get help" from a transaction detail → open Support with that tx pre-linked
@@ -116,7 +119,9 @@ function AppShell({ onLogout }) {
           padding: '0 14px',
           background: WBRAND.white, borderBottom: `1px solid ${WBRAND.line}`,
         }}>
-          <WLogotype mark={28} type={20}/>
+          <button onClick={() => navigate('dashboard')} aria-label="Kanzasset — Al / Sat" style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}>
+            <WLogotype mark={28} type={20}/>
+          </button>
           <button onClick={() => setMobileNavOpen(true)} aria-label="Menu" style={{
             width: 40, height: 40, borderRadius: 10,
             background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
