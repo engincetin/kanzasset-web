@@ -4,6 +4,7 @@ import { useIsMobile } from './lib/useResponsive.js';
 import { subscribeLang } from './lib/i18n.js';
 import { WSidebar } from './layout/Sidebar.jsx';
 import { WNotificationsDrawer } from './layout/NotificationsDrawer.jsx';
+import { WLogotype } from './components/coinicons.jsx';
 import { ToastHost } from './components/Toast.jsx';
 import { WebAuth } from './screens/Login.jsx';
 import { WebPortfolio } from './screens/Dashboard.jsx';
@@ -106,17 +107,24 @@ function AppShell({ onLogout }) {
         />
       </main>
 
-      {/* Mobile: floating menu button replaces the top bar */}
-      {isMobile && !mobileNavOpen && (
-        <button onClick={() => setMobileNavOpen(true)} aria-label="Menu" style={{
-          position: 'fixed', top: 10, left: 12, zIndex: 45,
-          width: 42, height: 42, borderRadius: 12,
-          background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
-          display: 'grid', placeItems: 'center', cursor: 'pointer',
-          boxShadow: '0 4px 14px rgba(0,0,0,0.12)',
+      {/* Mobile top bar: logo on the left, menu button on the right */}
+      {isMobile && (
+        <header style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 45,
+          height: 56, boxSizing: 'border-box',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 14px',
+          background: WBRAND.white, borderBottom: `1px solid ${WBRAND.line}`,
         }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke={WBRAND.ink} strokeWidth="1.8" strokeLinecap="round"/></svg>
-        </button>
+          <WLogotype mark={28} type={20}/>
+          <button onClick={() => setMobileNavOpen(true)} aria-label="Menu" style={{
+            width: 40, height: 40, borderRadius: 10,
+            background: WBRAND.white, border: `1px solid ${WBRAND.line}`,
+            display: 'grid', placeItems: 'center', cursor: 'pointer',
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke={WBRAND.ink} strokeWidth="1.8" strokeLinecap="round"/></svg>
+          </button>
+        </header>
       )}
 
       <WNotificationsDrawer open={notifsOpen} onClose={() => setNotifsOpen(false)} />
