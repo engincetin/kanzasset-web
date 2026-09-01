@@ -107,6 +107,7 @@ function AppShell({ onLogout }) {
           supportKey={supportKey}
           tradeSide={tradeSide}
           tradeKey={tradeKey}
+          dashboardKey={dashboardKey}
         />
       </main>
 
