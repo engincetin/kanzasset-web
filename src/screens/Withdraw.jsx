@@ -201,7 +201,7 @@ export function WebWithdraw({ navigate, initialAsset }) {
             <div style={{ padding: '20px 22px' }}>
               <WEyebrow>{t('From')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-                <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0.00" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 30, color: WBRAND.ink, letterSpacing: '-0.03em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
+                <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0.00" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', padding: 0, margin: 0, fontFamily: WFONT, fontWeight: 800, fontSize: 30, color: WBRAND.ink, letterSpacing: '-0.03em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 <WAssetSelector
                   value={asset.symbol}
                   options={kind === 'crypto' ? cryptoAssets : fiatAssets}

@@ -113,7 +113,7 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
             <div style={{ padding: mobile ? '18px 16px 22px' : '22px 24px 26px' }}>
               <WEyebrow>{t('You pay')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-                <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
+                <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', padding: 0, margin: 0, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 {side === 'buy'
                   ? <WAssetSelector value={from.symbol} options={buySources} onChange={s => setFrom(buySources.find(x => x.symbol === s))}/>
                   : <AGOLDChip/>}

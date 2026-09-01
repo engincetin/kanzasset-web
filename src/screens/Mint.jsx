@@ -54,7 +54,7 @@ export function WebMint({ navigate, onOpenTx }) {
             <div style={{ padding: mobile ? '18px 16px 16px' : '22px 24px 20px' }}>
               <WEyebrow>{t('You pay')}</WEyebrow>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
-                <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
+                <input value={amount} onChange={e => setAmount(wregroup(e.target.value))} inputMode="decimal" placeholder="0" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', padding: 0, margin: 0, fontFamily: WFONT, fontWeight: 800, fontSize: 36, color: WBRAND.ink, letterSpacing: '-0.035em', width: 0, minWidth: 0, fontVariantNumeric: 'tabular-nums' }}/>
                 <WAssetSelector value={from.symbol} options={sources} onChange={s => setFrom(sources.find(x => x.symbol === s))}/>
               </div>
               <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
