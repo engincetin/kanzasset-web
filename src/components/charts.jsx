@@ -3,7 +3,7 @@ import { WBRAND, WFONT, WMONO, wfmt } from '../lib/index.js';
 import { getLang } from '../lib/i18n.js';
 
 // ─── Price chart — responsive + interactive crosshair ─────────
-export function WPriceChart({ data, height = 260, color = WBRAND.red, showGrid = true, showAxis = true, padding = { top: 16, right: 12, bottom: 28, left: 56 } }) {
+export function WPriceChart({ data, height = 260, color = WBRAND.red, showGrid = true, showAxis = true, decimals = 2, padding = { top: 16, right: 12, bottom: 28, left: 56 } }) {
   const containerRef = useRef(null);
   const [width, setWidth] = useState(600);
   const [hover, setHover] = useState(null); // { i, svgX, svgY, clientX }
@@ -73,7 +73,7 @@ export function WPriceChart({ data, height = 260, color = WBRAND.red, showGrid =
           boxShadow: '0 4px 12px rgba(0,0,0,0.18)',
         }}>
           <div style={{ fontFamily: WMONO, fontSize: 13, fontWeight: 700, letterSpacing: '-0.01em' }}>
-            {wfmt(activePoint.v, 2)}
+            {wfmt(activePoint.v, decimals)}
           </div>
           <div style={{ fontFamily: WMONO, fontSize: 10, color: 'rgba(255,255,255,0.55)', marginTop: 1 }}>
             {activePoint.t}
@@ -104,7 +104,7 @@ export function WPriceChart({ data, height = 260, color = WBRAND.red, showGrid =
         {showAxis && yTicks.map((t, i) => (
           <text key={'yt' + i} x={pad.left - 8} y={t.y + 3}
             fontFamily={WMONO} fontSize="10" fill={WBRAND.muted} textAnchor="end">
-            {wfmt(t.v, 2)}
+            {wfmt(t.v, decimals)}
           </text>
         ))}
 

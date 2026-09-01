@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   WBRAND, WFONT, wfmt, wparse, wdecimals, wgroup, wregroup,
-  WRATES, WBALANCES, WMETA, wMakePriceData,
+  WRATES, WBALANCES, WMETA, wMakePriceData, wPriceDecimals,
 } from '../lib/index.js';
 import { WCoinDot } from './coinicons.jsx';
 import { WCard, WNum, WMonoNum, WPrimary, WSecondary } from './primitives.jsx';
@@ -304,7 +304,7 @@ export function WExchangePanel() {
   if (isQuoteCcy(from) && !isQuoteCcy(to)) { cBase = to; cQuote = from; }
   const rate = WRATES[cBase] / WRATES[cQuote];
   const isFiatQuote = STABLE.includes(cQuote);
-  const px = (v, d = 2) => `${isFiatQuote ? '$' : ''}${wfmt(v, d)}${isFiatQuote ? '' : ' ' + cQuote}`;
+  const px = (v) => `${isFiatQuote ? '$' : ''}${wfmt(v, wPriceDecimals(v))}${isFiatQuote ? '' : ' ' + cQuote}`;
 
   const chartData = useMemo(() => {
     const shape = wMakePriceData(90);
@@ -408,7 +408,7 @@ export function WExchangePanel() {
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 8 }}>
               <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>{px(spot)}</WNum>
               <span style={{ fontFamily: WFONT, fontSize: 13, color: pct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-                {pct >= 0 ? '+' : ''}{wfmt(diff, 2)} ({pct >= 0 ? '+' : ''}{wfmt(pct, 2)}%)
+                {pct >= 0 ? '+' : ''}{wfmt(diff, wPriceDecimals(spot))} ({pct >= 0 ? '+' : ''}{wfmt(pct, 2)}%)
               </span>
             </div>
           </div>
@@ -416,7 +416,7 @@ export function WExchangePanel() {
         </div>
         <div ref={chartRef} style={{ position: 'relative', ...(twoCol ? { flex: 1, minHeight: 0 } : { padding: '12px 16px 18px' }) }}>
           <div style={twoCol ? { position: 'absolute', top: 12, left: 16, right: 16, bottom: 18 } : undefined}>
-            <WPriceChart data={chartData} height={chartHeight} color={WBRAND.red}/>
+            <WPriceChart data={chartData} height={chartHeight} color={WBRAND.red} decimals={wPriceDecimals(spot)}/>
           </div>
         </div>
         <div style={{ flexShrink: 0, display: 'grid', gridTemplateColumns: ohlc2 ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', borderTop: `1px solid ${WBRAND.line}` }}>

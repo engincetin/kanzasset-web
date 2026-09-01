@@ -258,6 +258,14 @@ export const wTradeable = () => Object.keys(WRATES).filter(s => WMETA[s]?.kind =
 // Price of 1 `base` expressed in `quote` (both quoted in USDT internally).
 export function wPairRate(base, quote) { return (WRATES[base] ?? 0) / (WRATES[quote] ?? 1); }
 
+// Decimals to show for a price value: 2 for >=1, otherwise enough to keep ~4
+// significant digits (so small pair prices like 0.002094 BTC don't read as 0.00).
+export function wPriceDecimals(v) {
+  const a = Math.abs(v);
+  if (!isFinite(a) || a === 0 || a >= 1) return 2;
+  return Math.min(8, Math.floor(-Math.log10(a)) + 4);
+}
+
 export function wTotalUSDT() {
   let s = 0;
   for (const k of Object.keys(WBALANCES)) s += WBALANCES[k] * WRATES[k];
