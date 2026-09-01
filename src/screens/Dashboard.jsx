@@ -176,8 +176,32 @@ export function WebPortfolio({ navigate, onOpenTx }) {
         </div>
       </WCard>
 
+      {/* Recent activity */}
+      <div style={{ marginTop: 20 }}>
+        <WCard padding={0}>
+          <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <WSectionTitle title={t('Recent activity')} sub={t('Last 7 days')} style={{ marginBottom: 0 }}/>
+            <button onClick={() => navigate('activity')} style={{ background: WBRAND.white, border: `1px solid ${WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 9 }}>
+              {t('Activity', 'Tüm işlemler')} {WIcon.arrowRight(WBRAND.ink)}
+            </button>
+          </div>
+
+          <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+          <div style={{ minWidth: mobile ? 720 : 'auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
+            {['', 'Type', 'Asset', 'Amount', 'Counterparty', 'Date', 'Status'].map((h, i) => (
+              <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h ? t(h) : h}</div>
+            ))}
+          </div>
+
+          {WTXS.slice(0, 6).map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1} onOpen={onOpenTx}/>)}
+          </div>
+          </div>
+        </WCard>
+      </div>
+
       {/* Proof of Reserve — full-width strip */}
-      <WCard padding={0} style={{ marginBottom: mobile ? 14 : 20 }}>
+      <WCard padding={0} style={{ marginTop: mobile ? 14 : 20 }}>
         {(() => {
           const rows = [
             { k: t('Tokens in circulation'), v: '142,718.4203 AGOLD' },
@@ -238,31 +262,6 @@ export function WebPortfolio({ navigate, onOpenTx }) {
           );
         })()}
       </WCard>
-
-
-      {/* Recent activity */}
-      <div style={{ marginTop: 20 }}>
-        <WCard padding={0}>
-          <div style={{ padding: '18px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <WSectionTitle title={t('Recent activity')} sub={t('Last 7 days')} style={{ marginBottom: 0 }}/>
-            <button onClick={() => navigate('activity')} style={{ background: WBRAND.white, border: `1px solid ${WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 9 }}>
-              {t('Activity', 'Tüm işlemler')} {WIcon.arrowRight(WBRAND.ink)}
-            </button>
-          </div>
-
-          <div style={{ overflowX: mobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-          <div style={{ minWidth: mobile ? 720 : 'auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '40px 1.2fr 1fr 1.2fr 1fr 1fr 110px', gap: 12, padding: '10px 22px', borderBottom: `1px solid ${WBRAND.line}`, background: WBRAND.surface2 }}>
-            {['', 'Type', 'Asset', 'Amount', 'Counterparty', 'Date', 'Status'].map((h, i) => (
-              <div key={i} style={{ fontFamily: WFONT, fontSize: 10, fontWeight: 700, color: WBRAND.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{h ? t(h) : h}</div>
-            ))}
-          </div>
-
-          {WTXS.slice(0, 6).map((tx, i, arr) => <WTxRow key={tx.id} tx={tx} last={i === arr.length - 1} onOpen={onOpenTx}/>)}
-          </div>
-          </div>
-        </WCard>
-      </div>
     </div>
   );
 }
