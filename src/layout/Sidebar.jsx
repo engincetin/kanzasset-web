@@ -152,15 +152,7 @@ export function WSidebar({ active, onNavigate, collapsed: collapsedProp = false,
 
       <nav style={{ display: 'flex', flexDirection: 'column' }}>
         {NAV_GROUPS.slice(0, -1).map((g, gi) => (
-          <div key={g.id} style={{ marginTop: gi === 0 ? 0 : (collapsed ? 10 : 14) }}>
-            {!collapsed && (
-              <div style={{
-                fontFamily: WFONT, fontSize: 10, fontWeight: 700,
-                color: WBRAND.muted2, letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                padding: gi === 0 ? '0 12px 6px' : '8px 12px 6px',
-              }}>{navT(g.label)}</div>
-            )}
+          <div key={g.id} style={{ marginTop: gi === 0 ? 0 : (collapsed ? 10 : 8) }}>
             {collapsed && gi > 0 && (
               <div style={{ width: 20, height: 1, background: WBRAND.line, margin: '4px auto 8px' }}/>
             )}
