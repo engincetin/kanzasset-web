@@ -331,7 +331,7 @@ export function WExchangePanel({ navigate }) {
   const paneW = twoCol ? Math.max(0, gw - 500) : Math.min(gw || 9999, 520);
   const ohlc2 = paneW > 0 && paneW < 430;
 
-  const [from, setFrom] = useState('USDT');   // you sell / pay
+  const [from, setFrom] = useState('AED');    // you sell / pay — AED is the base currency
   const [to, setTo]     = useState('AGOLD');  // you buy / receive
   const [amount, setAmount] = useState('');
   const [range, setRange] = useState('3M');
@@ -349,8 +349,9 @@ export function WExchangePanel({ navigate }) {
   const insufficient = amt > payBalance + 1e-9;
   const canSubmit = out > 0 && !insufficient;
 
-  // Currency fee: charged only when paying with a non-base currency (base = USD stablecoins).
-  const currencyFeePct = STABLE.includes(from) ? 0 : 0.10;
+  // Currency fee: AED is the base currency, so trades with AED on either side are
+  // fee-free; any other (cross-currency) conversion carries an FX fee.
+  const currencyFeePct = (from === 'AED' || to === 'AED') ? 0 : 0.10;
   const slip = parseFloat(slippage) || 0;
   const minReceived = out * (1 - slip / 100);
 
@@ -442,9 +443,9 @@ export function WExchangePanel({ navigate }) {
               <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.positive, background: 'rgba(15,122,71,0.10)', padding: '2px 8px', borderRadius: 6 }}>{t('Free', 'Ücretsiz')}</span>
             </DRow>
             {currencyFeePct > 0 && (
-              <DRow label={t('Currency fee', 'Kur ücreti')} hint={t('Non-base currency', 'Baz dışı para birimi')} last
-                info={t('A conversion fee applied when you pay with an asset other than a base currency (USD stablecoins).',
-                        'Baz para birimi (USD stablecoin) dışında bir varlıkla ödeme yaptığında uygulanan dönüşüm ücreti.')}>
+              <DRow label={t('Currency fee', 'Kur ücreti')} hint={t('Non-AED conversion', 'AED dışı dönüşüm')} last
+                info={t('An FX fee applied to cross-currency conversions. Trades with AED (the base currency) on either side are free.',
+                        'Çapraz para birimi dönüşümlerine uygulanan kur ücreti. Baz para birimi AED taraflardan biriyse işlem ücretsizdir.')}>
                 <span style={{ fontFamily: WFONT, fontSize: 12.5, fontWeight: 600, color: WBRAND.ink, fontVariantNumeric: 'tabular-nums' }}>%{wfmt(currencyFeePct, 2)}</span>
               </DRow>
             )}

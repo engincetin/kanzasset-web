@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
-import { WBRAND, WFONT, WTXS } from '../lib/index.js';
+import { WBRAND, WFONT, WTXS, WRATES, wfmt } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
-import { WCard, WSecondary, WGhost } from '../components/primitives.jsx';
+import { WCard, WSecondary, WGhost, WEyebrow, WNum } from '../components/primitives.jsx';
 import { WRangeTabs } from '../components/charts.jsx';
 import { WTxRow } from '../components/shared.jsx';
 import { t } from '../lib/i18n.js';
@@ -78,8 +78,36 @@ export function WebActivity({ navigate, onOpenTx }) {
 
   const hasFilters = typeFilter !== 'All' || assetFilter !== 'All' || statusFilter !== 'All' || search;
 
+  // Summary strip (mirrors the Wallet page top): total count + deposit/withdraw value.
+  const depTxs = BASE_TXS.filter(tx => tx.type === 'Deposit');
+  const wdrTxs = BASE_TXS.filter(tx => tx.type === 'Withdraw');
+  const valUSDT = (txs) => txs.reduce((s, tx) => s + Math.abs(tx.amount) * (WRATES[tx.asset] || 0), 0);
+  const depVal = valUSDT(depTxs);
+  const wdrVal = valUSDT(wdrTxs);
+
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr 1fr' : '2fr 1fr 1fr', gap: mobile ? 12 : 16, marginBottom: 20 }}>
+        <WCard padding={22} style={{ minWidth: 0, gridColumn: mobile ? '1 / -1' : 'auto' }}>
+          <WEyebrow>{t('Total transactions', 'Toplam işlem')}</WEyebrow>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 8 }}>
+            <WNum size={30} weight={800} style={{ letterSpacing: '-0.03em' }}>{BASE_TXS.length}</WNum>
+            <span style={{ fontFamily: WFONT, fontWeight: 700, fontSize: 14, color: WBRAND.muted }}>{t('transactions', 'işlem')}</span>
+          </div>
+          <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 4 }}>{t('Last 30 days', 'Son 30 gün')}</div>
+        </WCard>
+        <WCard padding={22} style={{ minWidth: 0 }}>
+          <WEyebrow>{t('Deposits', 'Yatırma')}</WEyebrow>
+          <WNum size={22} weight={800} style={{ marginTop: 8, display: 'block', letterSpacing: '-0.025em' }}>${wfmt(depVal)}</WNum>
+          <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, fontWeight: 500 }}>{depTxs.length} {t('transactions', 'işlem')}</div>
+        </WCard>
+        <WCard padding={22} style={{ minWidth: 0 }}>
+          <WEyebrow>{t('Withdrawals', 'Çekme')}</WEyebrow>
+          <WNum size={22} weight={800} style={{ marginTop: 8, display: 'block', letterSpacing: '-0.025em' }}>${wfmt(wdrVal)}</WNum>
+          <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 4, fontWeight: 500 }}>{wdrTxs.length} {t('transactions', 'işlem')}</div>
+        </WCard>
+      </div>
+
       <WCard padding={0}>
         <div style={{ padding: mobile ? '12px 16px' : '14px 22px', borderBottom: `1px solid ${WBRAND.line}` }}>
           {mobile ? (
