@@ -33,8 +33,8 @@ export function WebDeposit({ navigate, initialAsset, onOpenTx }) {
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
-      <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: twoCol ? '560px 1fr' : '1fr', gap: mobile ? 14 : 20 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: (!twoCol && !mobile) ? 620 : 'none' }}>
+      <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: twoCol ? 'minmax(0, 1.25fr) minmax(0, 1fr)' : '1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', minWidth: 0, maxWidth: (!twoCol && !mobile) ? 620 : 'none' }}>
           {/* Kind toggle */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, padding: 4, background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12 }}>
             {[
@@ -74,22 +74,22 @@ export function WebDeposit({ navigate, initialAsset, onOpenTx }) {
           </WCard>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
           {kind === 'crypto' ? (
             <>
               <WCard padding={0}>
-                <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
+                <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+                  <div style={{ minWidth: 0 }}>
                     <div style={{ fontFamily: WFONT, fontSize: 15, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.015em' }}>{t('Your')} {cryptoAsset.symbol} {t('deposit address')}</div>
                     <div style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, marginTop: 2 }}>{t('Ethereum mainnet · ERC-20')}</div>
                   </div>
-                  <WPill tone="positive">{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
+                  <WPill tone="positive" style={{ flexShrink: 0 }}>{WIcon.check(WBRAND.positive)} {t('Verified')}</WPill>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : (dense ? '130px 1fr' : '180px 1fr'), gap: mobile ? 16 : (dense ? 16 : 24), padding: mobile ? '16px' : (dense ? 18 : 24) }}>
-                  <div style={{ background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: 12, aspectRatio: '1', maxWidth: '100%' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: (mobile || dense) ? '1fr' : '180px 1fr', gap: (mobile || dense) ? 16 : 24, padding: mobile ? '16px' : (dense ? 18 : 24) }}>
+                  <div style={{ background: WBRAND.white, border: `1px solid ${WBRAND.line}`, borderRadius: 12, padding: 12, aspectRatio: '1', width: '100%', maxWidth: (mobile || dense) ? 200 : '100%', justifySelf: (mobile || dense) ? 'center' : 'stretch' }}>
                     <WebQR value={depositAddress}/>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
                     <div>
                       <WEyebrow>{t('Address')}</WEyebrow>
                       <div style={{ marginTop: 8, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10, fontFamily: WMONO, fontSize: 13, color: WBRAND.ink, wordBreak: 'break-all', lineHeight: 1.5 }}>{depositAddress}</div>
