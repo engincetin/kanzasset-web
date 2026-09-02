@@ -622,16 +622,12 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
   const [gridRef, gw] = useElementWidth();
   const twoCol = !mobile && (gw === 0 || gw >= 840);
-  const [range, setRange] = useState('3M');
-  const priceData = wMakePriceData(90);
-  const quote = 'USDT';
-  const quoteRate = WRATES[quote] || 1;
-  const quotedData = priceData.map(d => ({ t: d.t, v: d.v / quoteRate }));
-  const spot = WRATES.AGOLD / quoteRate;
-  const first = quotedData[0].v;
-  const diff = spot - first;
-  const pct = (diff / first) * 100;
-  const px = (v, d = 2) => `$${wfmt(v, d)}`;
+  const deliveries = WTXS.filter(tx => tx.type === 'Delivery');
+  const perPage = 6;
+  const [page, setPage] = useState(0);
+  const pageCount = Math.max(1, Math.ceil(deliveries.length / perPage));
+  const cur = Math.min(page, pageCount - 1);
+  const pageItems = deliveries.slice(cur * perPage, cur * perPage + perPage);
 
   return (
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
@@ -643,30 +639,12 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
           <WCard padding={0}>
-            <div style={{ padding: mobile ? '14px 16px 12px' : '18px 24px 14px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
-              <div>
-                <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>AGOLD / {quote}</div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6 }}>
-                  <WNum size={26} weight={800} style={{ letterSpacing: '-0.025em' }}>{px(spot)}</WNum>
-                  <span style={{ fontFamily: WFONT, fontSize: 13, color: pct >= 0 ? WBRAND.positive : WBRAND.red, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-                    {pct >= 0 ? '+' : ''}{wfmt(diff, 2)} ({pct >= 0 ? '+' : ''}{wfmt(pct, 2)}%)
-                  </span>
-                </div>
-              </div>
-              <WRangeTabs value={range} onChange={setRange}/>
-            </div>
-            <div style={{ padding: '12px 16px 18px' }}>
-              <WPriceChart data={quotedData} height={280}/>
-            </div>
-          </WCard>
-
-          <WCard padding={0}>
             <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}` }}>
-              <div style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your recent physical deliveries', 'Son fiziksel teslimatlarım')}</div>
-              <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{t('Last 30 days')}</div>
+              <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your delivery requests', 'Teslimat talepleriniz')}</div>
+              <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{deliveries.length} {t('requests', 'talep')}</div>
             </div>
             <div style={{ padding: mobile ? '12px 14px 16px' : '14px 16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {WTXS.filter(tx => tx.type === 'Delivery').slice(0, 5).map((tx) => {
+              {pageItems.map((tx) => {
                 const st = DELIVERY_STAGES[tx.stage] || DELIVERY_STAGES.processing;
                 const kg = Math.abs(tx.amount) / 1000;
                 const track = wHasTracking(tx.stage);
@@ -702,6 +680,13 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
                 );
               })}
             </div>
+            {pageCount > 1 && (
+              <div style={{ padding: '12px 20px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                <WSecondary size="sm" onClick={() => setPage(Math.max(0, cur - 1))} disabled={cur === 0}>← {t('Previous', 'Önceki')}</WSecondary>
+                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>{t('Page', 'Sayfa')} {cur + 1} / {pageCount}</span>
+                <WSecondary size="sm" onClick={() => setPage(Math.min(pageCount - 1, cur + 1))} disabled={cur === pageCount - 1}>{t('Next', 'Sonraki')} →</WSecondary>
+              </div>
+            )}
           </WCard>
         </div>
       </div>
