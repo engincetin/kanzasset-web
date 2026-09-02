@@ -7,7 +7,7 @@ import { WPriceChart, WRangeTabs, WQuoteCountdown } from '../components/charts.j
 import { WAssetSelector, WTimeline, SelectField } from '../components/shared.jsx';
 import { AddDestinationModal } from './Profile.jsx';
 import { t } from '../lib/i18n.js';
-import { useIsMobile, useMediaQuery, useElementWidth, useElementHeight } from '../lib/useResponsive.js';
+import { useIsMobile, useMediaQuery, useElementWidth } from '../lib/useResponsive.js';
 
 function RedeemDigital({ targets, to, setTo, navigate }) {
   const mobile = useIsMobile();
@@ -621,17 +621,10 @@ export function WebRedeem({ navigate, onOpenTx }) {
 export function WebPhysicalRedeem({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
   const [gridRef, gw] = useElementWidth();
-  const [leftRef, leftH] = useElementHeight();   // match the requests card to the form height
   const twoCol = !mobile && (gw === 0 || gw >= 840);
   const deliveries = WTXS.filter(tx => tx.type === 'Delivery');
+  const perPage = 6;
   const [page, setPage] = useState(0);
-
-  // How many request cards fit next to the form: derive from the left column's
-  // height so the two columns end at the same line; the rest go to other pages.
-  const CARD_H = 78, HEAD_H = 60, FOOT_H = 50, LIST_PAD = 32;
-  const perPage = (twoCol && leftH)
-    ? Math.max(3, Math.floor((leftH - HEAD_H - FOOT_H - LIST_PAD) / CARD_H))
-    : 5;
   const pageCount = Math.max(1, Math.ceil(deliveries.length / perPage));
   const cur = Math.min(page, pageCount - 1);
   const pageItems = deliveries.slice(cur * perPage, cur * perPage + perPage);
@@ -640,17 +633,17 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
     <div style={{ padding: mobile ? '18px 16px 40px' : '28px 32px 48px', overflowY: 'auto', overflowX: 'hidden', height: '100%', boxSizing: 'border-box' }}>
 
       <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: twoCol ? '480px 1fr' : '1fr', gap: mobile ? 14 : 20, alignItems: 'start' }}>
-        <div ref={leftRef} style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (!twoCol && !mobile) ? 600 : 'none' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0, width: '100%', maxWidth: (!twoCol && !mobile) ? 600 : 'none' }}>
           <RedeemPhysicalWeb navigate={navigate}/>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
-          <WCard padding={0} style={{ display: 'flex', flexDirection: 'column', height: (twoCol && leftH) ? leftH : 'auto', minWidth: 0 }}>
-            <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}`, flexShrink: 0 }}>
+          <WCard padding={0} style={{ minWidth: 0 }}>
+            <div style={{ padding: '16px 22px 12px', borderBottom: `1px solid ${WBRAND.line}` }}>
               <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.01em' }}>{t('Your delivery requests', 'Teslimat talepleriniz')}</div>
               <div style={{ fontFamily: WFONT, fontSize: 11, color: WBRAND.muted, marginTop: 2 }}>{deliveries.length} {t('requests', 'talep')}</div>
             </div>
-            <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: mobile ? '12px 14px 16px' : '14px 16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ padding: mobile ? '12px 14px 16px' : '14px 16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
               {pageItems.map((tx) => {
                 const st = DELIVERY_STAGES[tx.stage] || DELIVERY_STAGES.processing;
                 const kg = Math.abs(tx.amount) / 1000;
@@ -677,13 +670,16 @@ export function WebPhysicalRedeem({ navigate, onOpenTx }) {
                 );
               })}
             </div>
-            {pageCount > 1 && (
-              <div style={{ padding: '12px 20px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            <div style={{ padding: '14px 20px', borderTop: `1px solid ${WBRAND.line}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: mobile ? 'wrap' : 'nowrap' }}>
+              <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted }}>{t('Page', 'Sayfa')} {cur + 1} {t('of', '/')} {pageCount}</span>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', justifyContent: mobile ? 'center' : 'flex-end', width: mobile ? '100%' : 'auto' }}>
                 <WSecondary size="sm" onClick={() => setPage(Math.max(0, cur - 1))} disabled={cur === 0}>← {t('Previous', 'Önceki')}</WSecondary>
-                <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 600 }}>{t('Page', 'Sayfa')} {cur + 1} / {pageCount}</span>
+                {Array.from({ length: pageCount }).map((_, p) => (
+                  <button key={p} onClick={() => setPage(p)} style={{ width: 32, height: 32, borderRadius: 8, background: p === cur ? WBRAND.panel : WBRAND.white, color: p === cur ? '#fff' : WBRAND.ink, border: `1px solid ${p === cur ? WBRAND.panel : WBRAND.line}`, cursor: 'pointer', fontFamily: WFONT, fontSize: 12, fontWeight: 700 }}>{p + 1}</button>
+                ))}
                 <WSecondary size="sm" onClick={() => setPage(Math.min(pageCount - 1, cur + 1))} disabled={cur === pageCount - 1}>{t('Next', 'Sonraki')} →</WSecondary>
               </div>
-            )}
+            </div>
           </WCard>
         </div>
       </div>
