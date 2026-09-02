@@ -1,9 +1,9 @@
-import { WBRAND, WFONT, WMONO, wfmt, wdecimals } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wdecimals, wHasTracking, wTracking, DELIVERY_STAGES } from '../lib/index.js';
 import { t } from '../lib/i18n.js';
 import { useIsMobile } from '../lib/useResponsive.js';
 import { WIcon } from './icons.jsx';
 import { WCoinDot } from './coinicons.jsx';
-import { WPill, WPrimary, WSecondary } from './primitives.jsx';
+import { WPill, WPrimary, WSecondary, WMonoNum, WCopyButton } from './primitives.jsx';
 
 // Per-type metadata for the detail view
 export function txMeta(tx) {
@@ -26,14 +26,13 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
   if (!tx) return null;
   const m = txMeta(tx);
   const isDelivery = tx.type === 'Delivery';
-  const tracking = 'BRX' + (tx.id.replace(/\D/g, '') + '000000000').slice(0, 9) + 'AE';
+  const hasTracking = isDelivery && wHasTracking(tx.stage);
   const rows = isDelivery
     ? [
         { l: 'Transaction ID', v: tx.id, mono: true },
         { l: 'Amount', v: `${wfmt(Math.abs(tx.amount), wdecimals(tx.asset))} ${tx.asset}` },
         { l: 'Destination', v: tx.paid && tx.paid !== '—' ? tx.paid : '—' },
         { l: 'Carrier', v: 'Brinks Secure Logistics' },
-        { l: 'Tracking number', v: tx.status === 'completed' ? tracking : 'Created once shipped', mono: tx.status === 'completed' },
         { l: 'Date & time', v: `${m.date} · ${m.time}` },
       ]
     : [
@@ -77,10 +76,16 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
             </button>
           </div>
           <div style={{ marginTop: 14 }}>
-            <WPill tone={tx.status === 'completed' ? 'positive' : tx.status === 'pending' ? 'warn' : 'negative'}>
-              {tx.status === 'completed' && WIcon.check(WBRAND.positive)}
-              {t(tx.status[0].toUpperCase() + tx.status.slice(1))}
-            </WPill>
+            {isDelivery
+              ? (() => { const st = DELIVERY_STAGES[tx.stage] || DELIVERY_STAGES.processing; return (
+                  <WPill tone={st.tone}>{st.tone === 'positive' && WIcon.check(WBRAND.positive)}{t(st.en, st.tr)}</WPill>
+                ); })()
+              : (
+                <WPill tone={tx.status === 'completed' ? 'positive' : tx.status === 'pending' ? 'warn' : 'negative'}>
+                  {tx.status === 'completed' && WIcon.check(WBRAND.positive)}
+                  {t(tx.status[0].toUpperCase() + tx.status.slice(1))}
+                </WPill>
+              )}
           </div>
         </div>
 
@@ -97,6 +102,20 @@ export function WTxDetailModal({ tx, onClose, onSupport }) {
               </div>
             ))}
           </div>
+
+          {isDelivery && (
+            <div style={{ padding: mobile ? '4px 16px 16px' : '4px 24px 18px' }}>
+              <div style={{ fontFamily: WFONT, fontSize: 10, color: WBRAND.muted, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{t('Tracking number')}</div>
+              {hasTracking ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 12px', background: WBRAND.surface, borderRadius: 10 }}>
+                  <WMonoNum size={13} weight={500} style={{ flex: 1, minWidth: 0, wordBreak: 'break-all' }}>{wTracking(tx.id)}</WMonoNum>
+                  <WCopyButton text={wTracking(tx.id)}/>
+                </div>
+              ) : (
+                <div style={{ padding: '10px 12px', background: WBRAND.surface, borderRadius: 10, fontFamily: WFONT, fontSize: 12.5, color: WBRAND.muted }}>{t('Created once shipped', 'Kargoya verilince oluşur')}</div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Footer */}
