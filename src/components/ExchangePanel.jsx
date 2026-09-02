@@ -443,7 +443,7 @@ export function WExchangePanel({ navigate }) {
               <span style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, color: WBRAND.positive, background: 'rgba(15,122,71,0.10)', padding: '2px 8px', borderRadius: 6 }}>{t('Free', 'Ücretsiz')}</span>
             </DRow>
             {currencyFeePct > 0 && (
-              <DRow label={t('Currency fee', 'Kur ücreti')} hint={t('Non-AED conversion', 'AED dışı dönüşüm')} last
+              <DRow label={t('Currency fee', 'Kur ücreti')} last
                 info={t('An FX fee applied to cross-currency conversions. Trades with AED (the base currency) on either side are free.',
                         'Çapraz para birimi dönüşümlerine uygulanan kur ücreti. Baz para birimi AED taraflardan biriyse işlem ücretsizdir.')}>
                 <span style={{ fontFamily: WFONT, fontSize: 12.5, fontWeight: 600, color: WBRAND.ink, fontVariantNumeric: 'tabular-nums' }}>%{wfmt(currencyFeePct, 2)}</span>
