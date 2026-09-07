@@ -20,8 +20,8 @@ function SignupRail({ step }) {
   if (mobile) {
     return (
       <div style={{ flexShrink: 0, background: WBRAND.panel, color: '#fff', padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <WMark size={24} color="#fff"/>
-        <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 17, letterSpacing: '-0.02em' }}>Kanzasset</span>
+        <WMark size={26} color="#fff"/>
+        <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 19, letterSpacing: '-0.02em' }}>Kanzasset</span>
         <span style={{ marginLeft: 'auto', fontFamily: WMONO, fontSize: 10.5, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.55)' }}>
           {cur >= 5 ? t('REVIEW') : t('STEP') + ' ' + (cur + 1) + ' ' + t('OF') + ' 5'}
         </span>
@@ -30,23 +30,24 @@ function SignupRail({ step }) {
   }
 
   return (
-    <div style={{ width: 340, flexShrink: 0, background: WBRAND.panel, color: '#fff', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '44px 36px 40px' }}>
-      <div style={{ position: 'absolute', top: -120, right: -120, width: 320, height: 320, borderRadius: 160, background: WBRAND.red, opacity: 0.20, filter: 'blur(70px)' }}/>
-      <div style={{ position: 'absolute', bottom: -140, left: -80, width: 280, height: 280, borderRadius: 140, background: '#FAC043', opacity: 0.12, filter: 'blur(80px)' }}/>
+    <div style={{ width: 520, flexShrink: 0, background: WBRAND.panel, color: '#fff', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '48px 48px 44px' }}>
+      <div style={{ position: 'absolute', top: -120, right: -120, width: 380, height: 380, borderRadius: 190, background: WBRAND.red, opacity: 0.20, filter: 'blur(70px)' }}/>
+      <div style={{ position: 'absolute', bottom: -140, left: -80, width: 320, height: 320, borderRadius: 160, background: '#FAC043', opacity: 0.12, filter: 'blur(80px)' }}/>
+      <div className="kz-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'linear-gradient(105deg, transparent 42%, rgba(255, 210, 110, 0.10) 50%, transparent 58%)' }}/>
 
       <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <WMark size={26} color="#fff"/>
-        <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 18, letterSpacing: '-0.02em' }}>Kanzasset</span>
+        <WMark size={30} color="#fff"/>
+        <span style={{ fontFamily: WFONT, fontWeight: 800, fontSize: 21, letterSpacing: '-0.02em' }}>Kanzasset</span>
       </div>
 
-      <div style={{ position: 'relative', marginTop: 40 }}>
+      <div style={{ position: 'relative', marginTop: 44 }}>
         <div style={{ fontFamily: WFONT, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>{t('Open an account')}</div>
-        <h2 style={{ margin: '12px 0 0', fontFamily: WFONT, fontSize: 26, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.16, color: '#fff' }}>
+        <h2 style={{ margin: '12px 0 0', fontFamily: WFONT, fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.16, color: '#fff' }}>
           {t('A few steps to start holding tokenised gold.')}
         </h2>
       </div>
 
-      <div style={{ position: 'relative', marginTop: 32, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ position: 'relative', marginTop: 36, display: 'flex', flexDirection: 'column' }}>
         {titles.map((title, i) => {
           const done = i < cur, active = i === cur, isLast = i === titles.length - 1;
           return (
