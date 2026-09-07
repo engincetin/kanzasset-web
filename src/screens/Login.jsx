@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { t } from '../lib/i18n.js';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
-import { useIsMobile } from '../lib/useResponsive.js';
+import { useIsMobile, useIsAuthNarrow } from '../lib/useResponsive.js';
 import { getAuthChannel } from '../lib/authChannel.js';
 import { WIcon } from '../components/icons.jsx';
 import { WMark, AGOLDMark } from '../components/coinicons.jsx';
@@ -11,7 +11,7 @@ import { WebSignup } from './Signup.jsx';
 
 // ─── Shared centered auth shell — brand panel left, form right ──
 export function WAuthLayout({ children }) {
-  const mobile = useIsMobile();
+  const mobile = useIsAuthNarrow();
 
   // On mobile: drop the big brand panel, show a compact brand bar above a full-width form.
   if (mobile) {
@@ -91,11 +91,11 @@ export function WAuthLayout({ children }) {
 export const authInput = {
   width: '100%', height: 46, borderRadius: 10, border: `1px solid ${WBRAND.line2}`,
   background: WBRAND.white, padding: '0 14px', outline: 'none',
-  fontFamily: WFONT, fontSize: 14, color: WBRAND.ink, fontWeight: 500, boxSizing: 'border-box',
+  fontFamily: WFONT, fontSize: 15, color: WBRAND.ink, fontWeight: 500, boxSizing: 'border-box',
 };
 export const authLink = {
   background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,
-  fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.red,
+  fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.red,
 };
 const authBackLink = {
   display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none',
@@ -177,7 +177,7 @@ export function AuthField({ label, trailing, children }) {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 7 }}>
-        <span style={{ fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{label}</span>
+        <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink, letterSpacing: '-0.005em' }}>{label}</span>
         {trailing}
       </div>
       {children}
@@ -195,7 +195,7 @@ function WebLogin({ onContinue, onForgot, onSignup }) {
     <WAuthLayout>
       <div>
         <h1 style={{ margin: 0, fontFamily: WFONT, fontSize: 26, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.025em' }}>{t('Sign in')}</h1>
-        <p style={{ margin: '8px 0 0', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>{t('Welcome back. Enter your credentials to continue.')}</p>
+        <p style={{ margin: '8px 0 0', fontFamily: WFONT, fontSize: 14, color: WBRAND.muted }}>{t('Welcome back. Enter your credentials to continue.')}</p>
 
         <form onSubmit={e => { e.preventDefault(); onContinue(); }} style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <AuthField label={t('Email address')}>
@@ -234,8 +234,8 @@ function WebLogin({ onContinue, onForgot, onSignup }) {
           {t('Sign in with passkey')}
         </WSecondary>
 
-        <p style={{ margin: '24px 0 0', textAlign: 'center', fontFamily: WFONT, fontSize: 13, color: WBRAND.muted }}>
-          {t('New to Kanzasset?')} <button onClick={onSignup} style={{ ...authLink, fontSize: 13 }}>{t('Create an account')}</button>
+        <p style={{ margin: '24px 0 0', textAlign: 'center', fontFamily: WFONT, fontSize: 14, color: WBRAND.muted }}>
+          {t('New to Kanzasset?')} <button onClick={onSignup} style={{ ...authLink, fontSize: 14 }}>{t('Create an account')}</button>
         </p>
       </div>
     </WAuthLayout>

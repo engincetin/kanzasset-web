@@ -25,6 +25,9 @@ export function useMediaQuery(query) {
 // Convenience flags used across screens.
 export const useIsMobile = () => useMediaQuery(`(max-width: ${BP.mobile}px)`);
 export const useIsTablet = () => useMediaQuery(`(max-width: ${BP.tablet}px)`);
+// Auth screens (login/signup) drop their 520px brand panel below this so the
+// form never gets squeezed — panel + a comfortable form need ~960px.
+export const useIsAuthNarrow = () => useMediaQuery('(max-width: 960px)');
 
 // Measure an element's actual rendered width with a ResizeObserver.
 // Unlike media queries this reflects the *available* space (e.g. it grows when

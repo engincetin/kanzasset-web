@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { t } from '../lib/i18n.js';
 import { WBRAND, WFONT, WMONO } from '../lib/index.js';
-import { useIsMobile } from '../lib/useResponsive.js';
+import { useIsAuthNarrow } from '../lib/useResponsive.js';
 import { WMark } from '../components/coinicons.jsx';
 import { WPrimary, WSecondary } from '../components/primitives.jsx';
 import { WCountdown } from '../components/shared.jsx';
@@ -13,7 +13,7 @@ const RAIL_TITLES = () => [t('Account type'), t('Location'), t('Email'), t('Pass
 
 // ─── Dark rail — steps + product pitch (desktop), compact bar (mobile) ──
 function SignupRail({ step }) {
-  const mobile = useIsMobile();
+  const mobile = useIsAuthNarrow();
   const titles = RAIL_TITLES();
   const cur = step >= 6 ? 5 : Math.min(4, step);
 
@@ -86,10 +86,10 @@ function SignupRail({ step }) {
 }
 
 const flexCta = { flex: 1, justifyContent: 'center' };
-const h1Style = { margin: 0, fontFamily: WFONT, fontSize: 25, fontWeight: 800, letterSpacing: '-0.025em', color: WBRAND.ink };
-const subPStyle = { margin: '9px 0 0', fontFamily: WFONT, fontSize: 13.5, lineHeight: 1.6, color: WBRAND.muted };
-const fieldLabelStyle = { marginBottom: 7, fontFamily: WFONT, fontSize: 12, fontWeight: 700, color: WBRAND.ink };
-const hintStyle = { fontSize: 11, color: WBRAND.muted, marginTop: 6, lineHeight: 1.45 };
+const h1Style = { margin: 0, fontFamily: WFONT, fontSize: 26, fontWeight: 800, letterSpacing: '-0.025em', color: WBRAND.ink };
+const subPStyle = { margin: '9px 0 0', fontFamily: WFONT, fontSize: 14, lineHeight: 1.6, color: WBRAND.muted };
+const fieldLabelStyle = { marginBottom: 7, fontFamily: WFONT, fontSize: 13, fontWeight: 700, color: WBRAND.ink };
+const hintStyle = { fontSize: 12, color: WBRAND.muted, marginTop: 6, lineHeight: 1.45 };
 
 // ─── Step 0 — account type ──────────────────────────────────────
 function StepAccountType({ type, onPick, onNext, onSignin }) {
@@ -477,7 +477,7 @@ function StepActivated({ onGo }) {
 
 // ─── Full signup flow ───────────────────────────────────────────
 export function WebSignup({ onActivated, onSignin }) {
-  const mobile = useIsMobile();
+  const mobile = useIsAuthNarrow();
   const [step, setStep] = useState(0);
   const [type, setType] = useState('individual');
   const [nat, setNat] = useState('');
