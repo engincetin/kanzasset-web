@@ -213,15 +213,15 @@ export function wregroup(typed) {
 }
 
 // ─── Account model ────────────────────────────────────────────
+// Kanzasset only ever moves between gold (AGOLD), the two settlement
+// stablecoins, and fiat — no other crypto (BTC/ETH/... are not supported).
 export const WRATES = {
   AGOLD: 135.82, USDT: 1, USDC: 1, USD: 1,
-  ETH: 3420,
   AED: 0.27225, EUR: 1.08, GBP: 1.27,
 };
 
 export const WBALANCES = {
   AGOLD: 7500, USDT: 10000, USDC: 5000,
-  ETH: 3.5,
   AED: 100000, USD: 50000, EUR: 0, GBP: 0,
 };
 
@@ -229,7 +229,6 @@ export const WMETA = {
   AGOLD: { name: 'AGOLD',       kind: 'crypto' },
   USDT: { name: 'Tether',         kind: 'crypto' },
   USDC: { name: 'USD Coin',       kind: 'crypto' },
-  ETH:  { name: 'Ethereum',       kind: 'crypto' },
   AED:  { name: 'UAE Dirham',     kind: 'fiat'   },
   USD:  { name: 'US Dollar',      kind: 'fiat'   },
   EUR:  { name: 'Euro',           kind: 'fiat'   },
@@ -239,13 +238,10 @@ export const WMETA = {
 // 24h change per symbol (mock) — drives the markets/quote colouring.
 export const WCHANGE24 = {
   AGOLD: 0.24, USDT: 0.00, USDC: -0.01,
-  ETH: 2.34,
 };
 
 export function wdecimals(s) {
   if (s === 'AGOLD') return 4;
-  if (s === 'BTC') return 6;
-  if (s === 'ETH' || s === 'BNB' || s === 'SOL') return 4;
   return 2;
 }
 
@@ -254,6 +250,31 @@ export const wTradeable = () => Object.keys(WRATES).filter(s => WMETA[s]?.kind =
 
 // Price of 1 `base` expressed in `quote` (both quoted in USDT internally).
 export function wPairRate(base, quote) { return (WRATES[base] ?? 0) / (WRATES[quote] ?? 1); }
+
+// ─── Trading pairs ────────────────────────────────────────────
+// The only tradeable combinations: fiat <-> AGOLD, stablecoin <-> AGOLD, and
+// fiat <-> stablecoin. No fiat-fiat conversion, no crypto outside AGOLD/USDT/USDC.
+const TRADE_FIAT = ['USD', 'AED', 'EUR'];
+export const TRADE_PAIRS = [
+  ...TRADE_FIAT.map((c) => [c, 'AGOLD']),
+  ['USDT', 'AGOLD'], ['USDC', 'AGOLD'],
+  ...TRADE_FIAT.map((c) => [c, 'USDT']),
+  ...TRADE_FIAT.map((c) => [c, 'USDC']),
+];
+
+export function wPairAllowed(a, b) {
+  return TRADE_PAIRS.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
+}
+
+// Every symbol that can legally sit opposite `symbol` in a trade.
+export function wCounterparts(symbol) {
+  const set = new Set();
+  for (const [x, y] of TRADE_PAIRS) {
+    if (x === symbol) set.add(y);
+    if (y === symbol) set.add(x);
+  }
+  return [...set];
+}
 
 // Decimals to show for a price value: 2 for >=1, otherwise enough to keep ~4
 // significant digits (so small pair prices like 0.002094 BTC don't read as 0.00).

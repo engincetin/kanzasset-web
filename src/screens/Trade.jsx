@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData, wCounterparts } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { AGOLDMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
@@ -45,9 +45,11 @@ export function WebTrade({ navigate, onOpenTx, initialSide = 'buy' }) {
   const [confirming, setConfirming] = useState(false);
 
   // Buy: spend a non-AGOLD asset to receive AGOLD. Sell: spend AGOLD to receive a non-AGOLD asset.
-  const buySources  = Object.keys(WBALANCES).filter(s => s !== 'AGOLD' && WBALANCES[s] > 0)
+  // Only AGOLD's allowed counterparts (fiat + USDT/USDC) can appear here.
+  const agoldCounterparts = wCounterparts('AGOLD');
+  const buySources  = agoldCounterparts.filter(s => WBALANCES[s] > 0)
     .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AGOLD }));
-  const sellTargets = Object.keys(WBALANCES).filter(s => s !== 'AGOLD')
+  const sellTargets = agoldCounterparts
     .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES.AGOLD / WRATES[s] }));
 
   const [from, setFrom] = useState(buySources[0]);   // buy: asset you pay with
