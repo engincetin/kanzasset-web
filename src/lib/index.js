@@ -215,13 +215,13 @@ export function wregroup(typed) {
 // ─── Account model ────────────────────────────────────────────
 export const WRATES = {
   AGOLD: 135.82, USDT: 1, USDC: 1, USD: 1,
-  BTC: 64850, ETH: 3420, BNB: 585, SOL: 172,
+  ETH: 3420,
   AED: 0.27225, EUR: 1.08, GBP: 1.27,
 };
 
 export const WBALANCES = {
   AGOLD: 7500, USDT: 10000, USDC: 5000,
-  BTC: 0.42, ETH: 3.5, BNB: 0, SOL: 0,
+  ETH: 3.5,
   AED: 100000, USD: 50000, EUR: 0, GBP: 0,
 };
 
@@ -229,10 +229,7 @@ export const WMETA = {
   AGOLD: { name: 'AGOLD',       kind: 'crypto' },
   USDT: { name: 'Tether',         kind: 'crypto' },
   USDC: { name: 'USD Coin',       kind: 'crypto' },
-  BTC:  { name: 'Bitcoin',        kind: 'crypto' },
   ETH:  { name: 'Ethereum',       kind: 'crypto' },
-  BNB:  { name: 'BNB',            kind: 'crypto' },
-  SOL:  { name: 'Solana',         kind: 'crypto' },
   AED:  { name: 'UAE Dirham',     kind: 'fiat'   },
   USD:  { name: 'US Dollar',      kind: 'fiat'   },
   EUR:  { name: 'Euro',           kind: 'fiat'   },
@@ -242,7 +239,7 @@ export const WMETA = {
 // 24h change per symbol (mock) — drives the markets/quote colouring.
 export const WCHANGE24 = {
   AGOLD: 0.24, USDT: 0.00, USDC: -0.01,
-  BTC: 1.82, ETH: 2.34, BNB: -0.76, SOL: 4.11,
+  ETH: 2.34,
 };
 
 export function wdecimals(s) {
@@ -333,4 +330,40 @@ export function wMakePriceData(points = 90, base = 133, drift = 0.05, vol = 0.01
   }
   data[data.length - 1].v = 135.82;
   return data;
+}
+
+// ─── Market hours / quote state ───────────────────────────────
+// Gold spot trades ~5 days a week: each session runs 18:00 → 17:00 (next day)
+// New York time, with a daily 17:00–18:00 break and a weekend close
+// (Fri 17:00 → Sun 18:00). When open we can confirm a Live Quote almost
+// instantly; when closed we show a Preview Quote off the last LBMA close.
+// Returns { live, secsToFlip } — secsToFlip counts down to the next state change.
+export function marketStatus(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', weekday: 'short',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+  }).formatToParts(now);
+  const get = (t) => parts.find(p => p.type === t)?.value;
+  const DOW = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  const dow = DOW[get('weekday')] ?? 1;
+  const hh = parseInt(get('hour'), 10) % 24;
+  const mm = parseInt(get('minute'), 10);
+  const ss = parseInt(get('second'), 10);
+  const cur = hh * 3600 + mm * 60 + ss;            // seconds since NY midnight
+  const CLOSE = 17 * 3600, OPEN = 18 * 3600, DAY = 24 * 3600;
+
+  let live;
+  if (dow === 6) live = false;                      // Saturday
+  else if (dow === 0) live = cur >= OPEN;           // Sunday opens 18:00
+  else if (dow === 5) live = cur < CLOSE;           // Friday closes 17:00
+  else live = cur < CLOSE || cur >= OPEN;           // Mon–Thu: closed 17:00–18:00
+
+  let secsToFlip;
+  if (live) {
+    secsToFlip = cur < CLOSE ? (CLOSE - cur) : (DAY - cur + CLOSE);
+  } else {
+    const dailyBreak = (dow >= 1 && dow <= 4 && cur >= CLOSE && cur < OPEN) || (dow === 0 && cur < OPEN);
+    secsToFlip = dailyBreak ? (OPEN - cur) : (((7 - dow) % 7) * DAY + (OPEN - cur));
+  }
+  return { live, secsToFlip: Math.max(0, secsToFlip) };
 }

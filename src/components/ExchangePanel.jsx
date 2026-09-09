@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   WBRAND, WFONT, wfmt, wparse, wdecimals, wgroup, wregroup,
-  WRATES, WBALANCES, WMETA, wMakePriceData, wPriceDecimals,
+  WRATES, WBALANCES, WMETA, wMakePriceData, wPriceDecimals, marketStatus,
 } from '../lib/index.js';
 import { WCoinDot } from './coinicons.jsx';
 import { WCard, WNum, WMonoNum, WPrimary, WSecondary, WPill } from './primitives.jsx';
@@ -322,6 +322,80 @@ function TradeDoneModal({ trade, onClose, onTrack }) {
   );
 }
 
+// Format a seconds countdown as "Xsa Ydk" / "Ydk Zsn".
+function fmtCountdown(secs) {
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  if (h > 0) return `${h} ${t('h', 'sa')} ${m} ${t('m', 'dk')}`;
+  if (m > 0) return `${m} ${t('m', 'dk')} ${s} ${t('s', 'sn')}`;
+  return `${s} ${t('s', 'sn')}`;
+}
+
+// Explains the two quote states + trading hours.
+function QuoteStatusModal({ onClose }) {
+  const mobile = useIsMobile();
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 140, background: 'rgba(10,10,10,0.45)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: mobile ? 12 : 24 }}>
+      <div onClick={e => e.stopPropagation()} className="kz-pop" style={{ width: mobile ? '100%' : 440, maxWidth: '100%', background: WBRAND.white, borderRadius: 16, boxShadow: '0 24px 64px rgba(0,0,0,0.22)', overflow: 'hidden' }}>
+        <div style={{ padding: mobile ? '18px 18px 14px' : '20px 24px 16px', borderBottom: `1px solid ${WBRAND.line}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span style={{ fontFamily: WFONT, fontSize: 17, fontWeight: 800, color: WBRAND.ink, letterSpacing: '-0.02em' }}>{t('Quote status', 'Fiyat durumu')}</span>
+          <button onClick={onClose} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', background: WBRAND.surface, cursor: 'pointer', color: WBRAND.muted, display: 'grid', placeItems: 'center' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+          </button>
+        </div>
+        <div style={{ padding: mobile ? '16px 18px 18px' : '18px 24px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 800, color: WBRAND.ink }}>{t('Live Quote', 'Canlı Fiyat')}</div>
+            <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 4, lineHeight: 1.55 }}>{t('Market is open — your price is confirmed almost instantly, typically within 10 seconds of placing your order.', 'Piyasa açık — fiyatınız neredeyse anında, genelde emri verdikten sonra 10 saniye içinde onaylanır.')}</div>
+          </div>
+          <div>
+            <div style={{ fontFamily: WFONT, fontSize: 14, fontWeight: 800, color: WBRAND.ink }}>{t('Preview Quote', 'Önizleme Fiyatı')}</div>
+            <div style={{ fontFamily: WFONT, fontSize: 13, color: WBRAND.muted, marginTop: 4, lineHeight: 1.55 }}>{t('Market is closed — we show a reference price based on the most recent LBMA gold spot close. Your final price is confirmed when the market reopens; if it lands within your max slippage the order executes, otherwise it is cancelled and refunded.', 'Piyasa kapalı — en son LBMA altın spot kapanışına göre referans bir fiyat gösteririz. Nihai fiyatınız piyasa açılınca kesinleşir; maksimum kaymanız içinde kalırsa emir gerçekleşir, aksi halde iptal edilip iade edilir.')}</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '12px 14px', background: WBRAND.surface, borderRadius: 10 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 1 }}><circle cx="12" cy="12" r="9" stroke={WBRAND.muted} strokeWidth="1.7"/><path d="M12 7v6" stroke={WBRAND.muted} strokeWidth="1.9" strokeLinecap="round"/><circle cx="12" cy="16.5" r="1.1" fill={WBRAND.muted}/></svg>
+            <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.ink, lineHeight: 1.5 }}>{t('Trading hours: 18:00 – 17:00 (next day) New York time, on working days.', 'İşlem saatleri: Hafta içi 18:00 – ertesi gün 17:00 (New York saati).')}</span>
+          </div>
+        </div>
+        <div style={{ padding: mobile ? '0 18px 18px' : '0 24px 22px' }}>
+          <WPrimary size="lg" onClick={onClose} style={{ width: '100%', justifyContent: 'center' }}>{t('OK', 'Tamam')}</WPrimary>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Top bar showing Live / Preview quote state + countdown to the next flip.
+function QuoteBar() {
+  const [, setTick] = useState(0);
+  const [infoOpen, setInfoOpen] = useState(false);
+  useEffect(() => { const id = setInterval(() => setTick(x => x + 1), 1000); return () => clearInterval(id); }, []);
+  const { live, secsToFlip } = marketStatus();
+  const accent = live ? WBRAND.positive : WBRAND.warn;
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '9px 12px', marginBottom: 10, background: WBRAND.surface, border: `1px solid ${WBRAND.line}`, borderRadius: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+          <span style={{ display: 'inline-grid', placeItems: 'center', width: 20, height: 20, borderRadius: 6, background: live ? 'rgba(15,122,71,0.12)' : 'rgba(183,121,31,0.14)', flexShrink: 0 }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill={accent}/></svg>
+          </span>
+          <span style={{ fontFamily: WFONT, fontSize: 13, fontWeight: 800, color: accent, letterSpacing: '-0.01em' }}>{live ? t('Live Quote', 'Canlı Fiyat') : t('Preview Quote', 'Önizleme Fiyatı')}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+          <span style={{ fontFamily: WFONT, fontSize: 12, color: WBRAND.muted, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {live ? t('Market closes in', 'Piyasa kapanışına') : t('Market opens in', 'Piyasa açılışına')} <span style={{ color: WBRAND.ink, fontWeight: 700 }}>{fmtCountdown(secsToFlip)}</span>
+          </span>
+          <button onClick={() => setInfoOpen(true)} aria-label={t('Quote status', 'Fiyat durumu')} style={{ width: 20, height: 20, borderRadius: 10, border: 'none', background: 'transparent', padding: 0, cursor: 'pointer', color: WBRAND.muted2, display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7"/><path d="M12 11v5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+      {infoOpen && <QuoteStatusModal onClose={() => setInfoOpen(false)}/>}
+    </>
+  );
+}
+
 export function WExchangePanel({ navigate }) {
   const mobile = useIsMobile();
   const [gridRef, gw] = useElementWidth();
@@ -397,6 +471,9 @@ export function WExchangePanel({ navigate }) {
       {/* ── Left: swap card ─────────────────────────────── */}
       <WCard padding={0} style={{ minWidth: 0, width: '100%', maxWidth: twoCol ? 'none' : 520, justifySelf: twoCol ? 'stretch' : 'center', display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: mobile ? '16px 16px 18px' : '18px 20px 20px', display: 'flex', flexDirection: 'column', gap: 6, position: 'relative', flex: 1 }}>
+
+          {/* Market quote state (Live / Preview) */}
+          <QuoteBar/>
 
           {/* Sell / Buy boxes */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
