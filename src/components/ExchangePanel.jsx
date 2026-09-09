@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import {
   WBRAND, WFONT, wfmt, wparse, wdecimals, wgroup, wregroup,
-  WRATES, WBALANCES, WMETA, wMakePriceData, wPriceDecimals,
+  WRATES, WBALANCES, WMETA, wMakePriceData, wPriceDecimals, wCounterparts,
 } from '../lib/index.js';
 import { WCoinDot } from './coinicons.jsx';
 import { WCard, WNum, WMonoNum, WPrimary, WSecondary, WPill } from './primitives.jsx';
@@ -10,8 +10,6 @@ import { useIsMobile, useElementWidth, useElementHeight } from '../lib/useRespon
 import { t } from '../lib/i18n.js';
 
 const STABLE = ['USDT', 'USDC', 'USD'];
-// Assets you can swap between — crypto AND fiat (buy gold with AED/USD, etc.).
-const swapAssets = () => Object.keys(WRATES);
 // Quote-style currencies (fiat + USD stablecoins) sit on the right of a pair.
 const isQuoteCcy = (s) => STABLE.includes(s) || WMETA[s]?.kind === 'fiat';
 
@@ -40,6 +38,9 @@ function TokenRow({ s, on, onSelect }) {
 }
 
 // ── Token pill + picker modal (DEX-style, opened from beside the amount) ──
+// `exclude` is the asset already sitting on the other side of the trade — the
+// picker only offers its valid counterparts (fiat<->AGOLD, stable<->AGOLD,
+// fiat<->stable), so a pair the platform doesn't support can never be formed.
 function WTokenSelect({ value, exclude, onChange }) {
   const mobile = useIsMobile();
   const [open, setOpen] = useState(false);
@@ -47,7 +48,7 @@ function WTokenSelect({ value, exclude, onChange }) {
   const [cat, setCat] = useState('all');   // all | crypto | fiat
   const ql = q.toLowerCase();
   const match = (s) => s.toLowerCase().includes(ql) || t(WMETA[s].name).toLowerCase().includes(ql) || WMETA[s].name.toLowerCase().includes(ql);
-  const base = swapAssets().filter(s => s !== exclude && match(s));
+  const base = wCounterparts(exclude).filter(match);
   const cryptos = base.filter(s => WMETA[s].kind === 'crypto');
   const fiats   = base.filter(s => WMETA[s].kind === 'fiat');
   const cats = [

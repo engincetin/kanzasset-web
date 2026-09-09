@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData, DELIVERY_STAGES } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData, DELIVERY_STAGES, wCounterparts } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { AGOLDMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
@@ -506,8 +506,7 @@ export function WebRedeem({ navigate, onOpenTx }) {
   const [range, setRange] = useState('3M');
   const priceData = wMakePriceData(90);
 
-  const targets = Object.keys(WBALANCES)
-    .filter(s => s !== 'AGOLD')
+  const targets = wCounterparts('AGOLD')
     .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES.AGOLD / WRATES[s] }));
   const [to, setTo] = useState(targets[0]);
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData } from '../lib/index.js';
+import { WBRAND, WFONT, WMONO, wfmt, wparse, wdecimals, wgroup, wregroup, WRATES, WBALANCES, WMETA, WTXS, wMakePriceData, wCounterparts } from '../lib/index.js';
 import { WIcon } from '../components/icons.jsx';
 import { AGOLDMark } from '../components/coinicons.jsx';
 import { WCard, WPrimary, WSecondary, WEyebrow, WNum, WMonoNum, WPill } from '../components/primitives.jsx';
@@ -10,8 +10,8 @@ import { t } from '../lib/i18n.js';
 
 export function WebMint({ navigate, onOpenTx }) {
   const mobile = useIsMobile();
-  const sources = Object.keys(WBALANCES)
-    .filter(s => s !== 'AGOLD' && WBALANCES[s] > 0)
+  const sources = wCounterparts('AGOLD')
+    .filter(s => WBALANCES[s] > 0)
     .map(s => ({ symbol: s, name: WMETA[s].name, balance: WBALANCES[s], rate: WRATES[s] / WRATES.AGOLD }));
 
   const [from, setFrom] = useState(sources[0]);
